@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  signInContainer: {
+  forgotPasswordContainer: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
     width: 309,
   },
 
-  imageSignIn: {
+  imageForgotPassword: {
     width: " 100%",
     height: 233,
   },
@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
     width: "100%",
   },
 
-  titleWelcome: {
+  title: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

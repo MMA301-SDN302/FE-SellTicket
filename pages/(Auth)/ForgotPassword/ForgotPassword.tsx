@@ -11,11 +11,11 @@ import { useState } from "react";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import type { RootStackParamList } from "../../types/NavigationTypes";
+import type { RootStackParamList } from "../../../types/NavigationTypes";
 import { styles } from "./ForgotPasswordStyle";
-import { CheckUserAccount } from "../../utils";
+import { CheckUserAccount } from "../../../utils";
 
-const SignInImg = require("../../assets/SignIn.png");
+const ForgotPasswordImg = require("../../../assets/Auth.png");
 
 type ForgotPasswordProp = StackNavigationProp<
   RootStackParamList,
@@ -48,9 +48,9 @@ const ForgotPassword = ({ navigation }: Props) => {
         }}
       >
         {/* Welcome */}
-        <Image style={styles.imageSignIn} source={SignInImg} />
-        <View style={styles.signInContainer}>
-          <View style={styles.titleWelcome}>
+        <Image style={styles.imageForgotPassword} source={ForgotPasswordImg} />
+        <View style={styles.forgotPasswordContainer}>
+          <View style={styles.title}>
             <Text
               style={{
                 color: "#000000",
@@ -61,7 +61,7 @@ const ForgotPassword = ({ navigation }: Props) => {
               Welcome
             </Text>
             <Text style={{ color: "#A0A0A0", fontWeight: 400, fontSize: 18 }}>
-              You are just one step away
+              Enter email to reset your password
             </Text>
           </View>
 
@@ -87,7 +87,10 @@ const ForgotPassword = ({ navigation }: Props) => {
               <Text
                 style={{ color: "green", textDecorationLine: "underline" }}
                 onPress={() => {
-                  navigation.reset({ index: 0, routes: [{ name: "SignIn" }] });
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: "SignIn" }],
+                  });
                 }}
               >
                 SignIn

@@ -13,10 +13,15 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import type { StackNavigationProp } from "@react-navigation/stack";
 
 import { styles } from "./SignInStyle";
-import type { RootStackParamList } from "../../types/NavigationTypes";
-import { CheckUserAccount, ValidateEmail, ValidatePassword } from "../../utils";
+import type { RootStackParamList } from "../../../types/NavigationTypes";
+import {
+  CheckUserAccount,
+  ValidateEmail,
+  ValidatePassword,
+} from "../../../utils";
+import { AsyncStorageLocal } from "../../../utils/AsyncStorageLocal";
 
-const SignInImg = require("../../assets/SignIn.png");
+const SignInImg = require("../../../assets/Auth.png");
 
 export interface AccountProps {
   email: string;
@@ -43,9 +48,8 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
     setErrorEmail("");
     setErrorPassword("");
     if (CheckUserAccount(email, password)) {
-      console.log("Login success");
-
-      return;
+      AsyncStorageLocal.set("user", email);
+      navigation.navigate("Home");
     } else {
       setErrorEmail(ValidateEmail(email));
       setErrorPassword(ValidatePassword(password));
@@ -76,7 +80,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
               Welcome
             </Text>
             <Text style={{ color: "#A0A0A0", fontWeight: 400, fontSize: 18 }}>
-              You are just one step away
+              Login to book ticket
             </Text>
           </View>
 
@@ -124,20 +128,19 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
             <Text style={styles.textError}>{errorPassword}</Text>
             {/* Extend */}
 
-            <View style={styles.textRememberMe}>
-              <TouchableOpacity
-                onPress={() => {
-                  setRemember(!remember);
-                }}
-              >
-                <Ionicons
-                  name={remember ? "checkbox-outline" : "square-outline"}
-                  size={24}
-                  color="green"
-                />
-              </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setRemember(!remember);
+              }}
+              style={styles.textRememberMe}
+            >
+              <Ionicons
+                name={remember ? "checkbox-outline" : "square-outline"}
+                size={24}
+                color="green"
+              />
               <Text style={{ color: "gray" }}>Remember me?</Text>
-            </View>
+            </TouchableOpacity>
 
             <View style={styles.buttonContinue}>
               <Button title="Sign In" color="green" onPress={CheckAccount} />

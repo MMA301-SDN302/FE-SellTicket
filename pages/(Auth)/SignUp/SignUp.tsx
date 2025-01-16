@@ -19,11 +19,11 @@ import {
   ValidateEmail,
   ValidatePassword,
   ValidateUserName,
-} from "../../utils";
-import type { RootStackParamList } from "../../types/NavigationTypes";
+} from "../../../utils";
+import type { RootStackParamList } from "../../../types/NavigationTypes";
 import { styles } from "./SignUpStyle";
 
-const SignInImg = require("../../assets/SignIn.png");
+const SignUpImg = require("../../../assets/Auth.png");
 
 type SignUpProp = StackNavigationProp<RootStackParamList, "SignUp">;
 
@@ -60,8 +60,8 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
           width: "100%",
         }}
       >
-        <Image style={styles.imageSignIn} source={SignInImg} />
-        <View style={styles.signInContainer}>
+        <Image style={styles.imageSignUp} source={SignUpImg} />
+        <View style={styles.signUpContainer}>
           <View style={styles.titleWelcome}>
             <Text
               style={{
@@ -73,7 +73,7 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
               Welcome
             </Text>
             <Text style={{ color: "#A0A0A0", fontWeight: 400, fontSize: 18 }}>
-              You are just one step away
+              Signup to get started
             </Text>
           </View>
 
