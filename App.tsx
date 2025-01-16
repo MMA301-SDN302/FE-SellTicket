@@ -18,13 +18,11 @@ const TabNavigator = () => (
     initialRouteName="Home"
     screenOptions={({ route }) => ({
       tabBarIcon: ({}) => {
-        var iconName = "home-outline";
         if (route.name === "Home") {
-          iconName = "home-outline";
+          return <Ionicons name="person-outline" size={24} color={"green"} />;
         } else if (route.name === "Profile") {
-          iconName = "person-outline";
+          return <Ionicons name="person-outline" size={24} color={"green"} />;
         }
-        return <Ionicons name={iconName} size={24} color={"green"} />;
       },
       tabBarActiveTintColor: "green",
     })}
