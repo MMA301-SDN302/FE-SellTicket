@@ -1,19 +1,12 @@
-import {
-  Button,
-  SafeAreaView,
-  View,
-  Image,
-  Text,
-  TextInput,
-} from "react-native";
+import { Button, SafeAreaView, View, Image, Text } from "react-native";
 import { useState } from "react";
 
 import type { StackNavigationProp } from "@react-navigation/stack";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import type { RootStackParamList } from "../../../types/NavigationTypes";
 import { styles } from "./ForgotPasswordStyle";
 import { CheckUserAccount } from "../../../utils";
+import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
 
 const ForgotPasswordImg = require("../../../assets/Auth.png");
 
@@ -26,14 +19,15 @@ type Props = {
 };
 const ForgotPassword = ({ navigation }: Props) => {
   const [email, setEmail] = useState("");
-  const [errorEmail, setErrorEmail] = useState("");
+  const [showError, setShowError] = useState(false);
+
   const CheckAccount = () => {
-    setErrorEmail("");
     if (CheckUserAccount(email)) {
       console.log(" success");
+      navigation.navigate("SignIn");
       return;
     } else {
-      setErrorEmail("Email is not exits");
+      setShowError(true);
     }
   };
 
@@ -67,19 +61,12 @@ const ForgotPassword = ({ navigation }: Props) => {
 
           <>
             {/* Email */}
-            <View style={styles.textInputContainer}>
-              <MaterialCommunityIcons name="email" size={24} color="green" />
-              <TextInput
-                style={{ width: "100%", height: "100%", borderColor: "gray" }}
-                placeholder="Input email"
-                selectionColor={"gray"}
-                value={email}
-                onChangeText={(text) => {
-                  setEmail(text);
-                }}
-              />
-            </View>
-            <Text style={styles.textError}>{errorEmail}</Text>
+            <TextInputCommon
+              type={"email"}
+              value={email}
+              setValue={setEmail}
+              showError={showError}
+            />
             <View style={styles.buttonContinue}>
               <Button title="Send OTP" color="green" onPress={CheckAccount} />
             </View>

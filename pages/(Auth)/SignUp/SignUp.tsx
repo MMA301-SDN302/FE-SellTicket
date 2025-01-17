@@ -1,27 +1,11 @@
-import { useState } from "react";
-
-import {
-  View,
-  Image,
-  Text,
-  TextInput,
-  Button,
-  TouchableOpacity,
-  SafeAreaView,
-} from "react-native";
-import React from "react";
-
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { View, Image, Text, Button, SafeAreaView, Alert } from "react-native";
 import type { StackNavigationProp } from "@react-navigation/stack";
 
-import {
-  CheckUserAccount,
-  ValidateEmail,
-  ValidatePassword,
-  ValidateUserName,
-} from "../../../utils";
 import type { RootStackParamList } from "../../../types/NavigationTypes";
 import { styles } from "./SignUpStyle";
+import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
+import { checkFormError } from "../../../utils";
 
 const SignUpImg = require("../../../assets/Auth.png");
 
@@ -31,23 +15,20 @@ type Props = {
   navigation: SignUpProp;
 };
 export const SignUp: React.FC<Props> = ({ navigation }) => {
-  const [showPassword, setShowPassword] = useState(false);
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorEmail, setErrorEmail] = useState("");
-  const [errorPassword, setErrorPassword] = useState("");
-  const [errorUserName, setErrorUserName] = useState("");
+
+  const [showError, setShowError] = useState(false);
+  const [isError, setIsError] = useState(true);
+
   const CheckAccount = () => {
-    setErrorEmail("");
-    setErrorPassword("");
-    if (CheckUserAccount(email, password)) {
-      console.log("Login success");
-      return;
+    var formHasError = checkFormError([email, userName], isError);
+    if (formHasError) {
+      setShowError(true);
     } else {
-      setErrorEmail(ValidateEmail(email));
-      setErrorPassword(ValidatePassword(password));
-      setErrorUserName(ValidateUserName(userName));
+      Alert.alert("Sign up success");
+      navigation.navigate("SignIn");
     }
   };
   return (
@@ -79,61 +60,30 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
 
           <>
             {/* UserName */}
-            <View style={styles.textInputContainer}>
-              <Ionicons name="person-sharp" size={24} color="green" />
-              <TextInput
-                style={{ width: "100%", height: "100%", borderColor: "gray" }}
-                placeholder="Input your name"
-                selectionColor={"gray"}
-                value={userName}
-                onChangeText={(text) => {
-                  setUserName(text);
-                }}
-              />
-            </View>
-            <Text style={styles.textError}>{errorUserName}</Text>
+            <TextInputCommon
+              type={"name"}
+              value={userName}
+              setValue={setUserName}
+              showError={showError}
+              setIsError={setIsError}
+            />
 
             {/* Email */}
-            <View style={styles.textInputContainer}>
-              <MaterialCommunityIcons name="email" size={24} color="green" />
-              <TextInput
-                style={{ width: "100%", height: "100%", borderColor: "gray" }}
-                placeholder="Input email"
-                selectionColor={"gray"}
-                value={email}
-                onChangeText={(text) => {
-                  setEmail(text);
-                }}
-              />
-            </View>
-            <Text style={styles.textError}>{errorEmail}</Text>
+            <TextInputCommon
+              type={"email"}
+              value={email}
+              setValue={setEmail}
+              showError={showError}
+              setIsError={setIsError}
+            />
             {/* Password */}
-            <View style={styles.textInputContainer}>
-              <Ionicons name="key" size={24} color="green" />
-              <TextInput
-                style={{ width: 220, height: "100%", borderColor: "gray" }}
-                placeholder="Input password"
-                selectionColor={"gray"}
-                value={password}
-                onChangeText={(text) => {
-                  setPassword(text);
-                }}
-                secureTextEntry={!showPassword}
-              />
-              <TouchableOpacity
-                style={{ marginRight: 10 }}
-                onPress={() => {
-                  setShowPassword(!showPassword);
-                }}
-              >
-                <Ionicons
-                  name={showPassword ? "eye" : "eye-off"}
-                  size={24}
-                  color="green"
-                />
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.textError}>{errorPassword}</Text>
+            <TextInputCommon
+              type={"password"}
+              value={password}
+              setValue={setPassword}
+              showError={showError}
+              setIsError={setIsError}
+            />
             {/* Extend */}
             <View style={styles.textForgotContainer}>
               <Text

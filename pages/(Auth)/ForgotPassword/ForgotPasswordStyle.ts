@@ -14,19 +14,6 @@ export const styles = StyleSheet.create({
     height: 233,
   },
 
-  textInputContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    height: 44,
-    width: "100%",
-    paddingLeft: 10,
-
-    borderColor: "gray",
-    borderWidth: 1,
-    gap: 10,
-  },
-
   textForgotContainer: {
     display: "flex",
     flexDirection: "row",
@@ -46,13 +33,5 @@ export const styles = StyleSheet.create({
     gap: 16,
     borderRadius: 20,
     marginBottom: 10,
-  },
-
-  textError: {
-    color: "red",
-    fontSize: 12,
-
-    alignItems: "flex-start",
-    width: "100%",
   },
 });
