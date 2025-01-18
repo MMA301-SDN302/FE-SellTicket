@@ -13,7 +13,7 @@ export const NotificationDetail = (noti: NotificationProps) => (
   <View style={styles.container}>
     <View style={styles.box}>
       <View style={styles.icon}>
-        <Ionicons name="bus" size={24} color="#007bff" />
+        <Ionicons name="bus" size={24} color="#2a3266" />
       </View>
       <View style={styles.detailMess}>
         <Text style={styles.mess}>{noti.mess}</Text>
