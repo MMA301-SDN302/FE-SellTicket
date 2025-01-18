@@ -28,10 +28,10 @@ export function ValidateUserName(userName: string) {
 
 export function CheckUserAccount(email: string, password?: string) {
   if (password === undefined) {
-    if (email === "admin") {
+    if (email === "admin@gmail.com") {
       return true;
     }
-  } else if (email === "admin" && password === "12345678") {
+  } else if (email === "admin@gmail.com" && password === "12345678") {
     return true;
   }
   return false;

@@ -161,6 +161,7 @@ const TextInputCommon = ({
       <Text
         style={{
           color: "gray",
+          margin: "100px"
         }}
       >
         {textTitle}

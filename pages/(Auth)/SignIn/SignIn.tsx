@@ -78,7 +78,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
             {/* Email */}
             <TextInputCommon
               type={"email"}
-              value={email}
+              value={email || "admin@gmail.com"} 
               setValue={setEmail}
               showError={showError}
             />
@@ -86,7 +86,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
             {/* Password */}
             <TextInputCommon
               type={"password"}
-              value={password}
+              value={password || "12345678"} 
               setValue={setPassword}
               showError={showError}
             />
