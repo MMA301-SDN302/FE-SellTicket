@@ -73,8 +73,8 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   recentSearches: {
-    marginTop: 20,
-    padding: 20,
+    paddingLeft: 30,
+    marginTop: 5
   },
   recentItem: {
     marginBottom: 10,
@@ -124,5 +124,6 @@ export const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
+    padding: 20
   },
 });
