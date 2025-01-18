@@ -3,23 +3,19 @@ import {
   View,
   Image,
   Text,
-  TextInput,
   Button,
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
 
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import type { StackNavigationProp } from "@react-navigation/stack";
 
 import { styles } from "./SignInStyle";
 import type { RootStackParamList } from "../../../types/NavigationTypes";
-import {
-  CheckUserAccount,
-  ValidateEmail,
-  ValidatePassword,
-} from "../../../utils";
+import { CheckUserAccount } from "../../../utils";
 import { AsyncStorageLocal } from "../../../utils/AsyncStorageLocal";
+import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
 
 const SignInImg = require("../../../assets/Auth.png");
 
@@ -36,23 +32,17 @@ type Props = {
 };
 
 export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
-  const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorEmail, setErrorEmail] = useState("");
-  const [errorPassword, setErrorPassword] = useState("");
+  const [showError, setShowError] = useState(false);
 
   const CheckAccount = () => {
-    setErrorEmail("");
-    setErrorPassword("");
     if (CheckUserAccount(email, password)) {
       AsyncStorageLocal.set("user", email);
       navigation.navigate("Home");
     } else {
-      setErrorEmail(ValidateEmail(email));
-      setErrorPassword(ValidatePassword(password));
+      setShowError(true);
     }
   };
 
@@ -86,46 +76,21 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
 
           <>
             {/* Email */}
-            <View style={styles.textInputContainer}>
-              <MaterialCommunityIcons name="email" size={24} color="green" />
-              <TextInput
-                style={{ width: "100%", height: "100%", borderColor: "gray" }}
-                placeholder="Input email"
-                selectionColor={"gray"}
-                value={email}
-                onChangeText={(text) => {
-                  setEmail(text);
-                }}
-              />
-            </View>
-            <Text style={styles.textError}>{errorEmail}</Text>
+            <TextInputCommon
+              type={"email"}
+              value={email}
+              setValue={setEmail}
+              showError={showError}
+            />
+
             {/* Password */}
-            <View style={styles.textInputContainer}>
-              <Ionicons name="key" size={24} color="green" />
-              <TextInput
-                style={{ width: 220, height: "100%", borderColor: "gray" }}
-                placeholder="Input password"
-                selectionColor={"gray"}
-                value={password}
-                onChangeText={(text) => {
-                  setPassword(text);
-                }}
-                secureTextEntry={!showPassword}
-              />
-              <TouchableOpacity
-                style={{ marginRight: 10 }}
-                onPress={() => {
-                  setShowPassword(!showPassword);
-                }}
-              >
-                <Ionicons
-                  name={showPassword ? "eye" : "eye-off"}
-                  size={24}
-                  color="green"
-                />
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.textError}>{errorPassword}</Text>
+            <TextInputCommon
+              type={"password"}
+              value={password}
+              setValue={setPassword}
+              showError={showError}
+            />
+
             {/* Extend */}
 
             <TouchableOpacity

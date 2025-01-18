@@ -3,7 +3,7 @@ const validateEmail = (email: string) => {
   return re.test(email);
 };
 export function ValidateEmail(email: string) {
-  if (email === "") {
+  if (email == "") {
     return "Please input email";
   } else if (!validateEmail(email)) {
     return "Please input email format";
@@ -36,3 +36,8 @@ export function CheckUserAccount(email: string, password?: string) {
   }
   return false;
 }
+export const checkFormError = (fields: string[], isError: boolean) => {
+  const hasError =
+    fields.map((field) => field === "").includes(true) || isError;
+  return hasError;
+};
