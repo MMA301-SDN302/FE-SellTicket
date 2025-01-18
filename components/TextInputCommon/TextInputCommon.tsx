@@ -39,9 +39,9 @@ const TextInputCommon = ({
   errorMess,
   valueDate,
   setValueDate,
-  showError, //true: show error
+  showError, // true: show error
   placeholder,
-  w, //width
+  w, // width
   iconMaterial,
   iconIon,
   textTitle,
@@ -69,6 +69,14 @@ const TextInputCommon = ({
   const [showPassword, setShowPassword] = useState(!(type == "password"));
   const phoneInput = useRef<PhoneInput>(null);
   const [valid, setValid] = useState(false);
+
+  // Hàm định dạng ngày theo định dạng dd/MM/yyyy
+  const formatDate = (date: Date): string => {
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
   if (newError && newError != "") {
     errorMess = newError;
   } else if (showError) {
@@ -161,14 +169,16 @@ const TextInputCommon = ({
         />
       )}
       {/* Title */}
-      <Text
-        style={{
-          color: "gray",
-          paddingBottom: 3,
-        }}
-      >
-        {textTitle}
-      </Text>
+      {textTitle && (
+        <Text
+          style={{
+            color: "gray",
+            paddingBottom: 3,
+          }}
+        >
+          {textTitle}
+        </Text>
+      )}
       {/* Phone */}
       {type == "phone" ? (
         <View style={[styles.textInputContainer, { width: w ?? "100%" }]}>
@@ -220,8 +230,8 @@ const TextInputCommon = ({
               selectionColor={"gray"}
               editable={type != "date"}
               value={
-                type == "date"
-                  ? valueDate && valueDate.toLocaleDateString()
+                type == "date" && valueDate
+                  ? formatDate(valueDate) // Hiển thị ngày dạng dd/MM/yyyy
                   : value
               }
               onChangeText={(text) => {
