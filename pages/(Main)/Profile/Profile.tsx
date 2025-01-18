@@ -7,37 +7,47 @@ import {
   Alert,
 } from "react-native";
 import type { StackNavigationProp } from "@react-navigation/stack";
+import type PhoneInput from "react-native-phone-number-input";
 import { Ionicons } from "@expo/vector-icons";
 
 import type { RootStackParamList } from "../../../types/NavigationTypes";
 import { styles } from "./ProfileStyle";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
-import { checkFormError } from "../../../utils";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import {
+  checkFormError,
+  ValidateEmail,
+  ValidateUserName,
+} from "../../../utils";
 import ResetPassword from "../../(Auth)/ResetPassword/ResetPassword";
+const Person = require("../../../assets/favicon.png");
 
 type ProfileProp = StackNavigationProp<RootStackParamList, "Profile">;
 
 type Props = {
   navigation: ProfileProp;
 };
-const Person = require("../../../assets/favicon.png");
-export const Profile: React.FC<Props> = ({ navigation }: Props) => {
+const Profile: React.FC<Props> = ({ navigation }: Props) => {
   const [isPerson, setIsPerson] = useState(false);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [gender, setGender] = useState("Male");
   const [userName, setUserName] = useState("Thanh Thủy");
 
+  const phoneCurrent = useRef<PhoneInput>(null);
+
   const [showError, setShowError] = useState(false);
-  const [isError, setIsError] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
   const [date, setDate] = useState(new Date(1598051730000));
 
   const Update = async () => {
-    var formHasError = checkFormError([email, phone, userName], isError);
+    var formHasError = checkFormError([
+      ValidateEmail(email),
+      ValidateUserName(userName),
+      phoneCurrent.current?.isValidNumber(phone) ? "" : "error",
+    ]);
+
     if (formHasError) {
       setShowError(true);
     } else {
@@ -67,7 +77,6 @@ export const Profile: React.FC<Props> = ({ navigation }: Props) => {
           value={userName}
           showError={showError}
           setValue={setUserName}
-          setIsError={setIsError}
         />
         {/* Phone */}
         <TextInputCommon
@@ -76,7 +85,7 @@ export const Profile: React.FC<Props> = ({ navigation }: Props) => {
           value={phone}
           showError={showError}
           setValue={setPhone}
-          setIsError={setIsError}
+          phoneCurrent={phoneCurrent}
         />
         {/* Email */}
         <TextInputCommon
@@ -85,7 +94,6 @@ export const Profile: React.FC<Props> = ({ navigation }: Props) => {
           value={email}
           setValue={setEmail}
           showError={showError}
-          setIsError={setIsError}
         />
         <TextInputCommon
           type={"date"}
@@ -93,7 +101,6 @@ export const Profile: React.FC<Props> = ({ navigation }: Props) => {
           valueDate={date}
           setValueDate={setDate}
           showError={showError}
-          setIsError={setIsError}
         />
         {/* Gender */}
         <View style={{ width: "100%" }}>
@@ -168,4 +175,5 @@ export const Profile: React.FC<Props> = ({ navigation }: Props) => {
     </View>
   );
 };
+
 export default Profile;

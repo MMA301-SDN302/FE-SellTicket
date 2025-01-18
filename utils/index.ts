@@ -36,9 +36,13 @@ export function CheckUserAccount(email: string, password?: string) {
   }
   return false;
 }
-export const checkFormError = (fields: string[], isError: boolean) => {
-  const hasError =
-    fields.map((field) => field === "").includes(true) || isError;
+export const checkFormError = (fields: string[]) => {
+  const hasError = fields
+    .map((field) => {
+      return field !== "";
+    })
+    .includes(true);
+
   return hasError;
 };
 export const CheckConfirmPassword = (

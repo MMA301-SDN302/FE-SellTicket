@@ -20,7 +20,7 @@ export const Ticket = (ticket: TicketProps) => (
     <View style={styles.header}>
       <Text style={styles.headerText}>Ticket Bus</Text>
       <View style={styles.priceBox}>
-        <Text style={styles.priceText}>150$</Text>
+        <Text style={styles.priceText}>{ticket.Price}</Text>
       </View>
     </View>
     <View style={styles.inforTicket}>

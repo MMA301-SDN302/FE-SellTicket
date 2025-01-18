@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TouchableOpacity, FlatList, Switch } from "react-native"; 
+import { View, Text, TouchableOpacity, FlatList, Switch } from "react-native";
 import { styles } from "./HomeStyle";
 import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -15,7 +15,7 @@ const recentSearches = [
   { id: "7", from: "Cần Thơ", to: "Đà Lạt", date: "18/01/2025" },
   { id: "8", from: "Hải Phòng", to: "Sài Gòn", date: "19/01/2025" },
   { id: "9", from: "Quy Nhơn", to: "Phú Quốc", date: "16/01/2025" },
-  { id: "10", from: "Hà Nội", to: "Nha Trang", date: "21/01/2025" }
+  { id: "10", from: "Hà Nội", to: "Nha Trang", date: "21/01/2025" },
 ];
 
 export const Home = () => {
@@ -27,7 +27,11 @@ export const Home = () => {
 
   const { navigateTo } = useNavigate();
 
-  const handleRecentSearchClick = (search: { from: string; to: string; date: string }) => {
+  const handleRecentSearchClick = (search: {
+    from: string;
+    to: string;
+    date: string;
+  }) => {
     setFrom(search.from);
     setTo(search.to);
 
@@ -56,13 +60,10 @@ export const Home = () => {
   };
 
   return (
-    <View style={styles.homeContainer}> 
-
-
+    <View style={styles.homeContainer}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Vexedatnhathanhtinh!</Text>
       </View>
-
 
       <View style={styles.searchForm}>
         <TextInputCommon
@@ -73,7 +74,6 @@ export const Home = () => {
           type="name"
           showError={isError && !from}
           errorMess="Vui lòng nhập nơi xuất phát."
-          setIsError={setIsError}
         />
         <TextInputCommon
           textTitle="Bạn muốn đi đâu?"
@@ -83,7 +83,6 @@ export const Home = () => {
           type="name"
           showError={isError && !to}
           errorMess="Vui lòng nhập nơi đến."
-          setIsError={setIsError}
         />
         <TextInputCommon
           textTitle="Ngày đi"
@@ -93,7 +92,6 @@ export const Home = () => {
           type="date"
           showError={isError && !date}
           errorMess="Vui lòng chọn ngày đi."
-          setIsError={setIsError}
         />
         <View style={styles.roundTrip}>
           <Text style={styles.roundTripLabel}>Khứ hồi</Text>
@@ -136,7 +134,10 @@ export const Home = () => {
         data={recentSearches}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handleRecentSearchClick(item)} style={styles.recentItem}>
+          <TouchableOpacity
+            onPress={() => handleRecentSearchClick(item)}
+            style={styles.recentItem}
+          >
             <Text style={styles.recentText}>
               {item.from} → {item.to}
             </Text>

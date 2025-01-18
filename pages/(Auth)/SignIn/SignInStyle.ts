@@ -38,6 +38,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     display: "flex",
     alignItems: "center",
+    paddingTop: 2,
 
     color: "#A0A0A0",
     width: "100%",
