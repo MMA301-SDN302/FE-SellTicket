@@ -139,7 +139,9 @@ const MyTickets = () => {
           ) : (
             <>
               {filteredTickets?.map((ticket, _) => (
-                <Ticket {...ticket} />
+                <View key={_}>
+                  <Ticket {...ticket} />
+                </View>
               ))}
             </>
           )}
