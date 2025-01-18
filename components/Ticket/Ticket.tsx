@@ -38,6 +38,7 @@ export const Ticket = (ticket: TicketProps) => (
             {ticket.Price ?? " > 100,000 VND"}
           </Text>
         </View>
+
       </View>
     </View>
     <View style={styles.inforTicket}>
