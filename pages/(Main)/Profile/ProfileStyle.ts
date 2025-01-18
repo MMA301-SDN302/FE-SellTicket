@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonActive: {
-    backgroundColor: "green",
+    backgroundColor: "#4D5995",
   },
   buttonText: {},
 });

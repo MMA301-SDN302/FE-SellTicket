@@ -23,6 +23,7 @@ interface textInputCommonProps {
   setValueDate?: React.Dispatch<React.SetStateAction<Date>>;
   setIsError?: React.Dispatch<React.SetStateAction<boolean>>;
   errorMess?: string;
+  newError?: string;
   placeholder?: string;
   w?: DimensionValue | undefined;
   iconMaterial?: string;
@@ -45,6 +46,7 @@ const TextInputCommon = ({
   iconIon,
   textTitle,
   setIsError,
+  newError,
 }: textInputCommonProps) => {
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
@@ -67,8 +69,9 @@ const TextInputCommon = ({
   const [showPassword, setShowPassword] = useState(!(type == "password"));
   const phoneInput = useRef<PhoneInput>(null);
   const [valid, setValid] = useState(false);
-
-  if (showError) {
+  if (newError && newError != "") {
+    errorMess = newError;
+  } else if (showError) {
     switch (type) {
       case "email":
         errorMess = ValidateEmail(value || "");
@@ -161,6 +164,7 @@ const TextInputCommon = ({
       <Text
         style={{
           color: "gray",
+          paddingBottom: 3,
         }}
       >
         {textTitle}
@@ -168,7 +172,7 @@ const TextInputCommon = ({
       {/* Phone */}
       {type == "phone" ? (
         <View style={[styles.textInputContainer, { width: w ?? "100%" }]}>
-          <Ionicons name={iconIon as any} size={24} color="green" />
+          <Ionicons name={iconIon as any} size={24} color="#4D5995" />
 
           <PhoneInput
             ref={phoneInput}
@@ -203,11 +207,11 @@ const TextInputCommon = ({
               <MaterialCommunityIcons
                 name={iconMaterial as any}
                 size={24}
-                color="green"
+                color="#4D5995"
               />
             )}
             {iconIon && (
-              <Ionicons name={iconIon as any} size={24} color="green" />
+              <Ionicons name={iconIon as any} size={24} color="#4D5995" />
             )}
 
             <TextInput
@@ -235,7 +239,7 @@ const TextInputCommon = ({
                 <Ionicons
                   name={showPassword ? "eye" : "eye-off"}
                   size={24}
-                  color="green"
+                  color="#4D5995"
                 />
               </TouchableOpacity>
             )}

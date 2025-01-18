@@ -41,3 +41,9 @@ export const checkFormError = (fields: string[], isError: boolean) => {
     fields.map((field) => field === "").includes(true) || isError;
   return hasError;
 };
+export const CheckConfirmPassword = (
+  password: string,
+  confirmPassword: string
+) => {
+  return password !== confirmPassword ? "New password is not double" : "";
+};
