@@ -14,6 +14,8 @@ import { styles } from "./ProfileStyle";
 import { useState } from "react";
 import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
 import { checkFormError } from "../../../utils";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import ResetPassword from "../../(Auth)/ResetPassword/ResetPassword";
 
 type ProfileProp = StackNavigationProp<RootStackParamList, "Profile">;
 
@@ -21,7 +23,6 @@ type Props = {
   navigation: ProfileProp;
 };
 const Person = require("../../../assets/favicon.png");
-
 export const Profile: React.FC<Props> = ({ navigation }: Props) => {
   const [isPerson, setIsPerson] = useState(false);
   const [email, setEmail] = useState("");
@@ -31,12 +32,9 @@ export const Profile: React.FC<Props> = ({ navigation }: Props) => {
 
   const [showError, setShowError] = useState(false);
   const [isError, setIsError] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const Logout = () => {
-    {
-      navigation.navigate("SignIn");
-    }
-  };
+  const [date, setDate] = useState(new Date(1598051730000));
 
   const Update = async () => {
     var formHasError = checkFormError([email, phone, userName], isError);
@@ -47,9 +45,12 @@ export const Profile: React.FC<Props> = ({ navigation }: Props) => {
       navigation.navigate("Home");
     }
   };
-  const [date, setDate] = useState(new Date(1598051730000));
   return (
     <View style={{ width: "100%" }}>
+      <ResetPassword
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
       <View style={styles.profileContainer}>
         <TouchableOpacity onPress={() => {}}>
           {isPerson ? (
@@ -155,10 +156,13 @@ export const Profile: React.FC<Props> = ({ navigation }: Props) => {
         </View>
         {/* Update */}
         <View style={styles.buttonConfirm}>
-          <Button title="Update" color="green" onPress={Update} />
+          <Button title="Update" color="#4D5995" onPress={Update} />
         </View>
-        <TouchableOpacity style={{ marginTop: 10 }} onPress={Logout}>
-          <Text>Logout</Text>
+        <TouchableOpacity
+          style={{ marginTop: 10 }}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text>Reset Password</Text>
         </TouchableOpacity>
       </View>
     </View>

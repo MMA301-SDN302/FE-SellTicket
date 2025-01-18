@@ -87,7 +87,7 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
             {/* Extend */}
             <View style={styles.textForgotContainer}>
               <Text
-                style={{ color: "green", textDecorationLine: "underline" }}
+                style={{ color: "#4D5995", textDecorationLine: "underline" }}
                 onPress={() => {
                   navigation.reset({ index: 0, routes: [{ name: "SignIn" }] });
                 }}
@@ -98,7 +98,7 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
           </>
 
           <View style={styles.buttonContinue}>
-            <Button title="Send OTP" color="green" onPress={CheckAccount} />
+            <Button title="Send OTP" color="#4D5995" onPress={CheckAccount} />
             <Text>
               By Clicking on Continue, you are agree to{" "}
               <Text style={{ color: "red", textDecorationLine: "underline" }}>

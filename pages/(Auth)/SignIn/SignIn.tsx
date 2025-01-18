@@ -102,13 +102,13 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
               <Ionicons
                 name={remember ? "checkbox-outline" : "square-outline"}
                 size={24}
-                color="green"
+                color="#4D5995"
               />
               <Text style={{ color: "gray" }}>Remember me?</Text>
             </TouchableOpacity>
 
             <View style={styles.buttonContinue}>
-              <Button title="Sign In" color="green" onPress={CheckAccount} />
+              <Button title="Sign In" color="#4D5995" onPress={CheckAccount} />
             </View>
             <View style={styles.textForgotContainer}>
               <Text
@@ -124,7 +124,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 Forgot password?
               </Text>
               <Text
-                style={{ color: "green", textDecorationLine: "underline" }}
+                style={{ color: "#4D5995", textDecorationLine: "underline" }}
                 onPress={() => {
                   navigation.navigate("SignUp");
                 }}
