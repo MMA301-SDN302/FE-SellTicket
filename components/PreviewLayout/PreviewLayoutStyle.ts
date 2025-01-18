@@ -12,6 +12,8 @@ export const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     flexWrap: "wrap",
+    width: "100%",
+    justifyContent: "space-evenly",
   },
   button: {
     paddingHorizontal: 8,
