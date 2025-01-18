@@ -19,8 +19,19 @@ export const Ticket = (ticket: TicketProps) => (
   <View style={styles.ticketContainer}>
     <View style={styles.header}>
       <Text style={styles.headerText}>Ticket Bus</Text>
+
       <View style={styles.priceBox}>
-        <Text style={styles.priceText}>{ticket.Price}</Text>
+        {ticket.Price ?? (
+          <Text
+            style={
+              (styles.inforText,
+              { left: "120%", position: "absolute", bottom: 0 })
+            }
+          >
+            Deposit
+          </Text>
+        )}
+        <Text style={styles.priceText}>{ticket.Price ?? " > 5$"}</Text>
       </View>
     </View>
     <View style={styles.inforTicket}>
