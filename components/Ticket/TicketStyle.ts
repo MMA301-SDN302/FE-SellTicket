@@ -33,7 +33,6 @@ export const styles = StyleSheet.create({
   priceBox: {
     display: "flex",
     justifyContent: "center",
-    paddingLeft: "15%",
 
     backgroundColor: "#fff",
     height: "100%",
@@ -43,8 +42,13 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: 40,
     borderTopRightRadius: 10,
   },
-  priceText: {
+  price: {
+    alignItems: "center",
+    justifyContent: "center",
     width: "100%",
+    display: "flex",
+  },
+  priceText: {
     fontSize: 24,
     fontWeight: "bold",
     color: "#c4230e",

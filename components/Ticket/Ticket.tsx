@@ -21,17 +21,23 @@ export const Ticket = (ticket: TicketProps) => (
       <Text style={styles.headerText}>Ticket Bus</Text>
 
       <View style={styles.priceBox}>
-        {ticket.Price ?? (
+        {ticket.Price == undefined ? (
           <Text
             style={
               (styles.inforText,
-              { left: "120%", position: "absolute", bottom: 0 })
+              { right: 5, position: "absolute", bottom: -20 })
             }
           >
             Deposit
           </Text>
+        ) : (
+          <></>
         )}
-        <Text style={styles.priceText}>{ticket.Price ?? " > 5$"}</Text>
+        <View style={styles.price}>
+          <Text style={styles.priceText}>
+            {ticket.Price ?? " > 100,000 VND"}
+          </Text>
+        </View>
       </View>
     </View>
     <View style={styles.inforTicket}>
@@ -40,30 +46,7 @@ export const Ticket = (ticket: TicketProps) => (
           {ticket.seatNO && (
             <View style={{ width: "50%" }}>
               <Text style={styles.inforText}>SEAT NO.</Text>
-
-              {Array.from(
-                { length: Math.ceil(ticket.seatNO.length / 2) },
-                (_, rowIndex) => (
-                  <View
-                    key={rowIndex}
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      marginBottom: 5,
-                      gap: 10,
-                    }}
-                  >
-                    {ticket.seatNO &&
-                      ticket.seatNO
-                        .slice(rowIndex * 2, rowIndex * 2 + 2)
-                        .map((seat, seatIndex) => (
-                          <Text key={seatIndex} style={styles.detailText}>
-                            {seat}
-                          </Text>
-                        ))}
-                  </View>
-                )
-              )}
+              <Text style={styles.detailText}>{ticket.seatNO}</Text>
             </View>
           )}
           {ticket.ticketNo && (
