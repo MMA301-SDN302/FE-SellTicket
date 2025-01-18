@@ -8,6 +8,13 @@ export const styles = StyleSheet.create({
     height: 100,
     paddingTop: 10,
   },
+  container: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "90%",
+    height: 100,
+  },
   drawerContent: {
     width: "100%",
     height: "100%",

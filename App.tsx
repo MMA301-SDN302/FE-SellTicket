@@ -4,18 +4,20 @@ import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { Header } from "./components/Header/Header";
-import type { RootStackParamList } from "./types/NavigationTypes";
+import type {
+  RootStackParamList,
+  RootTabParamList,
+} from "./types/NavigationTypes";
 import { SignUp } from "./pages/(Auth)/SignUp/SignUp";
 import { SignIn } from "./pages/(Auth)/SignIn/SignIn";
 import ForgotPassword from "./pages/(Auth)/ForgotPassword/ForgotPassword";
 import Home from "./pages/(Main)/Home/Home";
 import Profile from "./pages/(Main)/Profile/Profile";
 import { Notification } from "./pages/(Main)/Notification/Notification";
-import { useRef } from "react";
-import type { DrawerLayoutAndroid } from "react-native";
+import MyTickets from "./pages/(Main)/MyTicket/MyTicket";
 
 const Stack = createStackNavigator<RootStackParamList>();
-const Tab = createBottomTabNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<RootTabParamList>();
 
 const TabNavigatorHome = ({ navigation }: any) => (
   <Tab.Navigator
@@ -88,11 +90,12 @@ export default function App() {
           component={SignIn}
           options={{ headerShown: false }}
         />
+
         <Stack.Screen
           name="Profile"
           component={Profile}
           options={{
-            header: () => <Header />,
+            header: () => <Header goHome={true} />,
             headerShown: true,
           }}
         />
@@ -112,6 +115,14 @@ export default function App() {
           name="Home"
           component={TabNavigatorHome}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="MyTicket"
+          component={MyTickets}
+          options={{
+            header: () => <Header goHome={true} />,
+            headerShown: true,
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
