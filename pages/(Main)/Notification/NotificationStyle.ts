@@ -1,12 +1,22 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  notificationContainer: {
-    paddingTop: 50,
+  container: {
+    flex: 1,
+    marginTop: 5,
+    backgroundColor: "#82ABDD",
+    paddingTop: 10,
   },
-  drawerContent: {
+  containerView: {
+    alignItems: "center",
+    gap: 20,
+    color: "red",
     width: "100%",
-    height: "100%",
-    position: "absolute",
+  },
+  textNoDisplay: {
+    fontSize: 20,
+    marginTop: "5%",
+    color: "#0c1440",
+    fontStyle: "italic",
   },
 });

@@ -28,10 +28,10 @@ export function ValidateUserName(userName: string) {
 
 export function CheckUserAccount(email: string, password?: string) {
   if (password === undefined) {
-    if (email === "admin@gmail.com") {
+    if (email === "admin") {
       return true;
     }
-  } else if (email === "admin@gmail.com" && password === "12345678") {
+  } else if (email === "admin" && password === "12345678") {
     return true;
   }
   return false;
@@ -40,4 +40,10 @@ export const checkFormError = (fields: string[], isError: boolean) => {
   const hasError =
     fields.map((field) => field === "").includes(true) || isError;
   return hasError;
+};
+export const CheckConfirmPassword = (
+  password: string,
+  confirmPassword: string
+) => {
+  return password !== confirmPassword ? "New password is not double" : "";
 };

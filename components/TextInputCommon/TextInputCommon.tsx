@@ -1,5 +1,11 @@
 import React, { useRef, useState } from "react";
-import { View, Text, TextInput, DimensionValue, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  DimensionValue,
+  TouchableOpacity,
+} from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import PhoneInput from "react-native-phone-number-input";
@@ -17,6 +23,7 @@ interface textInputCommonProps {
   setValueDate?: React.Dispatch<React.SetStateAction<Date>>;
   setIsError?: React.Dispatch<React.SetStateAction<boolean>>;
   errorMess?: string;
+  newError?: string;
   placeholder?: string;
   w?: DimensionValue | undefined;
   iconMaterial?: string;
@@ -39,6 +46,7 @@ const TextInputCommon = ({
   iconIon,
   textTitle,
   setIsError,
+  newError,
 }: textInputCommonProps) => {
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
@@ -69,8 +77,9 @@ const TextInputCommon = ({
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
-
-  if (showError) {
+  if (newError && newError != "") {
+    errorMess = newError;
+  } else if (showError) {
     switch (type) {
       case "email":
         errorMess = ValidateEmail(value || "");
@@ -160,18 +169,20 @@ const TextInputCommon = ({
         />
       )}
       {/* Title */}
-      <Text
-        style={{
-          color: "gray",
-          margin: "100px",
-        }}
-      >
-        {textTitle}
-      </Text>
+      {textTitle && (
+        <Text
+          style={{
+            color: "gray",
+            paddingBottom: 3,
+          }}
+        >
+          {textTitle}
+        </Text>
+      )}
       {/* Phone */}
       {type == "phone" ? (
         <View style={[styles.textInputContainer, { width: w ?? "100%" }]}>
-          <Ionicons name={iconIon as any} size={24} color="green" />
+          <Ionicons name={iconIon as any} size={24} color="#4D5995" />
 
           <PhoneInput
             ref={phoneInput}
@@ -206,11 +217,11 @@ const TextInputCommon = ({
               <MaterialCommunityIcons
                 name={iconMaterial as any}
                 size={24}
-                color="green"
+                color="#4D5995"
               />
             )}
             {iconIon && (
-              <Ionicons name={iconIon as any} size={24} color="green" />
+              <Ionicons name={iconIon as any} size={24} color="#4D5995" />
             )}
 
             <TextInput
@@ -238,7 +249,7 @@ const TextInputCommon = ({
                 <Ionicons
                   name={showPassword ? "eye" : "eye-off"}
                   size={24}
-                  color="green"
+                  color="#4D5995"
                 />
               </TouchableOpacity>
             )}

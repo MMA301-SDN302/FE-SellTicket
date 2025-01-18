@@ -68,11 +68,11 @@ const ForgotPassword = ({ navigation }: Props) => {
               showError={showError}
             />
             <View style={styles.buttonContinue}>
-              <Button title="Send OTP" color="green" onPress={CheckAccount} />
+              <Button title="Send OTP" color="#4D5995" onPress={CheckAccount} />
             </View>
             <View style={styles.textForgotContainer}>
               <Text
-                style={{ color: "green", textDecorationLine: "underline" }}
+                style={{ color: "#4D5995", textDecorationLine: "underline" }}
                 onPress={() => {
                   navigation.reset({
                     index: 0,
