@@ -1,5 +1,3 @@
-import type { DrawerLayoutAndroid } from "react-native";
-
 export type RootStackParamList = {
   Home: undefined;
   Welcome: undefined;
@@ -10,7 +8,34 @@ export type RootStackParamList = {
   ResetPassword: undefined;
   Profile: undefined;
   MyTicket: undefined;
+  Route: {
+    from: string;
+    to: string;
+    date: string;
+    isRoundTrip: boolean;
+    travelTime: number;
+  }; // Thêm travelTime vào Route
+  Booking: {
+    from: string;
+    to: string;
+    date: string;
+    busName: string;
+    time: string;
+    price: string;
+    travelTime: number;
+  }; // Thêm travelTime vào Booking
+  PlaceOrder: {
+    from: string;
+    to: string;
+    date: string;
+    busName: string;
+    time: string;
+    price: string;
+    selectedSeats: string[];
+    travelTime: number;
+  }; // Thêm travelTime vào PlaceOrder
 };
+
 export type RootTabParamList = {
   HomeTab: undefined;
   ProfileTab: undefined;

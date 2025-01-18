@@ -15,6 +15,9 @@ import Home from "./pages/(Main)/Home/Home";
 import Profile from "./pages/(Main)/Profile/Profile";
 import { Notification } from "./pages/(Main)/Notification/Notification";
 import MyTickets from "./pages/(Main)/MyTicket/MyTicket";
+import RoutePage from "./pages/(Main)/Route/Route";
+import Booking from "./pages/(Main)/Booking/Booking";
+import PlaceOrder from "./pages/(Main)/PlaceOrder/PlaceOrder";
 import { LogBox } from "react-native";
 
 LogBox.ignoreLogs([
@@ -101,7 +104,6 @@ export default function App() {
           component={SignIn}
           options={{ headerShown: false }}
         />
-
         <Stack.Screen
           name="Profile"
           component={Profile}
@@ -110,7 +112,6 @@ export default function App() {
             headerShown: true,
           }}
         />
-
         <Stack.Screen
           name="SignUp"
           component={SignUp}
@@ -121,7 +122,6 @@ export default function App() {
           component={ForgotPassword}
           options={{ headerShown: false }}
         />
-
         <Stack.Screen
           name="Home"
           component={TabNavigatorHome}
@@ -130,6 +130,32 @@ export default function App() {
         <Stack.Screen
           name="MyTicket"
           component={MyTickets}
+          options={{
+            header: () => <Header goHome={true} />,
+            headerShown: true,
+          }}
+        />
+        <Stack.Screen
+          name="Route"
+          component={RoutePage}
+          options={{
+            header: () => <Header goHome={true} />,
+            headerShown: true,
+          }}
+        />
+
+        <Stack.Screen
+          name="Booking"
+          component={Booking}
+          options={{
+            header: () => <Header goHome={true} />,
+            headerShown: true,
+          }}
+        />
+
+        <Stack.Screen
+          name="PlaceOrder"
+          component={PlaceOrder}
           options={{
             header: () => <Header goHome={true} />,
             headerShown: true,

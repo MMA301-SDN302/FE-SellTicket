@@ -39,9 +39,9 @@ const TextInputCommon = ({
   errorMess = "",
   valueDate,
   setValueDate,
-  showError,
+  showError, // true: show error
   placeholder,
-  w,
+  w, // width
   iconMaterial,
   iconIon,
   textTitle,
@@ -63,6 +63,13 @@ const TextInputCommon = ({
   const [showPassword, setShowPassword] = useState(!(type == "password"));
   const [valid, setValid] = useState(false);
 
+  // Hàm định dạng ngày theo định dạng dd/MM/yyyy
+  const formatDate = (date: Date): string => {
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
   if (newError && newError != "") {
     errorMess = newError;
   } else if (showError) {
@@ -152,6 +159,7 @@ const TextInputCommon = ({
         style={{
           color: "gray",
           paddingBottom: 3,
+          paddingTop: textTitle ? 3 : 0,
         }}
       >
         {textTitle}
@@ -210,8 +218,8 @@ const TextInputCommon = ({
               selectionColor={"gray"}
               editable={type != "date"}
               value={
-                type == "date"
-                  ? valueDate && valueDate.toLocaleDateString()
+                type == "date" && valueDate
+                  ? formatDate(valueDate) // Hiển thị ngày dạng dd/MM/yyyy
                   : value
               }
               onChangeText={(text) => {
