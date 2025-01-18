@@ -12,9 +12,9 @@ export type RootStackParamList = {
   MyTicket: undefined;
 };
 export type RootTabParamList = {
-  Home: undefined;
-  Profile: undefined;
+  HomeTab: undefined;
+  ProfileTab: undefined;
   Logout: undefined;
-  Chat: undefined;
-  Notification: undefined;
+  ChatTab: undefined;
+  NotificationTab: undefined;
 };

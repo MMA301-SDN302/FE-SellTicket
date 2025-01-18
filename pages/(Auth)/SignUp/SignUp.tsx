@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Image, Text, Button, SafeAreaView, Alert } from "react-native";
 import type { StackNavigationProp } from "@react-navigation/stack";
 
 import type { RootStackParamList } from "../../../types/NavigationTypes";
 import { styles } from "./SignUpStyle";
 import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
-import { checkFormError } from "../../../utils";
+import {
+  checkFormError,
+  ValidateEmail,
+  ValidatePassword,
+  ValidateUserName,
+} from "../../../utils";
 
 const SignUpImg = require("../../../assets/Auth.png");
 
@@ -23,7 +28,11 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
   const [isError, setIsError] = useState(true);
 
   const CheckAccount = () => {
-    var formHasError = checkFormError([email, userName], isError);
+    var formHasError = checkFormError([
+      ValidateEmail(email),
+      ValidateUserName(userName),
+      ValidatePassword(password),
+    ]);
     if (formHasError) {
       setShowError(true);
     } else {
@@ -31,6 +40,7 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
       navigation.navigate("SignIn");
     }
   };
+
   return (
     <SafeAreaView>
       <View
@@ -65,7 +75,6 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
               value={userName}
               setValue={setUserName}
               showError={showError}
-              setIsError={setIsError}
             />
 
             {/* Email */}
@@ -74,7 +83,6 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
               value={email}
               setValue={setEmail}
               showError={showError}
-              setIsError={setIsError}
             />
             {/* Password */}
             <TextInputCommon
@@ -82,7 +90,6 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
               value={password}
               setValue={setPassword}
               showError={showError}
-              setIsError={setIsError}
             />
             {/* Extend */}
             <View style={styles.textForgotContainer}>

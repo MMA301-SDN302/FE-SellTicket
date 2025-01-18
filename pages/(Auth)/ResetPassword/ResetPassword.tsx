@@ -1,10 +1,15 @@
 import { Modal, View, Text, Alert, Button } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
+
 import { styles } from "./ResetPasswordStyle";
 import { useState } from "react";
 import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
-import { Ionicons } from "@expo/vector-icons";
-import { CheckConfirmPassword, checkFormError } from "../../../utils";
+import {
+  CheckConfirmPassword,
+  checkFormError,
+  ValidatePassword,
+} from "../../../utils";
 
 interface ResetPasswordProps {
   modalVisible: boolean;
@@ -20,29 +25,24 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [showError, setShowError] = useState(false);
-  const [isError, setIsError] = useState(true);
   const [errorMessConfirm, setErrorMessConfirm] = useState("");
 
   const CheckPassword = () => {
-    var formHasError = checkFormError(
-      [password, newPassword, confirmPassword],
-      isError
-    );
-    if (formHasError) {
+    const formHasError = checkFormError([
+      ValidatePassword(password),
+      ValidatePassword(newPassword),
+      ValidatePassword(confirmPassword),
+    ]);
+    const error = CheckConfirmPassword(newPassword, confirmPassword);
+    setErrorMessConfirm(error);
+    if (formHasError || error !== "") {
       setShowError(true);
-    } else {
-      const error = CheckConfirmPassword(newPassword, confirmPassword);
-      setErrorMessConfirm(error);
-      if (error != "") {
-        setShowError(true);
-      } else {
-        Alert.alert("Update success");
-        Reset();
-      }
+      return;
     }
+    Alert.alert("Update success");
+    Reset();
   };
   const Reset = () => {
-    setIsError(true);
     setShowError(false);
     setPassword("");
     setNewPassword("");
@@ -70,7 +70,6 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
                   showError={showError}
                   placeholder={"Input old password"}
                   textTitle="Old password"
-                  setIsError={setIsError}
                 />
                 {/* Password */}
                 <TextInputCommon
@@ -80,7 +79,6 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
                   showError={showError}
                   placeholder={"Input password"}
                   textTitle="New password"
-                  setIsError={setIsError}
                 />
                 {/* Password */}
                 <TextInputCommon
@@ -90,7 +88,6 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
                   showError={showError}
                   placeholder={"Input password"}
                   textTitle="Confirm new password"
-                  setIsError={setIsError}
                   newError={errorMessConfirm}
                 />
               </>

@@ -21,7 +21,7 @@ interface textInputCommonProps {
   setValue?: React.Dispatch<React.SetStateAction<string>>;
   valueDate?: Date;
   setValueDate?: React.Dispatch<React.SetStateAction<Date>>;
-  setIsError?: React.Dispatch<React.SetStateAction<boolean>>;
+  phoneCurrent?: React.RefObject<PhoneInput>;
   errorMess?: string;
   newError?: string;
   placeholder?: string;
@@ -36,19 +36,18 @@ const TextInputCommon = ({
   type,
   value,
   setValue,
-  errorMess,
+  errorMess = "",
   valueDate,
   setValueDate,
-  showError, //true: show error
+  showError,
   placeholder,
-  w, //width
+  w,
   iconMaterial,
   iconIon,
   textTitle,
-  setIsError,
   newError,
+  phoneCurrent = useRef<PhoneInput>(null),
 }: textInputCommonProps) => {
-  const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
 
   const onChange = (selectedDate: Date | undefined) => {
@@ -57,18 +56,13 @@ const TextInputCommon = ({
     currentDate && setValueDate && setValueDate(currentDate);
   };
 
-  const showMode = (currentMode: any) => {
-    setShow(true);
-    setMode(currentMode);
-  };
-
   const showDatepicker = () => {
-    showMode("date");
+    setShow(true);
   };
 
   const [showPassword, setShowPassword] = useState(!(type == "password"));
-  const phoneInput = useRef<PhoneInput>(null);
   const [valid, setValid] = useState(false);
+
   if (newError && newError != "") {
     errorMess = newError;
   } else if (showError) {
@@ -87,18 +81,11 @@ const TextInputCommon = ({
           errorMess = "Phone number not correct format";
         }
         break;
-      case "date":
-        if (!valueDate) {
-          errorMess = "Please select a date.";
-        }
-        break;
+
       default:
         errorMess = "";
         break;
     }
-
-    const hasError = errorMess !== "";
-    setIsError && setIsError(hasError);
   }
 
   if (!iconMaterial || !iconIon) {
@@ -174,26 +161,29 @@ const TextInputCommon = ({
         <View style={[styles.textInputContainer, { width: w ?? "100%" }]}>
           <Ionicons name={iconIon as any} size={24} color="#4D5995" />
 
-          <PhoneInput
-            ref={phoneInput}
-            containerStyle={styles.containerStylePhone}
-            countryPickerButtonStyle={styles.countryPickerButtonStyle}
-            textContainerStyle={styles.textContainerStyle}
-            textInputStyle={{
-              backgroundColor: "",
-              height: 44,
-            }}
-            defaultValue={value}
-            placeholder={"Input phone number"}
-            defaultCode="VN"
-            layout="second"
-            onChangeText={(text) => {
-              setValue && setValue(text);
-              const checkValid = phoneInput.current?.isValidNumber(text);
-              setValid(checkValid ? checkValid : false);
-            }}
-            autoFocus
-          />
+          {phoneCurrent && (
+            <PhoneInput
+              ref={phoneCurrent}
+              containerStyle={styles.containerStylePhone}
+              countryPickerButtonStyle={styles.countryPickerButtonStyle}
+              textContainerStyle={styles.textContainerStyle}
+              textInputStyle={{
+                backgroundColor: "",
+                height: 44,
+              }}
+              defaultValue={value}
+              placeholder={"Input phone number"}
+              defaultCode="VN"
+              layout="second"
+              onChangeText={(text) => {
+                const checkValid =
+                  phoneCurrent && phoneCurrent.current?.isValidNumber(text);
+                setValid(checkValid || false);
+                setValue && setValue(text);
+              }}
+              autoFocus
+            />
+          )}
         </View>
       ) : (
         <TouchableOpacity
@@ -246,7 +236,9 @@ const TextInputCommon = ({
           </>
         </TouchableOpacity>
       )}
-      <Text style={styles.textError}>{showError && errorMess}</Text>
+      {showError && (errorMess || newError) && (
+        <Text style={styles.textError}>{errorMess || newError}</Text>
+      )}
     </View>
   );
 };
