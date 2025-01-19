@@ -1,24 +1,26 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Alert } from "react-native";
+import { rootStackRoutes } from "../../types/NavigationTypes";
 import { RootStackParamList } from "../../types/NavigationTypes";
 
+// Định nghĩa kiểu NavigationProp từ RootStackParamList
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+// Lấy key từ RootStackParamList và tạo AvailableRoutes
+type AvailableRoutes = keyof RootStackParamList;
 
 const useNavigate = () => {
   const navigation = useNavigation<NavigationProp>();
 
   /**
    * Navigate to a target screen with parameters.
-   * @param {keyof RootStackParamList} target - The name of the screen to navigate to.
+   * @param {AvailableRoutes} target - The name of the screen to navigate to.
    * @param {object} params - The parameters to pass to the target screen.
    */
-  const navigateTo = <T extends keyof RootStackParamList>(
-    target: T,
-    params: RootStackParamList[T] = {} as RootStackParamList[T]
-  ) => {
+  const navigateTo = (target: AvailableRoutes, params = {}) => {
     try {
-      if (!(target in ({} as RootStackParamList))) {
+      if (!rootStackRoutes.includes(target)) {
         throw new Error(`Invalid route: ${target}`);
       }
 
