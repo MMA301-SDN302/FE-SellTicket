@@ -19,6 +19,8 @@ import RoutePage from "./pages/(Main)/Route/Route";
 import Booking from "./pages/(Main)/Booking/Booking";
 import PlaceOrder from "./pages/(Main)/PlaceOrder/PlaceOrder";
 import { LogBox } from "react-native";
+import Chat from "./pages/(Main)/Chat/Chat";
+import ChatDetail from "./components/ChatDetail/ChatDetail";
 
 LogBox.ignoreLogs([
   "Warning: Main: Support for defaultProps will be removed from function components in a future major release.",
@@ -70,7 +72,7 @@ const TabNavigatorHome = ({ navigation }: any) => (
     />
     <Tab.Screen
       name="ChatTab"
-      component={Home}
+      component={Chat}
       options={{ header: () => <Header />, headerShown: true, tabBarBadge: 2 }}
     />
     <Tab.Screen
@@ -109,6 +111,14 @@ export default function App() {
           component={Profile}
           options={{
             header: () => <Header goHome={true} />,
+            headerShown: true,
+          }}
+        />
+        <Tab.Screen
+          name="ChatDetail"
+          component={ChatDetail}
+          options={{
+            header: () => <Header back={true} />,
             headerShown: true,
           }}
         />

@@ -42,4 +42,7 @@ export type RootTabParamList = {
   Logout: undefined;
   ChatTab: undefined;
   NotificationTab: undefined;
+  ChatDetail: {
+    chatId: string;
+  };
 };
