@@ -46,3 +46,18 @@ export type RootTabParamList = {
     chatId: string;
   };
 };
+
+export const rootStackRoutes: (keyof RootStackParamList)[] = [
+  "Home",
+  "Welcome",
+  "SignIn",
+  "SignUp",
+  "Logout",
+  "ForgotPassword",
+  "ResetPassword",
+  "Profile",
+  "MyTicket",
+  "Route",
+  "Booking",
+  "PlaceOrder"
+];
