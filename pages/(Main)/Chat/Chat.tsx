@@ -99,20 +99,18 @@ const Chat: React.FC<Props> = ({ navigation }: Props) => {
 
   return (
     <PreviewLayout label="Chat">
-      <ScrollView style={styles.container}>
-        <View style={styles.container}>
-          <FlatList
-            data={chats}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.chatList}
-            onEndReachedThreshold={0.5}
-            ItemSeparatorComponent={() => (
-              <View style={{ height: 1, backgroundColor: "gray" }} />
-            )}
-          />
-        </View>
-      </ScrollView>
+      <View style={styles.container}>
+        <FlatList
+          data={chats}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.chatList}
+          onEndReachedThreshold={0.5}
+          ItemSeparatorComponent={() => (
+            <View style={{ height: 1, backgroundColor: "gray" }} />
+          )}
+        />
+      </View>
     </PreviewLayout>
   );
 };
