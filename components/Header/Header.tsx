@@ -29,7 +29,7 @@ export const Header = ({ back, goHome }: headerProps) => {
             }}
             name="arrow-back"
             size={40}
-            color={"green"}
+            color={"#0c1440"}
           />
         ) : goHome ? (
           <Ionicons
@@ -38,7 +38,7 @@ export const Header = ({ back, goHome }: headerProps) => {
             }}
             name="home-outline"
             size={40}
-            color={"green"}
+            color={"#0c1440"}
           />
         ) : (
           <Ionicons
@@ -47,7 +47,7 @@ export const Header = ({ back, goHome }: headerProps) => {
             }}
             name="ticket-outline"
             size={40}
-            color={"green"}
+            color={"#0c1440"}
           />
         )}
         <TouchableOpacity
@@ -65,7 +65,7 @@ export const Header = ({ back, goHome }: headerProps) => {
           {isPerson ? (
             <Image source={Person} style={styles.avatarStyle} />
           ) : (
-            <Ionicons name="person-circle" size={40} color={"green"} />
+            <Ionicons name="person-circle" size={40} color={"#0c1440"} />
           )}
         </TouchableOpacity>
       </View>

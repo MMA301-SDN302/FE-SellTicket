@@ -37,11 +37,11 @@ export type RootStackParamList = {
 };
 
 export type RootTabParamList = {
-  HomeTab: undefined;
+  Home: undefined;
   ProfileTab: undefined;
   Logout: undefined;
-  ChatTab: undefined;
-  NotificationTab: undefined;
+  Chat: undefined;
+  Notification: undefined;
   ChatDetail: {
     chatId: string;
   };
@@ -59,5 +59,5 @@ export const rootStackRoutes: (keyof RootStackParamList)[] = [
   "MyTicket",
   "Route",
   "Booking",
-  "PlaceOrder"
+  "PlaceOrder",
 ];
