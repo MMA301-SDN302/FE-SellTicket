@@ -22,11 +22,10 @@ interface ChatScreenProps {
   time: Date;
   avatar: string;
 }
-type ProfileProp = StackNavigationProp<RootTabParamList, "ChatTab">;
+type ProfileProp = StackNavigationProp<RootTabParamList, "Chat">;
 
 type Props = {
   navigation: ProfileProp;
-  chatInfor: ChatScreenProps;
 };
 const chats: ChatScreenProps[] = [
   {

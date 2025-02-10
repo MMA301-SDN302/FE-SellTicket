@@ -38,7 +38,6 @@ export const Ticket = (ticket: TicketProps) => (
             {ticket.Price ?? " > 100,000 VND"}
           </Text>
         </View>
-
       </View>
     </View>
     <View style={styles.inforTicket}>
@@ -99,6 +98,7 @@ export const Ticket = (ticket: TicketProps) => (
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            gap: 5,
           }}
         >
           <Text style={styles.locationText}>{ticket.Depature}</Text>
@@ -115,22 +115,6 @@ export const Ticket = (ticket: TicketProps) => (
           </View>
           <Text style={styles.locationText}>{ticket.Arrive}</Text>
         </View>
-        {ticket.Passenger && (
-          <View style={styles.detailBox}>
-            <View style={{ width: "50%" }}>
-              <Text style={styles.inforText}>Passenger</Text>
-              <Text style={styles.detailText}>{ticket.Passenger}</Text>
-            </View>
-            {ticket.seatNO && (
-              <View
-                style={{ width: "50%", alignItems: "center", display: "flex" }}
-              >
-                <Text style={styles.inforText}>Quantity</Text>
-                <Text style={styles.detailText}>{ticket?.seatNO.length}</Text>
-              </View>
-            )}
-          </View>
-        )}
       </View>
     </View>
   </View>

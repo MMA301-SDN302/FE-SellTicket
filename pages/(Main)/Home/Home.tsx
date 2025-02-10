@@ -109,7 +109,7 @@ export const Home = () => {
 
       <View style={styles.additionalInfo}>
         <View style={styles.infoItem}>
-          <MaterialIcons name="check-circle" size={20} color="green" />
+          <MaterialIcons name="check-circle" size={20} color="#0c1440" />
           <Text style={styles.infoText}>Chắc chắn có chỗ</Text>
         </View>
         <View style={styles.infoItem}>

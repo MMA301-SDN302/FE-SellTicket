@@ -33,50 +33,50 @@ const Tab = createBottomTabNavigator<RootTabParamList>();
 
 const TabNavigatorHome = ({ navigation }: any) => (
   <Tab.Navigator
-    initialRouteName={"HomeTab"}
+    initialRouteName={"Home"}
     screenOptions={({ route }) => ({
       tabBarIcon: ({}) => {
         let icon;
         switch (route.name) {
-          case "HomeTab":
-            icon = <Ionicons name="home-outline" size={24} color={"green"} />;
+          case "Home":
+            icon = <Ionicons name="home-outline" size={24} color={"#0c1440"} />;
             break;
-          case "ChatTab":
+          case "Chat":
             icon = (
-              <Ionicons name="chatbox-outline" size={24} color={"green"} />
+              <Ionicons name="chatbox-outline" size={24} color={"#0c1440"} />
             );
             break;
           case "Logout":
-            icon = <Ionicons name="log-out" size={24} color={"green"} />;
+            icon = <Ionicons name="log-out" size={24} color={"#0c1440"} />;
             break;
-          case "NotificationTab":
+          case "Notification":
             icon = (
               <Ionicons
                 name="notifications-outline"
                 size={24}
-                color={"green"}
+                color={"#0c1440"}
               />
             );
             break;
         }
         return icon;
       },
-      tabBarActiveTintColor: "green",
+      tabBarActiveTintColor: "#0c1440",
       tabBarInactiveTintColor: "gray",
     })}
   >
     <Tab.Screen
-      name="HomeTab"
+      name="Home"
       component={Home}
       options={{ header: () => <Header />, headerShown: true }}
     />
     <Tab.Screen
-      name="ChatTab"
+      name="Chat"
       component={Chat}
       options={{ header: () => <Header />, headerShown: true, tabBarBadge: 2 }}
     />
     <Tab.Screen
-      name="NotificationTab"
+      name="Notification"
       component={Notification}
       options={{ header: () => <Header />, headerShown: true, tabBarBadge: 2 }}
     />

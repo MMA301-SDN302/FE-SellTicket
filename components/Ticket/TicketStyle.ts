@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
 
     marginLeft: "15%",
-    letterSpacing: 8,
+    letterSpacing: 5,
   },
   priceBox: {
     display: "flex",
@@ -49,7 +49,7 @@ export const styles = StyleSheet.create({
     display: "flex",
   },
   priceText: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#c4230e",
   },
@@ -80,7 +80,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
 
     width: "50%",
-    gap: 10,
+    height: 150,
   },
   locationText: {
     fontWeight: "bold",

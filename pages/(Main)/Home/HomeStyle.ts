@@ -39,12 +39,12 @@ export const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 14,
-    color: "green",
+    color: "#0c1440",
     marginBottom: 5,
   },
   input: {
     borderWidth: 1,
-    borderColor: "green",
+    borderColor: "#0c1440",
     borderRadius: 5,
     padding: 10,
     marginBottom: 15,
@@ -62,7 +62,7 @@ export const styles = StyleSheet.create({
     color: "#333",
   },
   searchButton: {
-    backgroundColor: "green",
+    backgroundColor: "#0c1440",
     padding: 15,
     borderRadius: 5,
     alignItems: "center",
@@ -74,7 +74,7 @@ export const styles = StyleSheet.create({
   },
   recentSearches: {
     paddingLeft: 30,
-    marginTop: 5
+    marginTop: 5,
   },
   recentItem: {
     marginBottom: 10,
@@ -90,12 +90,12 @@ export const styles = StyleSheet.create({
 
   warning: {
     color: "#black",
-    backgroundColor: 'yellow',
+    backgroundColor: "yellow",
     fontSize: 14,
     padding: 20,
     margin: 7,
     textAlign: "center",
-    borderRadius: 10
+    borderRadius: 10,
   },
 
   additionalInfo: {
@@ -124,6 +124,6 @@ export const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    padding: 20
+    padding: 20,
   },
 });
