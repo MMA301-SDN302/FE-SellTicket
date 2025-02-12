@@ -1,11 +1,14 @@
 import { View, TouchableOpacity, Text } from "react-native";
-import type { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 import { styles } from "./PreviewLayoutStyle";
+import TextInputCommon from "../TextInputCommon/TextInputCommon";
 type PreviewLayoutProps = PropsWithChildren<{
-  label: string;
+  label?: string;
   values?: string[];
   selectedValue?: string;
   setSelectedValue?: (value: string) => void;
+  searchText?: string;
+  setSearchText?: React.Dispatch<React.SetStateAction<string>>;
 }>;
 
 export const PreviewLayout = ({
@@ -14,9 +17,19 @@ export const PreviewLayout = ({
   values,
   selectedValue,
   setSelectedValue,
+  searchText,
+  setSearchText,
 }: PreviewLayoutProps) => (
   <View style={{ padding: 10, flex: 1 }}>
-    <Text style={styles.label}>{label}</Text>
+    {label && <Text style={styles.label}>{label}</Text>}
+    {searchText !== undefined && (
+      <TextInputCommon
+        type={"search"}
+        value={searchText}
+        setValue={setSearchText}
+        showError={false}
+      />
+    )}
     <View style={styles.row}>
       {values &&
         values.map(
@@ -42,8 +55,6 @@ export const PreviewLayout = ({
             )
         )}
     </View>
-    <View style={[styles.container, { [label]: selectedValue }]}>
-      {children}
-    </View>
+    <View style={[styles.container]}>{children}</View>
   </View>
 );

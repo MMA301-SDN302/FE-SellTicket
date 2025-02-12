@@ -13,6 +13,8 @@ import type {
   RootTabParamList,
 } from "../../../types/NavigationTypes";
 import { PreviewLayout } from "../../../components/PreviewLayout/PreviewLayout";
+import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
+import { useEffect, useState } from "react";
 
 interface ChatScreenProps {
   id: string;
@@ -95,12 +97,25 @@ const Chat: React.FC<Props> = ({ navigation }: Props) => {
       </Text>
     </TouchableOpacity>
   );
+  const [searchText, setSearchText] = useState("");
+  const [filteredChats, setFilteredChats] = useState(chats);
 
+  useEffect(() => {
+    setFilteredChats(
+      chats.filter((chat) => {
+        return chat.name.toLowerCase().includes(searchText.toLowerCase());
+      })
+    );
+  }, [searchText]);
   return (
-    <PreviewLayout label="Chat">
+    <PreviewLayout
+      label=""
+      searchText={searchText}
+      setSearchText={setSearchText}
+    >
       <View style={styles.container}>
         <FlatList
-          data={chats}
+          data={filteredChats}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.chatList}

@@ -13,7 +13,14 @@ import PhoneInput from "react-native-phone-number-input";
 import { styles } from "./TextInputCommonStyle";
 import { ValidateEmail, ValidatePassword, ValidateUserName } from "../../utils";
 
-type typeTextInput = "phone" | "email" | "name" | "password" | "date" | null;
+type typeTextInput =
+  | "phone"
+  | "email"
+  | "name"
+  | "password"
+  | "date"
+  | "search"
+  | null;
 
 interface textInputCommonProps {
   type: typeTextInput;
@@ -112,6 +119,9 @@ const TextInputCommon = ({
       case "date":
         iconIon = "calendar";
         break;
+      case "search":
+        iconIon = "search";
+        break;
       default:
         break;
     }
@@ -131,6 +141,9 @@ const TextInputCommon = ({
       case "password":
         placeholder = "Input password";
         break;
+      case "search":
+        placeholder = "Search ...";
+        break;
       default:
         break;
     }
@@ -142,7 +155,7 @@ const TextInputCommon = ({
         display: "flex",
         alignItems: "flex-start",
         justifyContent: "flex-start",
-        width: "100%",
+        width: w ?? "100%",
       }}
     >
       {/* Show date */}
@@ -195,7 +208,7 @@ const TextInputCommon = ({
         </View>
       ) : (
         <TouchableOpacity
-          style={[styles.textInputContainer, { width: w ?? "100%" }]}
+          style={[styles.textInputContainer, { width: "100%" }]}
           onPress={() => {
             type == "date" && showDatepicker();
           }}
@@ -213,7 +226,11 @@ const TextInputCommon = ({
             )}
 
             <TextInput
-              style={{ width: 220, height: "100%", borderColor: "gray" }}
+              style={{
+                width: "90%",
+                height: "100%",
+                borderColor: "gray",
+              }}
               placeholder={placeholder}
               selectionColor={"gray"}
               editable={type != "date"}
