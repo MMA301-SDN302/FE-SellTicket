@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Image,
@@ -10,43 +10,37 @@ import {
 
 import { Ionicons } from "@expo/vector-icons";
 import type { StackNavigationProp } from "@react-navigation/stack";
-
 import { styles } from "./SignInStyle";
 import type { RootStackParamList } from "../../../types/NavigationTypes";
+import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
+import FormArea from "../../../components/Common/Form/FormArea";
 import { CheckUserAccount } from "../../../utils";
 import { AsyncStorageLocal } from "../../../utils/AsyncStorageLocal";
-import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
 
 const SignInImg = require("../../../assets/Auth.png");
 
-export interface AccountProps {
-  email: string;
-  setEmail: React.Dispatch<React.SetStateAction<string>>;
-  setPassword: React.Dispatch<React.SetStateAction<string>>;
-  password: string;
-}
 type SignInProp = StackNavigationProp<RootStackParamList, "SignIn">;
 
 type Props = {
   navigation: SignInProp;
 };
+type FormValues = {
+  phone: string;
+  password: string;
+};
 
 export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
   const [remember, setRemember] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showError, setShowError] = useState(false);
 
-  const CheckAccount = () => {
-    // if (CheckUserAccount(email, password)) {
-    //   AsyncStorageLocal.set("user", email);
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "Home" }],
-    });
-    // } else {
-    //   setShowError(true);
-    // }
+  const CheckAccount = (formdata: FormValues) => {
+    if (CheckUserAccount(formdata.phone, formdata.password)) {
+      AsyncStorageLocal.set("user", formdata.phone);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
+      });
+    } else {
+    }
   };
 
   return (
@@ -72,26 +66,30 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
             >
               Welcome
             </Text>
-            <Text style={{ color: "#A0A0A0", fontWeight: 400, fontSize: 18 }}>
-              Login to book ticket
-            </Text>
+            <Text
+              style={{ color: "#A0A0A0", fontWeight: 400, fontSize: 18 }}
+            ></Text>
           </View>
-
-          <>
-            {/* Email */}
+          <FormArea
+            initialValues={{ phone: "", password: "" }}
+            onSubmit={CheckAccount}
+            buttonTitle="Sign In"
+            buttonStyle={styles.buttonContinue}
+          >
             <TextInputCommon
-              type={"email"}
-              value={email}
-              setValue={setEmail}
-              showError={showError}
+              type={"phone"}
+              fieldName="phone"
+              errorName="Phone number"
+              required={true}
             />
 
             {/* Password */}
             <TextInputCommon
               type={"password"}
-              value={password}
-              setValue={setPassword}
-              showError={showError}
+              fieldName="password"
+              errorName="Password"
+              required={true}
+              minLength={6}
             />
 
             {/* Extend */}
@@ -109,33 +107,29 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
               />
               <Text style={{ color: "gray" }}>Remember me?</Text>
             </TouchableOpacity>
-
-            <View style={styles.buttonContinue}>
-              <Button title="Sign In" color="#4D5995" onPress={CheckAccount} />
-            </View>
-            <View style={styles.textForgotContainer}>
-              <Text
-                style={{
-                  color: "gray",
-                  textDecorationColor: "gray",
-                  fontStyle: "italic",
-                }}
-                onPress={() => {
-                  navigation.navigate("ForgotPassword");
-                }}
-              >
-                Forgot password?
-              </Text>
-              <Text
-                style={{ color: "#4D5995", textDecorationLine: "underline" }}
-                onPress={() => {
-                  navigation.navigate("SignUp");
-                }}
-              >
-                SignUp
-              </Text>
-            </View>
-          </>
+          </FormArea>
+          <View style={styles.textForgotContainer}>
+            <Text
+              style={{
+                color: "gray",
+                textDecorationColor: "gray",
+                fontStyle: "italic",
+              }}
+              onPress={() => {
+                navigation.navigate("ForgotPassword");
+              }}
+            >
+              Forgot password?
+            </Text>
+            <Text
+              style={{ color: "#4D5995", textDecorationLine: "underline" }}
+              onPress={() => {
+                navigation.navigate("SignUp");
+              }}
+            >
+              SignUp
+            </Text>
+          </View>
         </View>
       </View>
     </SafeAreaView>

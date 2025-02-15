@@ -13,7 +13,7 @@ import type {
   RootTabParamList,
 } from "../../../types/NavigationTypes";
 import { PreviewLayout } from "../../../components/PreviewLayout/PreviewLayout";
-import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
+import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 import { useEffect, useState } from "react";
 
 interface ChatScreenProps {

@@ -10,10 +10,10 @@ import type { StackNavigationProp } from "@react-navigation/stack";
 import type PhoneInput from "react-native-phone-number-input";
 import { Ionicons } from "@expo/vector-icons";
 
-import type { RootStackParamList } from "../../../types/NavigationTypes";
+import type { RootTabParamList } from "../../../types/NavigationTypes";
 import { styles } from "./ProfileStyle";
 import { useRef, useState } from "react";
-import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
+import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 import {
   checkFormError,
   ValidateEmail,
@@ -22,7 +22,12 @@ import {
 import ResetPassword from "../../(Auth)/ResetPassword/ResetPassword";
 const Person = require("../../../assets/favicon.png");
 
-const Profile = () => {
+type ProfileProp = StackNavigationProp<RootTabParamList, "Profile">;
+
+type Props = {
+  navigation: ProfileProp;
+};
+const Profile: React.FC<Props> = ({ navigation }: Props) => {
   const [isPerson, setIsPerson] = useState(false);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -47,6 +52,7 @@ const Profile = () => {
       setShowError(true);
     } else {
       Alert.alert("Update success");
+      navigation.navigate("Home");
     }
   };
   return (
@@ -66,35 +72,34 @@ const Profile = () => {
         {/* UserName */}
 
         <TextInputCommon
-          type={"name"}
+          type={"text"}
           textTitle="Full name"
           value={userName}
-          showError={showError}
-          setValue={setUserName}
+          fieldName={""}
+          errorName={"text"}
         />
         {/* Phone */}
         <TextInputCommon
           type={"phone"}
           textTitle="Phone number"
           value={phone}
-          showError={showError}
-          setValue={setPhone}
-          phoneCurrent={phoneCurrent}
+          fieldName={""}
+          errorName={"Phone number"}
         />
         {/* Email */}
         <TextInputCommon
           type={"email"}
           textTitle="Email"
           value={email}
-          setValue={setEmail}
-          showError={showError}
+          fieldName={""}
+          errorName={""}
         />
         <TextInputCommon
           type={"date"}
           textTitle="Day of birth"
-          valueDate={date}
-          setValueDate={setDate}
-          showError={showError}
+          value={date}
+          fieldName={""}
+          errorName={""}
         />
         {/* Gender */}
         <View style={{ width: "100%" }}>

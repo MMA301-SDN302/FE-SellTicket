@@ -4,13 +4,14 @@ import type { StackNavigationProp } from "@react-navigation/stack";
 
 import type { RootStackParamList } from "../../../types/NavigationTypes";
 import { styles } from "./SignUpStyle";
-import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
+import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 import {
   checkFormError,
-  ValidateEmail,
   ValidatePassword,
   ValidateUserName,
+  validateVietnamesePhoneNumber,
 } from "../../../utils";
+import { InputValue } from "../../../components/Common/TextInput/InputType/type";
 
 const SignUpImg = require("../../../assets/Auth.png");
 
@@ -20,18 +21,19 @@ type Props = {
   navigation: SignUpProp;
 };
 export const SignUp: React.FC<Props> = ({ navigation }) => {
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
+  const [firstName, setFirstName] = useState<InputValue>("");
+  const [lastName, setLastName] = useState<InputValue>("");
+  const [phone, setPhone] = useState<InputValue>("");
+  const [password, setPassword] = useState<InputValue>("");
   const [showError, setShowError] = useState(false);
   const [isError, setIsError] = useState(true);
 
   const CheckAccount = () => {
     var formHasError = checkFormError([
-      ValidateEmail(email),
-      ValidateUserName(userName),
-      ValidatePassword(password),
+      // ValidateUserName(firstName),
+      // ValidateUserName(lastName),
+      // validateVietnamesePhoneNumber(phone),
+      // ValidatePassword(password),
     ]);
     if (formHasError) {
       setShowError(true);
@@ -71,17 +73,24 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
           <>
             {/* UserName */}
             <TextInputCommon
-              type={"name"}
-              value={userName}
-              setValue={setUserName}
+              type={"date"}
+              value={firstName}
+              setValue={setFirstName}
+              errorMess="Please input your first name"
               showError={showError}
             />
-
+            <TextInputCommon
+              showError={showError}
+              type={"text"}
+              value={lastName}
+              setValue={setLastName}
+              errorMess="Please input your last name"
+            />
             {/* Email */}
             <TextInputCommon
-              type={"email"}
-              value={email}
-              setValue={setEmail}
+              type={"phone"}
+              value={phone}
+              setValue={setPhone}
               showError={showError}
             />
             {/* Password */}

@@ -25,13 +25,13 @@ export function ValidateUserName(userName: string) {
   }
   return "";
 }
-
-export function CheckUserAccount(email: string, password?: string) {
+//
+export function CheckUserAccount(phone: string, password?: string) {
   if (password === undefined) {
-    if (email === "admin") {
+    if (phone === "admin") {
       return true;
     }
-  } else if (email === "admin" && password === "12345678") {
+  } else if (phone === "admin" && password === "12345678") {
     return true;
   }
   return false;
@@ -50,4 +50,20 @@ export const CheckConfirmPassword = (
   confirmPassword: string
 ) => {
   return password !== confirmPassword ? "New password is not double" : "";
+};
+
+export const ValidateText = (text: string, fieldName: string) => {
+  if (text === "") {
+    return `Please input ${fieldName}`;
+  }
+  return "";
+};
+
+export const validateVietnamesePhoneNumber = (phone: string) => {
+  const re = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
+  const isValid = re.test(phone);
+  if (!isValid) {
+    return "Please input VietNam phone number";
+  }
+  return "";
 };

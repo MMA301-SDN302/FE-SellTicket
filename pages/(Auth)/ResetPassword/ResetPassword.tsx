@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { styles } from "./ResetPasswordStyle";
 import { useState } from "react";
-import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
+import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 import {
   CheckConfirmPassword,
   checkFormError,
@@ -65,30 +65,32 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
                 {/* Password */}
                 <TextInputCommon
                   type={"password"}
-                  value={password}
-                  setValue={setPassword}
-                  showError={showError}
-                  placeholder={"Input old password"}
+                  fieldName="Input old password"
+                  errorName="Password"
+                  required={true}
                   textTitle="Old password"
+                  minLength={6}
+                  value={password}
                 />
                 {/* Password */}
                 <TextInputCommon
                   type={"password"}
+                  fieldName="Input old password"
                   value={newPassword}
-                  setValue={setNewPassword}
-                  showError={showError}
-                  placeholder={"Input password"}
+                  errorName="Password"
+                  required={true}
+                  minLength={6}
                   textTitle="New password"
                 />
                 {/* Password */}
                 <TextInputCommon
                   type={"password"}
+                  fieldName="Input old password"
                   value={confirmPassword}
-                  setValue={setConfirmPassword}
-                  showError={showError}
-                  placeholder={"Input password"}
+                  errorName="Password"
+                  required={true}
+                  minLength={6}
                   textTitle="Confirm new password"
-                  newError={errorMessConfirm}
                 />
               </>
               <View style={styles.buttonContinue}>
