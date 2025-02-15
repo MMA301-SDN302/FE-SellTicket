@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View, Text, TouchableOpacity, FlatList, Switch } from "react-native";
 import { styles } from "./HomeStyle";
-import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
+import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 import { MaterialIcons } from "@expo/vector-icons";
 import useNavigate from "../../../components/Navigate/Navigate";
 

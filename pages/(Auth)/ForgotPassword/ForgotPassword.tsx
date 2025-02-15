@@ -6,7 +6,7 @@ import type { StackNavigationProp } from "@react-navigation/stack";
 import type { RootStackParamList } from "../../../types/NavigationTypes";
 import { styles } from "./ForgotPasswordStyle";
 import { CheckUserAccount } from "../../../utils";
-import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
+import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 
 const ForgotPasswordImg = require("../../../assets/Auth.png");
 

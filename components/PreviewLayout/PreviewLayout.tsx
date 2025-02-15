@@ -1,7 +1,7 @@
 import { View, TouchableOpacity, Text } from "react-native";
 import { type PropsWithChildren } from "react";
 import { styles } from "./PreviewLayoutStyle";
-import TextInputCommon from "../TextInputCommon/TextInputCommon";
+import TextInputCommon from "../Common/TextInput/TextInputCommon";
 type PreviewLayoutProps = PropsWithChildren<{
   label?: string;
   values?: string[];
