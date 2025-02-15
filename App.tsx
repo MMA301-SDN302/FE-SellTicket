@@ -18,9 +18,10 @@ import MyTickets from "./pages/(Main)/MyTicket/MyTicket";
 import RoutePage from "./pages/(Main)/Route/Route";
 import Booking from "./pages/(Main)/Booking/Booking";
 import PlaceOrder from "./pages/(Main)/PlaceOrder/PlaceOrder";
-import { LogBox } from "react-native";
+import { LogBox, View } from "react-native";
 import Chat from "./pages/(Main)/Chat/Chat";
 import ChatDetail from "./components/ChatDetail/ChatDetail";
+import "tailwindcss/tailwind.css";
 
 LogBox.ignoreLogs([
   "Warning: Main: Support for defaultProps will be removed from function components in a future major release.",
@@ -106,7 +107,7 @@ export default function App() {
           component={SignIn}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
+        <Stack.Screen 
           name="Profile"
           component={Profile}
           options={{
