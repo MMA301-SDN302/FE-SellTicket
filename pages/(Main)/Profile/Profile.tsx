@@ -22,12 +22,7 @@ import {
 import ResetPassword from "../../(Auth)/ResetPassword/ResetPassword";
 const Person = require("../../../assets/favicon.png");
 
-type ProfileProp = StackNavigationProp<RootStackParamList, "Profile">;
-
-type Props = {
-  navigation: ProfileProp;
-};
-const Profile: React.FC<Props> = ({ navigation }: Props) => {
+const Profile = () => {
   const [isPerson, setIsPerson] = useState(false);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -52,7 +47,6 @@ const Profile: React.FC<Props> = ({ navigation }: Props) => {
       setShowError(true);
     } else {
       Alert.alert("Update success");
-      navigation.navigate("Home");
     }
   };
   return (

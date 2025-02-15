@@ -38,12 +38,15 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
   const [showError, setShowError] = useState(false);
 
   const CheckAccount = () => {
-    if (CheckUserAccount(email, password)) {
-      AsyncStorageLocal.set("user", email);
-      navigation.navigate("Home");
-    } else {
-      setShowError(true);
-    }
+    // if (CheckUserAccount(email, password)) {
+    //   AsyncStorageLocal.set("user", email);
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Home" }],
+    });
+    // } else {
+    //   setShowError(true);
+    // }
   };
 
   return (

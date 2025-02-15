@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, Image } from "react-native";
+import { TouchableOpacity, View, Image, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
@@ -28,46 +28,63 @@ export const Header = ({ back, goHome }: headerProps) => {
               navigation.goBack();
             }}
             name="arrow-back"
-            size={40}
+            size={30}
             color={"#0c1440"}
           />
         ) : goHome ? (
           <Ionicons
             onPress={() => {
-              navigation.navigate("Home");
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "Home" }],
+              });
             }}
             name="home-outline"
-            size={40}
+            size={30}
             color={"#0c1440"}
           />
         ) : (
-          <Ionicons
-            onPress={() => {
-              navigation.navigate("MyTicket");
-            }}
-            name="ticket-outline"
-            size={40}
-            color={"#0c1440"}
-          />
+          <View style={styles.welcomeText}>
+            <Text style={styles.welcomeTitle}>Welcome</Text>
+            <Text
+              style={styles.userName}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              Thanh Thủy
+            </Text>
+          </View>
         )}
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("Home");
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Home" }],
+            });
           }}
         >
           <Image style={styles.logoStyle} source={Logo} />
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Profile");
-          }}
-        >
-          {isPerson ? (
-            <Image source={Person} style={styles.avatarStyle} />
-          ) : (
-            <Ionicons name="person-circle" size={40} color={"#0c1440"} />
-          )}
-        </TouchableOpacity>
+        <View style={styles.iconContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Notification");
+            }}
+          >
+            <Ionicons
+              name="notifications-outline"
+              size={30}
+              color={"#0c1440"}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Chat");
+            }}
+          >
+            <Ionicons name="chatbubble-outline" size={30} color={"#0c1440"} />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );

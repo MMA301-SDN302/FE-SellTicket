@@ -24,7 +24,7 @@ interface ChatScreenProps {
   time: Date;
   avatar: string;
 }
-type ProfileProp = StackNavigationProp<RootTabParamList, "Chat">;
+type ProfileProp = StackNavigationProp<RootStackParamList, "Chat">;
 
 type Props = {
   navigation: ProfileProp;

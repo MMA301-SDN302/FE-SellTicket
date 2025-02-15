@@ -6,8 +6,11 @@ export type RootStackParamList = {
   Logout: undefined;
   ForgotPassword: undefined;
   ResetPassword: undefined;
-  Profile: undefined;
-  MyTicket: undefined;
+  Chat: undefined;
+  Notification: undefined;
+  ChatDetail: {
+    chatId: string;
+  };
   Route: {
     from: string;
     to: string;
@@ -38,13 +41,11 @@ export type RootStackParamList = {
 
 export type RootTabParamList = {
   Home: undefined;
-  ProfileTab: undefined;
+  Profile: undefined;
   Logout: undefined;
-  Chat: undefined;
+  Map: undefined;
+  MyTicket: undefined;
   Notification: undefined;
-  ChatDetail: {
-    chatId: string;
-  };
 };
 
 export const rootStackRoutes: (keyof RootStackParamList)[] = [
@@ -55,9 +56,9 @@ export const rootStackRoutes: (keyof RootStackParamList)[] = [
   "Logout",
   "ForgotPassword",
   "ResetPassword",
-  "Profile",
-  "MyTicket",
   "Route",
   "Booking",
   "PlaceOrder",
+  "Chat",
+  "Notification",
 ];

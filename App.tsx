@@ -32,7 +32,7 @@ LogBox.ignoreLogs([
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
-const TabNavigatorHome = ({ navigation }: any) => (
+const TabNavigatorHome = () => (
   <Tab.Navigator
     initialRouteName={"Home"}
     screenOptions={({ route }) => ({
@@ -42,21 +42,17 @@ const TabNavigatorHome = ({ navigation }: any) => (
           case "Home":
             icon = <Ionicons name="home-outline" size={24} color={"#0c1440"} />;
             break;
-          case "Chat":
+          case "Map":
+            icon = <Ionicons name="map-outline" size={24} color={"#0c1440"} />;
+            break;
+          case "MyTicket":
             icon = (
-              <Ionicons name="chatbox-outline" size={24} color={"#0c1440"} />
+              <Ionicons name="ticket-outline" size={24} color={"#0c1440"} />
             );
             break;
-          case "Logout":
-            icon = <Ionicons name="log-out" size={24} color={"#0c1440"} />;
-            break;
-          case "Notification":
+          case "Profile":
             icon = (
-              <Ionicons
-                name="notifications-outline"
-                size={24}
-                color={"#0c1440"}
-              />
+              <Ionicons name="person-circle" size={24} color={"#0c1440"} />
             );
             break;
         }
@@ -72,29 +68,29 @@ const TabNavigatorHome = ({ navigation }: any) => (
       options={{ header: () => <Header />, headerShown: true }}
     />
     <Tab.Screen
-      name="Chat"
-      component={Chat}
-      options={{ header: () => <Header />, headerShown: true, tabBarBadge: 2 }}
+      name="Map"
+      component={Home}
+      options={{ header: () => <Header />, headerShown: true }}
     />
     <Tab.Screen
-      name="Notification"
-      component={Notification}
-      options={{ header: () => <Header />, headerShown: true, tabBarBadge: 2 }}
+      name="MyTicket"
+      component={MyTickets}
+      options={{ header: () => <Header />, headerShown: true }}
     />
     <Tab.Screen
-      name="Logout"
-      listeners={{
-        tabPress: (e) => {
-          e.preventDefault();
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "SignIn" }],
-          });
-        },
-      }}
-    >
-      {() => null}
-    </Tab.Screen>
+      name="Profile"
+      component={Profile}
+      // listeners={{
+      //   tabPress: (e) => {
+      //     e.preventDefault();
+      //     navigation.reset({
+      //       index: 0,
+      //       routes: [{ name: "SignIn" }],
+      //     });
+      //   },
+      // }}
+      options={{ header: () => <Header />, headerShown: true }}
+    />
   </Tab.Navigator>
 );
 
@@ -107,15 +103,23 @@ export default function App() {
           component={SignIn}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="Profile"
-          component={Profile}
+        <Stack.Screen
+          name="Notification"
+          component={Notification}
           options={{
             header: () => <Header goHome={true} />,
             headerShown: true,
           }}
         />
-        <Tab.Screen
+        <Stack.Screen
+          name="Chat"
+          component={Chat}
+          options={{
+            header: () => <Header goHome={true} />,
+            headerShown: true,
+          }}
+        />
+        <Stack.Screen
           name="ChatDetail"
           component={ChatDetail}
           options={{
@@ -138,7 +142,7 @@ export default function App() {
           component={TabNavigatorHome}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
+        <Tab.Screen
           name="MyTicket"
           component={MyTickets}
           options={{
