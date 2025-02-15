@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 95,
+    marginBottom: 32,
   },
 
   buttonContinue: {

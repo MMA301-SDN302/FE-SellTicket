@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { styles } from "./ResetPasswordStyle";
 import { useState } from "react";
-import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
+import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 import {
   CheckConfirmPassword,
   checkFormError,

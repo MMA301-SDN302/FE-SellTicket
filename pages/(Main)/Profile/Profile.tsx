@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import type { RootStackParamList } from "../../../types/NavigationTypes";
 import { styles } from "./ProfileStyle";
 import { useRef, useState } from "react";
-import TextInputCommon from "../../../components/TextInputCommon/TextInputCommon";
+import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 import {
   checkFormError,
   ValidateEmail,
