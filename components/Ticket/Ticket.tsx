@@ -27,6 +27,8 @@ export const Ticket = (ticket: TicketProps) => (
               (styles.inforText,
               { right: 5, position: "absolute", bottom: -20 })
             }
+            numberOfLines={1}
+            ellipsizeMode="tail"
           >
             Deposit
           </Text>
@@ -34,7 +36,7 @@ export const Ticket = (ticket: TicketProps) => (
           <></>
         )}
         <View style={styles.price}>
-          <Text style={styles.priceText}>
+          <Text style={styles.priceText} numberOfLines={1} ellipsizeMode="tail">
             {ticket.Price ?? " > 100,000 VND"}
           </Text>
         </View>
@@ -45,27 +47,65 @@ export const Ticket = (ticket: TicketProps) => (
         <View style={styles.detailBox}>
           {ticket.seatNO && (
             <View style={{ width: "50%" }}>
-              <Text style={styles.inforText}>SEAT NO.</Text>
-              <Text style={styles.detailText}>{ticket.seatNO}</Text>
+              <Text
+                style={styles.inforText}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                SEAT NO.
+              </Text>
+              <Text
+                style={styles.detailText}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {ticket.seatNO}
+              </Text>
             </View>
           )}
           {ticket.ticketNo && (
             <View style={{ width: "40%" }}>
-              <Text style={styles.inforText}>TICKET NO.</Text>
-              <Text style={styles.detailText}>{ticket.ticketNo}</Text>
+              <Text
+                style={styles.inforText}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                TICKET NO.
+              </Text>
+              <Text
+                style={styles.detailText}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {ticket.ticketNo}
+              </Text>
             </View>
           )}
         </View>
         <View style={styles.detailBox}>
           <View>
-            <Text style={styles.inforText}>Departure Time</Text>
-            <Text style={styles.detailText}>
+            <Text
+              style={styles.inforText}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              Departure Time
+            </Text>
+            <Text
+              style={styles.detailText}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               {ticket.DepatureTime?.toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
               })}
             </Text>
-            <Text style={styles.dateText}>
+            <Text
+              style={styles.dateText}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               {ticket.DepatureTime?.toLocaleDateString([], {
                 weekday: "short",
                 month: "short",
@@ -74,14 +114,28 @@ export const Ticket = (ticket: TicketProps) => (
             </Text>
           </View>
           <View>
-            <Text style={styles.inforText}>Arrival Time</Text>
-            <Text style={styles.detailText}>
+            <Text
+              style={styles.inforText}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              Arrival Time
+            </Text>
+            <Text
+              style={styles.detailText}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               {ticket.ArriveTime?.toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
               })}
             </Text>
-            <Text style={styles.dateText}>
+            <Text
+              style={styles.dateText}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               {ticket.ArriveTime?.toLocaleDateString([], {
                 weekday: "short",
                 month: "short",
@@ -101,7 +155,13 @@ export const Ticket = (ticket: TicketProps) => (
             gap: 5,
           }}
         >
-          <Text style={styles.locationText}>{ticket.Depature}</Text>
+          <Text
+            style={styles.locationText}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {ticket.Depature}
+          </Text>
           <View
             style={{
               display: "flex",
@@ -113,7 +173,13 @@ export const Ticket = (ticket: TicketProps) => (
             <Ionicons name="bus" size={45} color={"#42509a"} />
             <Text style={{ color: "#3e5221", fontWeight: "500" }}>TO</Text>
           </View>
-          <Text style={styles.locationText}>{ticket.Arrive}</Text>
+          <Text
+            style={styles.locationText}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {ticket.Arrive}
+          </Text>
         </View>
       </View>
     </View>

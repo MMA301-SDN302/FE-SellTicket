@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
     width: "90%",
     backgroundColor: "#fff",
     borderRadius: 10,
+    overflow: "hidden",
   },
   header: {
     display: "flex",
@@ -59,11 +60,11 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
 
-    width: "50%",
+    maxWidth: "60%",
     borderRightWidth: 1,
     borderStyle: "dashed",
     height: "auto",
-    gap: 20,
+    gap: 8,
   },
   detailBox: {
     display: "flex",
@@ -79,12 +80,12 @@ export const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
 
-    width: "50%",
+    width: "40%",
     height: 150,
   },
   locationText: {
     fontWeight: "bold",
-    fontSize: 24,
+    fontSize: 20,
     color: "#0c1440",
   },
   inforTicket: {
@@ -95,11 +96,11 @@ export const styles = StyleSheet.create({
     width: "100%",
   },
   inforText: {
-    fontSize: 18,
+    fontSize: 16,
     color: "gray",
   },
   detailText: {
-    fontSize: 18,
+    fontSize: 14,
     color: "#0c1440",
     fontWeight: "bold",
     width: "auto",
