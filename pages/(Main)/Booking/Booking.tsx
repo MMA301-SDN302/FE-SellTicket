@@ -1,10 +1,11 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Button, StyleSheet } from "react-native";
-import { styles } from "./BookingStyle"; // Sử dụng các style đã tạo từ trước
+import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { styles } from "./BookingStyle";
 import type { RouteProp } from "@react-navigation/native";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import type { RootStackParamList } from "../../../types/NavigationTypes";
 import useNavigate from "../../../components/Navigate/Navigate";
+import { MaterialIcons } from "@expo/vector-icons";
 
 type BookingScreenProp = StackNavigationProp<RootStackParamList, "Booking">;
 type BookingScreenRouteProp = RouteProp<RootStackParamList, "Booking">;
@@ -14,42 +15,39 @@ type Props = {
   route: BookingScreenRouteProp;
 };
 
-// Dữ liệu ghế xe (vẫn giữ nguyên như cũ)
-const seats = [
-  ...Array(10).fill(null).map((_, index) => ({
-    id: `A${index + 1}`,
-    seatNumber: `A${index + 1}`,
-    isAvailable: true,
-  })),
-  ...Array(10).fill(null).map((_, index) => ({
-    id: `B${index + 1}`,
-    seatNumber: `B${index + 1}`,
-    isAvailable: true,
-  })),
-  ...Array(10).fill(null).map((_, index) => ({
-    id: `C${index + 1}`,
-    seatNumber: `C${index + 1}`,
-    isAvailable: true,
-  })),
-];
+// Hàm tạo danh sách ghế xe
+const generateSeats = (floor: number) =>
+  ["A", "B", "C"].flatMap((row) =>
+    Array.from({ length: 8 }, (_, index) => ({
+      id: `${row}${index + 1 + (floor - 1) * 8}`,
+      seatNumber: `${row}${index + 1 + (floor - 1) * 8}`,
+      isAvailable: true,
+    }))
+  );
 
-const Booking = ({ navigation, route }: Props) => {
-  // Lấy thông tin từ route.params, bao gồm travelTime
-  const { from = '', to = '', date = '', busName = '', time = '', price = '', travelTime = 0 } = route.params || {};
+const seatsFloor1 = generateSeats(1);
+const seatsFloor2 = generateSeats(2);
+
+const Booking = ({ route }: Props) => {
+  const { from = "", to = "", date = "", busName = "", time = "", price = "", travelTime = 0 } = route.params || {};
   
-  const [selectedSeats, setSelectedSeats] = React.useState<string[]>([]); // Giữ danh sách ghế đã chọn
+  const [selectedSeats, setSelectedSeats] = React.useState<string[]>([]);
   const { navigateTo } = useNavigate();
 
   const handleSelectSeat = (seatId: string) => {
-    if (selectedSeats.includes(seatId)) {
-      setSelectedSeats(selectedSeats.filter((id) => id !== seatId)); // Bỏ chọn ghế
-    } else {
-      setSelectedSeats([...selectedSeats, seatId]); // Chọn ghế
-    }
+    setSelectedSeats((prevSeats) =>
+      prevSeats.includes(seatId)
+        ? prevSeats.filter((id) => id !== seatId)
+        : [...prevSeats, seatId]
+    );
   };
 
   const handleFinishBooking = () => {
-    // Chuyển tất cả các thông tin đã chọn đến trang PlaceOrder
+    if (selectedSeats.length === 0) {
+      Alert.alert("Thông báo", "Vui lòng chọn ít nhất 1 chỗ ngồi!");
+      return;
+    }
+
     navigateTo("PlaceOrder", {
       from,
       to,
@@ -57,7 +55,7 @@ const Booking = ({ navigation, route }: Props) => {
       busName,
       time,
       price,
-      travelTime,  // Truyền travelTime
+      travelTime,
       selectedSeats,
     });
   };
@@ -66,7 +64,7 @@ const Booking = ({ navigation, route }: Props) => {
     const isSelected = selectedSeats.includes(item.id);
     return (
       <TouchableOpacity
-        key={item.id} 
+        key={item.id}
         style={[
           styles.seatItem,
           item.isAvailable ? styles.available : styles.unavailable,
@@ -82,31 +80,55 @@ const Booking = ({ navigation, route }: Props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Chọn Ghế</Text>
-      <Text style={styles.subHeader}>
-        {from} → {to} - Ngày: {date} - Xe: {busName} - Thời gian: {time} - Thời gian di chuyển: {travelTime} giờ
-      </Text>
-
-      {/* Tạo giao diện xe giường nằm */}
-      <View style={styles.busContainer}>
-        <View style={styles.leftSide}>
-          {seats.slice(0, 10).map((item) => renderSeat(item))}
-        </View>
-        <View style={styles.middleSpace}>
-          <Text style={styles.hallway}>Hành Lang</Text>
-        </View>
-        <View style={styles.centerSide}>
-          {seats.slice(10, 20).map((item) => renderSeat(item))}
-        </View>
-        <View style={styles.middleSpace}>
-          <Text style={styles.hallway}>Hành Lang</Text>
-        </View>
-        <View style={styles.rightSide}>
-          {seats.slice(20, 30).map((item) => renderSeat(item))}
-        </View>
+      {/* Header */}
+      <View style={styles.headerContainer}>
+        <MaterialIcons name="event-seat" size={28} color="#fff" />
+        <Text style={styles.header}>Chọn Ghế</Text>
       </View>
 
-      <Button title="Hoàn tất" onPress={handleFinishBooking} />
+      {/* Thông tin chuyến xe */}
+      <View style={styles.infoBox}>
+        <Text style={styles.subHeader}>
+          <MaterialIcons name="place" size={18} color="#007bff" /> 
+          <Text style={styles.highlight}> {from}</Text> → 
+          <Text style={styles.highlight}> {to}</Text> {"\n"}
+
+          <MaterialIcons name="event" size={18} color="#007bff" /> Ngày:  
+          <Text style={styles.highlight}> {date}</Text> {"\n"}
+
+          <MaterialIcons name="directions-bus" size={18} color="#007bff" /> Xe:  
+          <Text style={styles.highlight}> {busName}</Text> {"\n"}
+
+          <MaterialIcons name="access-time" size={18} color="#007bff" /> Thời gian:  
+          <Text style={styles.highlight}> {time}</Text> {"\n"}
+
+          <MaterialIcons name="hourglass-bottom" size={18} color="#007bff" /> Di chuyển:  
+          <Text style={styles.highlight}> {travelTime} giờ</Text>
+        </Text>
+      </View>
+
+      {/* Sơ đồ ghế */}
+      <View style={styles.sheetStyles}>
+        {[{ floor: 1, seats: seatsFloor1 }, { floor: 2, seats: seatsFloor2 }].map(({ floor, seats }) => (
+          <View key={floor} style={styles.floorContainer}>
+            <Text style={styles.floorLabel}>Tầng {floor}</Text>
+            <View style={styles.busContainer}>
+              {[0, 8, 16].map((startIdx) => (
+                <React.Fragment key={startIdx}>
+                  <View style={styles.seatRow}>{seats.slice(startIdx, startIdx + 8).map(renderSeat)}</View>
+                  {startIdx < 16 && <View style={styles.narrowHallway} />}
+                </React.Fragment>
+              ))}
+            </View>
+          </View>
+        ))}
+      </View>
+
+      {/* Nút hoàn tất */}
+      <TouchableOpacity style={styles.finishButton} onPress={handleFinishBooking}>
+        <MaterialIcons name="check-circle" size={22} color="#fff" />
+        <Text style={styles.finishButtonText}>Hoàn tất</Text>
+      </TouchableOpacity>
     </View>
   );
 };
