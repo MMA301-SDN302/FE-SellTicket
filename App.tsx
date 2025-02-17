@@ -22,6 +22,7 @@ import { Alert, LogBox } from "react-native";
 import Chat from "./pages/(Main)/Chat/Chat";
 import ChatDetail from "./components/ChatDetail/ChatDetail";
 import "tailwindcss/tailwind.css";
+import { AsyncStorageLocal } from "./utils/AsyncStorageLocal";
 
 LogBox.ignoreLogs([
   "Warning: Main: Support for defaultProps will be removed from function components in a future major release.",
@@ -101,11 +102,13 @@ const TabNavigatorHome = ({ navigation }: any) => (
               { text: "Cancel", style: "cancel" },
               {
                 text: "OK",
-                onPress: () =>
+                onPress: () => {
                   navigation.reset({
                     index: 0,
                     routes: [{ name: "SignIn" }],
                   }),
+                    AsyncStorageLocal.remove("user");
+                },
               },
             ],
             { cancelable: false }
@@ -119,7 +122,7 @@ const TabNavigatorHome = ({ navigation }: any) => (
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="SignIn">
+      <Stack.Navigator initialRouteName="HomeStack">
         <Stack.Screen
           name="SignIn"
           component={SignIn}
