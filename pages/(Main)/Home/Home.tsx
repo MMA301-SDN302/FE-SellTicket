@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { View, Text, TouchableOpacity, FlatList, Switch } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  Switch,
+  ScrollView,
+} from "react-native";
 import { styles } from "./HomeStyle";
 import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 import useNavigate from "../../../components/Navigate/Navigate";
@@ -28,7 +35,11 @@ export const Home = () => {
 
   const { navigateTo } = useNavigate();
 
-  const handleRecentSearchClick = (search: { from: string; to: string; date: string }) => {
+  const handleRecentSearchClick = (search: {
+    from: string;
+    to: string;
+    date: string;
+  }) => {
     setFrom(search.from);
     setTo(search.to);
 
@@ -57,96 +68,120 @@ export const Home = () => {
   };
 
   return (
-    <View style={styles.homeContainer}>
-      <Image 
-        source={{ uri: "https://s3-alpha-sig.figma.com/img/aa6f/4ca4/e50c079c9646512591856a96f337f9f8?Expires=1740355200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=CUmf73QXMmyF3vu7HsGrOyIXI87c~1BmJb2dAfLqn8KZHcfRIMlGW5RBmKTsGSEl99tKCQ2FwH1Pqp7iNNUq-K0Bp3858gZi-70No7kIWbVJ4YERhERArHekr-UYECrBIGEo775qg5-9KeUlLHQP8azYgYOhBc7VLouavY9~xvOFNuD9iF-~x5Us~md6pZrUu782vnFvUiYaJcEUr4c1u8rATz73vySgUYGs6lkKcFhLOljk--JX-hYXDCyDRhh4lnpso5-ZFj8w18an8dbY7CpRZu2q1mBaD-VTp4MGJfisGFfbQxe-aRcL9vssb-Qe-jJWsNu3TrNm3Jw1NsfjIA__" }} 
-        style={styles.headerImage}
+    <ScrollView>
+      <View style={styles.homeContainer}>
+        <Image
+          source={{
+            uri: "https://s3-alpha-sig.figma.com/img/aa6f/4ca4/e50c079c9646512591856a96f337f9f8?Expires=1740355200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=CUmf73QXMmyF3vu7HsGrOyIXI87c~1BmJb2dAfLqn8KZHcfRIMlGW5RBmKTsGSEl99tKCQ2FwH1Pqp7iNNUq-K0Bp3858gZi-70No7kIWbVJ4YERhERArHekr-UYECrBIGEo775qg5-9KeUlLHQP8azYgYOhBc7VLouavY9~xvOFNuD9iF-~x5Us~md6pZrUu782vnFvUiYaJcEUr4c1u8rATz73vySgUYGs6lkKcFhLOljk--JX-hYXDCyDRhh4lnpso5-ZFj8w18an8dbY7CpRZu2q1mBaD-VTp4MGJfisGFfbQxe-aRcL9vssb-Qe-jJWsNu3TrNm3Jw1NsfjIA__",
+          }}
+          style={styles.headerImage}
         />
 
-      <View style={styles.searchForm}>
-        <TextInputCommon
-          textTitle="Nơi xuất phát:"
-          placeholder="Nhập nơi xuất phát"
-          value={from}
-          onChangeText={setFrom}
-          type="text"
-          error={isError && !from ? "Vui lòng nhập nơi xuất phát." : ""}
-          fieldName="from"
-          errorName="fromError"
-        />
-        <TextInputCommon
-          textTitle="Bạn muốn đi đâu?"
-          placeholder="Nhập nơi đến"
-          value={to}
-          onChangeText={setTo}
-          type="text"
-          error={isError && !to ? "Vui lòng nhập nơi đến." : ""}
-          fieldName="to"
-          errorName="toError"
-        />
-        <TextInputCommon
-          textTitle="Ngày đi"
-          placeholder="Chọn ngày"
-          value={date.toISOString().split("T")[0]} 
-          onChangeText={(text) => setDate(new Date(text))} 
-          type="date"
-          error={isError && !date ? "Vui lòng chọn ngày đi." : ""}
-          fieldName="date"
-          errorName="dateError"
-        />
-        <View style={styles.roundTrip}>
-          <Text style={styles.roundTripLabel}>Khứ hồi</Text>
-          <Switch
-            value={isRoundTrip}
-            onValueChange={setIsRoundTrip}
-            trackColor={{ false: "#ddd", true: "#007bff" }}
-            thumbColor="#fff"
+        <View style={styles.searchForm}>
+          <TextInputCommon
+            textTitle="Nơi xuất phát:"
+            placeholder="Nhập nơi xuất phát"
+            value={from}
+            onChangeText={setFrom}
+            type="text"
+            error={isError && !from ? "Vui lòng nhập nơi xuất phát." : ""}
+            fieldName="from"
+            errorName="fromError"
           />
-        </View>
-        <TouchableOpacity style={styles.searchButton} onPress={handleSubmit}>
-          <Text style={styles.searchButtonText}>Tìm kiếm</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.infoContainer}>
-        <View style={styles.infoItem}>
-          <MaterialIcons name="check-circle" size={16} color="#0c1440" style={styles.infoIcon} />
-          <Text style={styles.infoText}>Chắc chắn có chỗ</Text>
-        </View>
-        <View style={styles.infoItem}>
-          <MaterialIcons name="support-agent" size={16} color="blue" style={styles.infoIcon} />
-          <Text style={styles.infoText}>Hỗ trợ 24/7</Text>
-        </View>
-        <View style={styles.infoItem}>
-          <MaterialIcons name="local-offer" size={16} color="red" style={styles.infoIcon} />
-          <Text style={styles.infoText}>Nhiều ưu đãi</Text>
-        </View>
-        <View style={styles.infoItem}>
-          <MaterialIcons name="credit-card" size={16} color="purple" style={styles.infoIcon} />
-          <Text style={styles.infoText}>Thanh toán đa dạng</Text>
-        </View>
-      </View>
-
-      <Text style={styles.sectionTitle}>Tìm kiếm gần đây</Text>
-
-      <FlatList
-        style={styles.recentSearches}
-        contentContainerStyle={{ paddingBottom: 20 }}
-        data={recentSearches}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => handleRecentSearchClick(item)}
-            style={styles.recentItem}
-          >
-            <Text style={styles.recentText}>
-              {item.from} → {item.to}
-            </Text>
-            <Text style={styles.recentDate}>{item.date}</Text>
+          <TextInputCommon
+            textTitle="Bạn muốn đi đâu?"
+            placeholder="Nhập nơi đến"
+            value={to}
+            onChangeText={setTo}
+            type="text"
+            error={isError && !to ? "Vui lòng nhập nơi đến." : ""}
+            fieldName="to"
+            errorName="toError"
+          />
+          <TextInputCommon
+            textTitle="Ngày đi"
+            placeholder="Chọn ngày"
+            value={date.toISOString().split("T")[0]}
+            onChangeText={(text) => setDate(new Date(text))}
+            type="date"
+            error={isError && !date ? "Vui lòng chọn ngày đi." : ""}
+            fieldName="date"
+            errorName="dateError"
+          />
+          <View style={styles.roundTrip}>
+            <Text style={styles.roundTripLabel}>Khứ hồi</Text>
+            <Switch
+              value={isRoundTrip}
+              onValueChange={setIsRoundTrip}
+              trackColor={{ false: "#ddd", true: "#007bff" }}
+              thumbColor="#fff"
+            />
+          </View>
+          <TouchableOpacity style={styles.searchButton} onPress={handleSubmit}>
+            <Text style={styles.searchButtonText}>Tìm kiếm</Text>
           </TouchableOpacity>
-        )}
-      />
-    </View>
+        </View>
+
+        <View style={styles.infoContainer}>
+          <View style={styles.infoItem}>
+            <MaterialIcons
+              name="check-circle"
+              size={16}
+              color="#0c1440"
+              style={styles.infoIcon}
+            />
+            <Text style={styles.infoText}>Chắc chắn có chỗ</Text>
+          </View>
+          <View style={styles.infoItem}>
+            <MaterialIcons
+              name="support-agent"
+              size={16}
+              color="blue"
+              style={styles.infoIcon}
+            />
+            <Text style={styles.infoText}>Hỗ trợ 24/7</Text>
+          </View>
+          <View style={styles.infoItem}>
+            <MaterialIcons
+              name="local-offer"
+              size={16}
+              color="red"
+              style={styles.infoIcon}
+            />
+            <Text style={styles.infoText}>Nhiều ưu đãi</Text>
+          </View>
+          <View style={styles.infoItem}>
+            <MaterialIcons
+              name="credit-card"
+              size={16}
+              color="purple"
+              style={styles.infoIcon}
+            />
+            <Text style={styles.infoText}>Thanh toán đa dạng</Text>
+          </View>
+        </View>
+
+        <Text style={styles.sectionTitle}>Tìm kiếm gần đây</Text>
+
+        <FlatList
+          style={styles.recentSearches}
+          contentContainerStyle={{ paddingBottom: 20 }}
+          data={recentSearches}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => handleRecentSearchClick(item)}
+              style={styles.recentItem}
+            >
+              <Text style={styles.recentText}>
+                {item.from} → {item.to}
+              </Text>
+              <Text style={styles.recentDate}>{item.date}</Text>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
+    </ScrollView>
   );
 };
 

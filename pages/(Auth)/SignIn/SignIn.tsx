@@ -6,6 +6,7 @@ import {
   Button,
   TouchableOpacity,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -32,19 +33,10 @@ type FormValues = {
 export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
   const [remember, setRemember] = useState(false);
 
-  const CheckAccount = (formdata: FormValues) => {
-    if (CheckUserAccount(formdata.phone, formdata.password)) {
-      AsyncStorageLocal.set("user", formdata.phone);
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "Home" }],
-      });
-    } else {
-    }
-  };
+  const CheckAccount = (formdata: FormValues) => {};
 
   return (
-    <SafeAreaView>
+    <ScrollView>
       <View
         style={{
           display: "flex",
@@ -132,6 +124,6 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
           </View>
         </View>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };

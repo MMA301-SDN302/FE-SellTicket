@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
 import { styles } from "./BookingStyle";
 import type { RouteProp } from "@react-navigation/native";
 import type { StackNavigationProp } from "@react-navigation/stack";
@@ -29,8 +29,16 @@ const seatsFloor1 = generateSeats(1);
 const seatsFloor2 = generateSeats(2);
 
 const Booking = ({ route }: Props) => {
-  const { from = "", to = "", date = "", busName = "", time = "", price = "", travelTime = 0 } = route.params || {};
-  
+  const {
+    from = "",
+    to = "",
+    date = "",
+    busName = "",
+    time = "",
+    price = "",
+    travelTime = 0,
+  } = route.params || {};
+
   const [selectedSeats, setSelectedSeats] = React.useState<string[]>([]);
   const { navigateTo } = useNavigate();
 
@@ -79,57 +87,74 @@ const Booking = ({ route }: Props) => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.headerContainer}>
-        <MaterialIcons name="event-seat" size={28} color="#fff" />
-        <Text style={styles.header}>Chọn Ghế</Text>
-      </View>
+    <ScrollView>
+      <View style={styles.container}>
+        {/* Header */}
+        <View style={styles.headerContainer}>
+          <MaterialIcons name="event-seat" size={28} color="#fff" />
+          <Text style={styles.header}>Chọn Ghế</Text>
+        </View>
 
-      {/* Thông tin chuyến xe */}
-      <View style={styles.infoBox}>
-        <Text style={styles.subHeader}>
-          <MaterialIcons name="place" size={18} color="#007bff" /> 
-          <Text style={styles.highlight}> {from}</Text> → 
-          <Text style={styles.highlight}> {to}</Text> {"\n"}
+        {/* Thông tin chuyến xe */}
+        <View style={styles.infoBox}>
+          <Text style={styles.subHeader}>
+            <MaterialIcons name="place" size={18} color="#007bff" />
+            <Text style={styles.highlight}> {from}</Text> →
+            <Text style={styles.highlight}> {to}</Text> {"\n"}
+            <MaterialIcons name="event" size={18} color="#007bff" /> Ngày:
+            <Text style={styles.highlight}> {date}</Text> {"\n"}
+            <MaterialIcons
+              name="directions-bus"
+              size={18}
+              color="#007bff"
+            />{" "}
+            Xe:
+            <Text style={styles.highlight}> {busName}</Text> {"\n"}
+            <MaterialIcons name="access-time" size={18} color="#007bff" /> Thời
+            gian:
+            <Text style={styles.highlight}> {time}</Text> {"\n"}
+            <MaterialIcons
+              name="hourglass-bottom"
+              size={18}
+              color="#007bff"
+            />{" "}
+            Di chuyển:
+            <Text style={styles.highlight}> {travelTime} giờ</Text>
+          </Text>
+        </View>
 
-          <MaterialIcons name="event" size={18} color="#007bff" /> Ngày:  
-          <Text style={styles.highlight}> {date}</Text> {"\n"}
-
-          <MaterialIcons name="directions-bus" size={18} color="#007bff" /> Xe:  
-          <Text style={styles.highlight}> {busName}</Text> {"\n"}
-
-          <MaterialIcons name="access-time" size={18} color="#007bff" /> Thời gian:  
-          <Text style={styles.highlight}> {time}</Text> {"\n"}
-
-          <MaterialIcons name="hourglass-bottom" size={18} color="#007bff" /> Di chuyển:  
-          <Text style={styles.highlight}> {travelTime} giờ</Text>
-        </Text>
-      </View>
-
-      {/* Sơ đồ ghế */}
-      <View style={styles.sheetStyles}>
-        {[{ floor: 1, seats: seatsFloor1 }, { floor: 2, seats: seatsFloor2 }].map(({ floor, seats }) => (
-          <View key={floor} style={styles.floorContainer}>
-            <Text style={styles.floorLabel}>Tầng {floor}</Text>
-            <View style={styles.busContainer}>
-              {[0, 8, 16].map((startIdx) => (
-                <React.Fragment key={startIdx}>
-                  <View style={styles.seatRow}>{seats.slice(startIdx, startIdx + 8).map(renderSeat)}</View>
-                  {startIdx < 16 && <View style={styles.narrowHallway} />}
-                </React.Fragment>
-              ))}
+        {/* Sơ đồ ghế */}
+        <View style={styles.sheetStyles}>
+          {[
+            { floor: 1, seats: seatsFloor1 },
+            { floor: 2, seats: seatsFloor2 },
+          ].map(({ floor, seats }) => (
+            <View key={floor} style={styles.floorContainer}>
+              <Text style={styles.floorLabel}>Tầng {floor}</Text>
+              <View style={styles.busContainer}>
+                {[0, 8, 16].map((startIdx) => (
+                  <React.Fragment key={startIdx}>
+                    <View style={styles.seatRow}>
+                      {seats.slice(startIdx, startIdx + 8).map(renderSeat)}
+                    </View>
+                    {startIdx < 16 && <View style={styles.narrowHallway} />}
+                  </React.Fragment>
+                ))}
+              </View>
             </View>
-          </View>
-        ))}
-      </View>
+          ))}
+        </View>
 
-      {/* Nút hoàn tất */}
-      <TouchableOpacity style={styles.finishButton} onPress={handleFinishBooking}>
-        <MaterialIcons name="check-circle" size={22} color="#fff" />
-        <Text style={styles.finishButtonText}>Hoàn tất</Text>
-      </TouchableOpacity>
-    </View>
+        {/* Nút hoàn tất */}
+        <TouchableOpacity
+          style={styles.finishButton}
+          onPress={handleFinishBooking}
+        >
+          <MaterialIcons name="check-circle" size={22} color="#fff" />
+          <Text style={styles.finishButtonText}>Hoàn tất</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 };
 
