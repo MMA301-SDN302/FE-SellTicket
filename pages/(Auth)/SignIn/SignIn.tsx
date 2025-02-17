@@ -33,10 +33,19 @@ type FormValues = {
 export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
   const [remember, setRemember] = useState(false);
 
-  const CheckAccount = (formdata: FormValues) => {};
+  const CheckAccount = (formdata: FormValues) => {
+    if (CheckUserAccount(formdata.phone, formdata.password)) {
+      AsyncStorageLocal.set("user", formdata.phone);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
+      });
+    } else {
+    }
+  };
 
   return (
-    <ScrollView>
+    <SafeAreaView>
       <View
         style={{
           display: "flex",
@@ -124,6 +133,6 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
           </View>
         </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
