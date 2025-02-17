@@ -18,7 +18,7 @@ import MyTickets from "./pages/(Main)/MyTicket/MyTicket";
 import RoutePage from "./pages/(Main)/Route/Route";
 import Booking from "./pages/(Main)/Booking/Booking";
 import PlaceOrder from "./pages/(Main)/PlaceOrder/PlaceOrder";
-import { LogBox, View } from "react-native";
+import { Alert, LogBox } from "react-native";
 import Chat from "./pages/(Main)/Chat/Chat";
 import ChatDetail from "./components/ChatDetail/ChatDetail";
 import "tailwindcss/tailwind.css";
@@ -34,7 +34,7 @@ LogBox.ignoreLogs([
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
-const TabNavigatorHome = () => (
+const TabNavigatorHome = ({ navigation }: any) => (
   <Tab.Navigator
     initialRouteName={"Home"}
     screenOptions={({ route }) => ({
@@ -54,8 +54,11 @@ const TabNavigatorHome = () => (
             break;
           case "Profile":
             icon = (
-              <Ionicons name="person-circle" size={24} color={"#0c1440"} />
+              <Ionicons name="person-outline" size={24} color={"#0c1440"} />
             );
+            break;
+          case "Logout":
+            icon = <Ionicons name="log-out" size={24} color={"#0c1440"} />;
             break;
         }
         return icon;
@@ -82,16 +85,33 @@ const TabNavigatorHome = () => (
     <Tab.Screen
       name="Profile"
       component={Profile}
-      // listeners={{
-      //   tabPress: (e) => {
-      //     e.preventDefault();
-      //     navigation.reset({
-      //       index: 0,
-      //       routes: [{ name: "SignIn" }],
-      //     });
-      //   },
-      // }}
       options={{ header: () => <Header />, headerShown: true }}
+    />
+    <Tab.Screen
+      name="Logout"
+      component={() => null}
+      listeners={{
+        tabPress: (e) => {
+          e.preventDefault();
+
+          Alert.alert(
+            "Logout",
+            "Are you sure you want to log out?",
+            [
+              { text: "Cancel", style: "cancel" },
+              {
+                text: "OK",
+                onPress: () =>
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: "SignIn" }],
+                  }),
+              },
+            ],
+            { cancelable: false }
+          );
+        },
+      }}
     />
   </Tab.Navigator>
 );
@@ -140,7 +160,7 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Home"
+          name="HomeStack"
           component={TabNavigatorHome}
           options={{ headerShown: false }}
         />

@@ -71,6 +71,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
                   textTitle="Old password"
                   minLength={6}
                   value={password}
+                  onChangeText={setPassword}
                 />
                 {/* Password */}
                 <TextInputCommon
@@ -81,6 +82,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
                   required={true}
                   minLength={6}
                   textTitle="New password"
+                  onChangeText={setNewPassword}
                 />
                 {/* Password */}
                 <TextInputCommon
@@ -91,6 +93,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
                   required={true}
                   minLength={6}
                   textTitle="Confirm new password"
+                  onChangeText={setConfirmPassword}
                 />
               </>
               <View style={styles.buttonContinue}>

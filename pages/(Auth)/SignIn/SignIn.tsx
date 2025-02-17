@@ -38,7 +38,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
       AsyncStorageLocal.set("user", formdata.phone);
       navigation.reset({
         index: 0,
-        routes: [{ name: "Home" }],
+        routes: [{ name: "HomeStack" }],
       });
     } else {
     }

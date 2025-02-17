@@ -1,5 +1,5 @@
 export type RootStackParamList = {
-  Home: undefined;
+  HomeStack: undefined;
   Welcome: undefined;
   SignIn: undefined;
   SignUp: undefined;
@@ -49,7 +49,7 @@ export type RootTabParamList = {
 };
 
 export const rootStackRoutes: (keyof RootStackParamList)[] = [
-  "Home",
+  "HomeStack",
   "Welcome",
   "SignIn",
   "SignUp",
