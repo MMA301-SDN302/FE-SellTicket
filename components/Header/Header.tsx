@@ -36,7 +36,7 @@ export const Header = ({ back, goHome }: headerProps) => {
             onPress={() => {
               navigation.reset({
                 index: 0,
-                routes: [{ name: "Home" }],
+                routes: [{ name: "HomeStack" }],
               });
             }}
             name="home-outline"
@@ -59,7 +59,7 @@ export const Header = ({ back, goHome }: headerProps) => {
           onPress={() => {
             navigation.reset({
               index: 0,
-              routes: [{ name: "Home" }],
+              routes: [{ name: "HomeStack" }],
             });
           }}
         >

@@ -75,6 +75,7 @@ const Profile: React.FC<Props> = ({ navigation }: Props) => {
           type={"text"}
           textTitle="Full name"
           value={userName}
+          onChangeText={setUserName}
           fieldName={""}
           errorName={"text"}
         />
@@ -83,6 +84,7 @@ const Profile: React.FC<Props> = ({ navigation }: Props) => {
           type={"phone"}
           textTitle="Phone number"
           value={phone}
+          onChangeText={setPhone}
           fieldName={""}
           errorName={"Phone number"}
         />
@@ -91,6 +93,7 @@ const Profile: React.FC<Props> = ({ navigation }: Props) => {
           type={"email"}
           textTitle="Email"
           value={email}
+          onChangeText={setEmail}
           fieldName={""}
           errorName={""}
         />
@@ -98,6 +101,7 @@ const Profile: React.FC<Props> = ({ navigation }: Props) => {
           type={"date"}
           textTitle="Day of birth"
           value={date}
+          onChangeText={(text) => setDate(new Date(text))}
           fieldName={""}
           errorName={""}
         />
