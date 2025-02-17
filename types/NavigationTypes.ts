@@ -1,3 +1,4 @@
+import { ROLE_NAME } from './../utils/constant';
 export type RootStackParamList = {
   Home: undefined;
   Welcome: undefined;
@@ -36,7 +37,20 @@ export type RootStackParamList = {
     price: string;
     selectedSeats: string[];
     travelTime: number;
-  }; // Thêm travelTime vào PlaceOrder
+  }; 
+    AdminPage: undefined;
+    ProductDashboard: undefined;
+    UserManagement: undefined;
+    Orders: undefined;
+    Reports: undefined;
+    Settings: undefined;
+    Admin: undefined;
+};
+
+ 
+export type AdminDrawerParamList = {
+  AdminPage: undefined;
+  ProductDashboard: undefined;
 };
 
 export type RootTabParamList = {
