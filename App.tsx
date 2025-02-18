@@ -22,6 +22,8 @@ import { LogBox, View } from "react-native";
 import Chat from "./pages/(Main)/Chat/Chat";
 import ChatDetail from "./components/ChatDetail/ChatDetail";
 import "tailwindcss/tailwind.css";
+import ToastMessage from "./components/Common/ToastMessage/ToastMessage";
+import VerifyOtp from "./pages/(Auth)/VerifyOtp/VerifyOtp";
 
 LogBox.ignoreLogs([
   "Warning: Main: Support for defaultProps will be removed from function components in a future major release.",
@@ -107,7 +109,7 @@ export default function App() {
           component={SignIn}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
+        <Stack.Screen
           name="Profile"
           component={Profile}
           options={{
@@ -172,7 +174,13 @@ export default function App() {
             headerShown: true,
           }}
         />
+        <Stack.Screen
+          name="OtpVerify"
+          component={VerifyOtp}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
+      <ToastMessage />
     </NavigationContainer>
   );
 }

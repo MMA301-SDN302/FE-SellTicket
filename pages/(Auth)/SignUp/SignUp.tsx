@@ -1,46 +1,64 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { View, Image, Text, Button, SafeAreaView, Alert } from "react-native";
-import type { StackNavigationProp } from "@react-navigation/stack";
 
-import type { RootStackParamList } from "../../../types/NavigationTypes";
 import { styles } from "./SignUpStyle";
 import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
-import {
-  checkFormError,
-  ValidatePassword,
-  ValidateUserName,
-  validateVietnamesePhoneNumber,
-} from "../../../utils";
-import { InputValue } from "../../../components/Common/TextInput/InputType/type";
+
+import { Props, SignUpRequest, SignUpResponse } from "./Types";
+import FormArea from "../../../components/Common/Form/FormArea";
+import useApi from "../../../hooks/useApi";
+import { ApiConstant } from "../../../data/ApiConstant";
+import { ErrorResponse } from "../../../types/ApiTypes";
+import ERROR_CODES from "../../../data/ErrorCode";
+import useToast from "../../../hooks/useToast";
 
 const SignUpImg = require("../../../assets/Auth.png");
 
-type SignUpProp = StackNavigationProp<RootStackParamList, "SignUp">;
-
-type Props = {
-  navigation: SignUpProp;
-};
 export const SignUp: React.FC<Props> = ({ navigation }) => {
-  const [firstName, setFirstName] = useState<InputValue>("");
-  const [lastName, setLastName] = useState<InputValue>("");
-  const [phone, setPhone] = useState<InputValue>("");
-  const [password, setPassword] = useState<InputValue>("");
-  const [showError, setShowError] = useState(false);
-  const [isError, setIsError] = useState(true);
+  const { showToast } = useToast();
+  const { fetchData } = useApi<SignUpResponse>({
+    method: "POST",
+    url: ApiConstant.Register,
+  });
+  const [data, setData] = useState<SignUpRequest>({
+    firstName: "",
+    lastName: "",
+    mobilePhone: "",
+    password: "",
+    sex: "Male",
+  });
+  const handleSignUp = async (formData: SignUpRequest) => {
+    console.log("formData", formData);
 
-  const CheckAccount = () => {
-    var formHasError = checkFormError([
-      // ValidateUserName(firstName),
-      // ValidateUserName(lastName),
-      // validateVietnamesePhoneNumber(phone),
-      // ValidatePassword(password),
-    ]);
-    if (formHasError) {
-      setShowError(true);
-    } else {
-      Alert.alert("Sign up success");
-      navigation.navigate("SignIn");
-    }
+    await fetchData(formData)
+      .then((res) => {
+        navigation.navigate("OtpVerify", {
+          mobilePhone: res.phone_number,
+        });
+      })
+      .catch((err: ErrorResponse) => {
+        if (err.error_code === ERROR_CODES.MISSING_FIELD) {
+          showToast({
+            type: "error",
+            message: "Đăng ký thất bại",
+            description: "Vui lòng điền đầy đủ thông tin",
+          });
+        }
+        if (err.error_code === ERROR_CODES.INVALID_PHONE_NUMBER) {
+          showToast({
+            type: "error",
+            message: "Đăng ký thất bại",
+            description: "Số điện thoại không hợp lệ",
+          });
+        }
+        if (err.error_code === ERROR_CODES.DUPLICATE_ENTRY) {
+          showToast({
+            type: "error",
+            message: "Đăng ký thất bại",
+            description: "Số điện thoại đã tồn tại",
+          });
+        }
+      });
   };
 
   return (
@@ -66,63 +84,81 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
               Welcome
             </Text>
             <Text style={{ color: "#A0A0A0", fontWeight: 400, fontSize: 18 }}>
-              Signup to get started
+              Đăng ký tài khoản để bắt đầu
             </Text>
           </View>
 
-          <>
+          <FormArea
+            buttonTitle="Đăng Ký"
+            initialValues={data}
+            onSubmit={handleSignUp}
+          >
             {/* UserName */}
             <TextInputCommon
-              type={"date"}
-              value={firstName}
-              setValue={setFirstName}
-              errorMess="Please input your first name"
-              showError={showError}
+              type={"text"}
+              errorName="Họ"
+              fieldName="firstName"
+              placeholder="Nhập Họ của bạn"
+              required
             />
             <TextInputCommon
-              showError={showError}
               type={"text"}
-              value={lastName}
-              setValue={setLastName}
-              errorMess="Please input your last name"
+              errorName="Tên"
+              fieldName="lastName"
+              placeholder="Nhập Tên của bạn"
+              required
             />
             {/* Email */}
             <TextInputCommon
               type={"phone"}
-              value={phone}
-              setValue={setPhone}
-              showError={showError}
+              errorName="Số Điện Thoại"
+              fieldName="mobilePhone"
+              pattern={/(84|0[3|5|7|8|9])+([0-9]{8})\b/}
+              patternMess="Số điện thoại không hợp lệ"
+              required
             />
             {/* Password */}
             <TextInputCommon
               type={"password"}
-              value={password}
-              setValue={setPassword}
-              showError={showError}
+              errorName="Mật Khẩu"
+              fieldName="password"
+              minLength={8}
+              required
+            />
+            <TextInputCommon
+              type={"checkbox"}
+              fieldName="sex"
+              checkBoxOptions={{
+                type: "single",
+                labels: [
+                  {
+                    title: "Nam",
+                    value: "Male",
+                  },
+                  {
+                    title: "Nữ",
+                    value: "Female",
+                  },
+                  {
+                    title: "Khác",
+                    value: "Other",
+                  },
+                ],
+                defaultValue: ["Male"],
+              }}
             />
             {/* Extend */}
-            <View style={styles.textForgotContainer}>
-              <Text
-                style={{ color: "#4D5995", textDecorationLine: "underline" }}
-                onPress={() => {
-                  navigation.reset({ index: 0, routes: [{ name: "SignIn" }] });
-                }}
-              >
-                SignIn
-              </Text>
-            </View>
-          </>
+          </FormArea>
 
           <View style={styles.buttonContinue}>
-            <Button title="Send OTP" color="#4D5995" onPress={CheckAccount} />
             <Text>
-              By Clicking on Continue, you are agree to{" "}
+              Bằng cách nhấn vào Đăng Ký, bạn đồng ý với{" "}
               <Text style={{ color: "red", textDecorationLine: "underline" }}>
-                Privacy Policy
+                Chính Sách Bảo Mật
               </Text>{" "}
-              and {""}
+              và {""}
               <Text style={{ color: "red", textDecorationLine: "underline" }}>
-                Terms & Conditions
+                Điều Khoản & Điều Kiện
               </Text>
             </Text>
           </View>
