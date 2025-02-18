@@ -82,7 +82,6 @@ export const Home = () => {
             textTitle="Nơi xuất phát:"
             placeholder="Nhập nơi xuất phát"
             value={from}
-            onChangeText={setFrom}
             type="text"
             error={isError && !from ? "Vui lòng nhập nơi xuất phát." : ""}
             fieldName="from"
@@ -93,7 +92,6 @@ export const Home = () => {
             textTitle="Bạn muốn đi đâu?"
             placeholder="Nhập nơi đến"
             value={to}
-            onChangeText={setTo}
             type="text"
             error={isError && !to ? "Vui lòng nhập nơi đến." : ""}
             icon="search"
@@ -104,7 +102,6 @@ export const Home = () => {
             textTitle="Ngày đi"
             placeholder="Chọn ngày"
             value={date.toISOString().split("T")[0]}
-            onChangeText={(text) => setDate(new Date(text))}
             type="date"
             error={isError && !date ? "Vui lòng chọn ngày đi." : ""}
             fieldName="date"

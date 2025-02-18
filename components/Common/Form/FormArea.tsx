@@ -11,7 +11,6 @@ const FormArea = <T extends Record<string, any>>({
   initialValues,
   buttonTitle = "Submit",
   wrapStyle = {},
-  buttonStyle = {},
   titleStyle = {},
 }: FormAreaProps<T>) => {
   const { handleSubmit, values, handleChange, errorsMessage } =
@@ -30,7 +29,7 @@ const FormArea = <T extends Record<string, any>>({
             required: child.props.required || false,
             minLength: child.props.minLength || 0,
             maxLength: child.props.maxLength || 200,
-            pattern: child.props.pattern || "",
+            pattern: child.props.pattern || undefined,
             patternMess: child.props.patternMess || "",
             errorName: child.props.errorName || child.props.fieldName,
           },
@@ -42,8 +41,8 @@ const FormArea = <T extends Record<string, any>>({
     return React.Children.map(children, (child) => {
       if (React.isValidElement<TextInputCommonProps>(child)) {
         return React.cloneElement<TextInputCommonProps>(child, {
-          onChangeText: (value: string) =>
-            handleChange(child.props.fieldName, value),
+          onChangeText: (value: string | string[]) =>
+            handleChange(child.props.fieldName, value as any),
           value: values[child.props.fieldName],
           error: errorsMessage[child.props.fieldName],
         });

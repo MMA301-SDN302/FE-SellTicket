@@ -8,6 +8,7 @@ import EmailInputType from "./InputType/EmailInputType";
 import PasswordInputType from "./InputType/PasswordInputType";
 import TextInputType from "./InputType/TextInputType";
 import { useState } from "react";
+import CheckBoxInputType from "./InputType/CheckBoxType";
 
 const TextInputCommon = ({
   type,
@@ -20,6 +21,7 @@ const TextInputCommon = ({
   style,
   icon,
   error = "",
+  checkBoxOptions,
 }: TextInputCommonProps) => {
   const inputComponent: { [key: string]: any } = {
     phone: (
@@ -81,20 +83,33 @@ const TextInputCommon = ({
         icon={icon}
       />
     ),
+    checkbox: (
+      <CheckBoxInputType
+        value={typeof value === "string" ? value : ""}
+        w={w}
+        style={style}
+        options={options}
+        title={textTitle || ""}
+        placeholder={placeholder}
+        onChangeText={onChangeText}
+        icon={icon}
+        checkBoxOptions={checkBoxOptions}
+      />
+    ),
   };
 
   return (
     <View
       style={{
         display: "flex",
-        alignItems: "flex-start",
-        justifyContent: "flex-start",
+        alignItems: "center",
+        justifyContent: "flex-end",
         width: w ?? "100%",
+        height: 70,
       }}
     >
       {inputComponent[type as string]}
-
-      {!!error && <Text style={styles.textError}>{error}</Text>}
+      <Text style={styles.textError}>{error}</Text>
     </View>
   );
 };

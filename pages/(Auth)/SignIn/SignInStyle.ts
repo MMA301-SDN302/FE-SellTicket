@@ -28,9 +28,8 @@ export const styles = StyleSheet.create({
 
   buttonContinue: {
     width: "100%",
-    gap: 16,
+    textAlign: "center",
     borderRadius: 20,
-    marginBottom: 10,
   },
 
   textRememberMe: {

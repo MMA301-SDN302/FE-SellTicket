@@ -1,7 +1,6 @@
-import { DimensionValue, StyleProp, TextStyle, View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import PhoneInput, { PhoneInputProps } from "react-native-phone-number-input";
-import { StyleSheet } from "react-native";
+import PhoneInput from "react-native-phone-number-input";
 import TitleInput from "./TitleInput";
 import { IInputTypeProps } from "./type";
 
@@ -11,7 +10,7 @@ const PhoneInputType = ({
   style,
   value,
   title = "",
-  placeholder = "Input your phone number",
+  placeholder = "Số điện thoại",
   icon = "call",
   onChangeText,
 }: IInputTypeProps) => {
@@ -27,6 +26,7 @@ const PhoneInputType = ({
           textInputStyle={{
             backgroundColor: "",
             height: 44,
+            fontSize: 16,
             ...(style as object),
           }}
           defaultCode="VN"

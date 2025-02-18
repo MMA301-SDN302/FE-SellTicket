@@ -14,6 +14,7 @@ export type TypeTextInput =
   | "password"
   | "date"
   | "search"
+  | "checkbox"
   | null;
 
 export type InputValue = Date | string | undefined;
@@ -27,15 +28,16 @@ export interface TextInputCommonProps {
   icon?: React.ComponentProps<typeof Ionicons>["name"];
   options?: TextInputProps | PhoneInputProps;
   style?: StyleProp<TextStyle>;
-  error ?: string;
+  error?: string;
   fieldName: string;
-  errorName: string;
-  onChangeText?: (text: string) => void;
+  errorName?: string;
+  onChangeText?: (text: string | Array<string>) => void;
   required?: boolean;
   maxLength?: number;
   minLength?: number;
-  pattern?: string;
+  pattern?: RegExp;
   patternMess?: string;
+  checkBoxOptions?: CheckBoxOptions;
 }
 
 export type IInputTypeProps = {
@@ -46,5 +48,20 @@ export type IInputTypeProps = {
   title?: string;
   placeholder?: string;
   icon?: React.ComponentProps<typeof Ionicons>["name"];
-  onChangeText?: (text: string) => void;
+  onChangeText?: (text: string | Array<string>) => void;
+  checkBoxOptions?: CheckBoxOptions;
+};
+
+export type CheckBoxOptions = {
+  type: "single" | "multiple";
+  labels: Array<{
+    title: string;
+    value: string;
+  }>;
+  defaultValue: [string];
+};
+export type checkboxList = {
+  title: string;
+  value: string;
+  checked: boolean;
 };

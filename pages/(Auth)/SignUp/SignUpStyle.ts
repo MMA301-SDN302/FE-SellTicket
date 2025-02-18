@@ -10,24 +10,20 @@ export const styles = StyleSheet.create({
 
   imageSignUp: {
     width: "100%",
-    height: 233,
+    height: 220,
   },
 
   textForgotContainer: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "flex-start",
+    alignItems: "center",
     width: "100%",
-    marginTop: 5,
-    marginBottom: 40,
   },
 
   titleWelcome: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 24,
-    marginBottom: 24,
   },
 
   buttonContinue: {

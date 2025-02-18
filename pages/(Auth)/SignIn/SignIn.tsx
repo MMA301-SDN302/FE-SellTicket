@@ -3,43 +3,40 @@ import {
   View,
   Image,
   Text,
-  Button,
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
-import type { StackNavigationProp } from "@react-navigation/stack";
 import { styles } from "./SignInStyle";
-import type { RootStackParamList } from "../../../types/NavigationTypes";
 import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 import FormArea from "../../../components/Common/Form/FormArea";
-import { CheckUserAccount } from "../../../utils";
-import { AsyncStorageLocal } from "../../../utils/AsyncStorageLocal";
-import { useAuth } from "../../../context/AuthContext";
-
+import { FormValues, LoginResponse, Props } from "./Types";
+import useApi from "../../../hooks/useApi";
+import { ErrorResponse } from "../../../types/ApiTypes";
 const SignInImg = require("../../../assets/Auth.png");
-
-type SignInProp = StackNavigationProp<RootStackParamList, "SignIn">;
-
-type Props = {
-  navigation: SignInProp;
-};
-type FormValues = {
-  phone: string;
-  password: string;
-};
 
 export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
   const [remember, setRemember] = useState(false);
-  const { login } = useAuth();
-  const CheckAccount = (formdata: FormValues) => {
-    login("abc");
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "HomeStack" }],
-    });
+  const [formValues, setFormValues] = useState<FormValues>({
+    phoneNumber: "",
+    password: "",
+  });
+  const { fetchData } = useApi<LoginResponse>({
+    method: "POST",
+    url: "/auth/login",
+  });
+
+  const CheckAccount = async (formdata: FormValues) => {
+    setFormValues(formdata);
+    await fetchData(formdata)
+      .then((res) => {
+        console.log(res.user);
+      })
+      .catch((err: ErrorResponse) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -64,23 +61,22 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 marginTop: 32,
               }}
             >
-              Chào mừng trở lại
+              Welcome
             </Text>
             <Text
               style={{ color: "#A0A0A0", fontWeight: 400, fontSize: 18 }}
             ></Text>
           </View>
           <FormArea
-            initialValues={{ phone: "", password: "" }}
+            initialValues={formValues}
             onSubmit={CheckAccount}
             buttonTitle="Đăng nhập"
-            buttonStyle={styles.buttonContinue}
+            titleStyle={styles.buttonContinue}
           >
             <TextInputCommon
               type={"phone"}
-              fieldName="phone"
-              errorName="Phone number"
-              placeholder="Nhập số điện thoại"
+              fieldName="phoneNumber"
+              errorName="Phone Number"
               required={true}
             />
 
@@ -89,9 +85,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
               type={"password"}
               fieldName="password"
               errorName="Password"
-              placeholder="Nhập mật khẩu"
               required={true}
-              minLength={6}
             />
 
             {/* Extend */}
@@ -107,7 +101,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 size={24}
                 color="#4D5995"
               />
-              <Text style={{ color: "gray" }}>Ghi nhớ?</Text>
+              <Text style={{ color: "gray" }}>Ghi nhớ ?</Text>
             </TouchableOpacity>
           </FormArea>
           <View style={styles.textForgotContainer}>
@@ -121,7 +115,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 navigation.navigate("ForgotPassword");
               }}
             >
-              Quên mật khẩu?
+              Quên Mật Khẩu?
             </Text>
             <Text
               style={{ color: "#4D5995", textDecorationLine: "underline" }}
@@ -129,7 +123,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 navigation.navigate("SignUp");
               }}
             >
-              Đăng ký
+              Đăng Ký
             </Text>
           </View>
         </View>

@@ -37,6 +37,9 @@ export type RootStackParamList = {
     price: string;
     selectedSeats: string[];
     travelTime: number;
+  }; // Thêm travelTime vào PlaceOrder
+  OtpVerify: {
+    mobilePhone: string;
   };
   AdminPage: undefined;
   ProductDashboard: undefined;
@@ -71,6 +74,7 @@ export const rootStackRoutes: (keyof RootStackParamList)[] = [
   "Route",
   "Booking",
   "PlaceOrder",
+  "OtpVerify",
   "Chat",
   "Notification",
 ];

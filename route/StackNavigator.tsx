@@ -11,6 +11,7 @@ import PlaceOrder from "../pages/(Main)/PlaceOrder/PlaceOrder";
 import { Notification } from "../pages/(Main)/Notification/Notification";
 import { TabNavigatorHome } from "./TabNavigator";
 import RoutePage from "../pages/(Main)/Route/Route";
+import VerifyOtp from "../pages/(Auth)/VerifyOtp/VerifyOtp";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -87,6 +88,11 @@ const StackNavigator = () => {
           header: () => <Header goHome={true} />,
           headerShown: true,
         }}
+      />
+      <Stack.Screen
+        name="OtpVerify"
+        component={VerifyOtp}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
