@@ -12,6 +12,7 @@ import {
   validateVietnamesePhoneNumber,
 } from "../../../utils";
 import { InputValue } from "../../../components/Common/TextInput/InputType/type";
+import FormArea from "../../../components/Common/Form/FormArea";
 
 const SignUpImg = require("../../../assets/Auth.png");
 
@@ -63,43 +64,51 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
                 fontSize: 32,
               }}
             >
-              Welcome
+              Chào mừng
             </Text>
             <Text style={{ color: "#A0A0A0", fontWeight: 400, fontSize: 18 }}>
-              Signup to get started
+              Đăng ký để dùng ứng dụng
             </Text>
           </View>
 
-          <>
+          <FormArea
+            initialValues={{ phone: "", password: "" }}
+            onSubmit={CheckAccount}
+            buttonTitle="Đăng ký"
+            buttonStyle={styles.buttonContinue}
+          >
             {/* UserName */}
             <TextInputCommon
-              type={"date"}
-              value={firstName}
-              setValue={setFirstName}
-              errorMess="Please input your first name"
-              showError={showError}
-            />
-            <TextInputCommon
-              showError={showError}
               type={"text"}
-              value={lastName}
-              setValue={setLastName}
-              errorMess="Please input your last name"
+              value={firstName}
+              onChangeText={setFirstName}
+              textTitle="Tên người dùng"
+              placeholder="Nhập tên người dùng "
+              fieldName={""}
+              errorName={""}
             />
-            {/* Email */}
+
+            {/* Phone */}
             <TextInputCommon
               type={"phone"}
-              value={phone}
-              setValue={setPhone}
-              showError={showError}
+              fieldName="phone"
+              textTitle="Số điện thoại"
+              errorName="Phone number"
+              placeholder="Nhập số điện thoại"
+              required={true}
             />
+
             {/* Password */}
             <TextInputCommon
               type={"password"}
-              value={password}
-              setValue={setPassword}
-              showError={showError}
+              fieldName="password"
+              textTitle="Mật khẩu"
+              errorName="Password"
+              placeholder="Nhập mật khẩu"
+              required={true}
+              minLength={6}
             />
+
             {/* Extend */}
             <View style={styles.textForgotContainer}>
               <Text
@@ -108,22 +117,22 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
                   navigation.reset({ index: 0, routes: [{ name: "SignIn" }] });
                 }}
               >
-                SignIn
+                Đăng nhập
               </Text>
             </View>
-          </>
+          </FormArea>
 
           <View style={styles.buttonContinue}>
-            <Button title="Send OTP" color="#4D5995" onPress={CheckAccount} />
             <Text>
-              By Clicking on Continue, you are agree to{" "}
+              Bằng cách nhấp vào Tiếp tục, bạn đồng ý với{" "}
               <Text style={{ color: "red", textDecorationLine: "underline" }}>
-                Privacy Policy
+                Chính sách bảo mật
               </Text>{" "}
-              and {""}
+              và {""}
               <Text style={{ color: "red", textDecorationLine: "underline" }}>
-                Terms & Conditions
+                Điều khoản & Điều kiện{" "}
               </Text>
+              của ứng dụng
             </Text>
           </View>
         </View>

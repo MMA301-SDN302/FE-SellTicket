@@ -1,4 +1,4 @@
-import { ROLE_NAME } from './../utils/constant';
+import { ROLE_NAME } from "./../utils/constant";
 export type RootStackParamList = {
   HomeStack: undefined;
   Welcome: undefined;
@@ -37,29 +37,27 @@ export type RootStackParamList = {
     price: string;
     selectedSeats: string[];
     travelTime: number;
-  }; 
-    AdminPage: undefined;
-    ProductDashboard: undefined;
-    UserManagement: undefined;
-    Orders: undefined;
-    Reports: undefined;
-    Settings: undefined;
-    Admin: undefined;
+  };
+  AdminPage: undefined;
+  ProductDashboard: undefined;
+  UserManagement: undefined;
+  Orders: undefined;
+  Reports: undefined;
+  Settings: undefined;
+  Admin: undefined;
 };
 
- 
 export type AdminDrawerParamList = {
   AdminPage: undefined;
   ProductDashboard: undefined;
 };
 
 export type RootTabParamList = {
-  Home: undefined;
-  Profile: undefined;
-  Logout: undefined;
-  Map: undefined;
-  MyTicket: undefined;
-  Notification: undefined;
+  "Trang chủ": undefined;
+  "Trang cá nhân": undefined;
+  "Đăng xuất": undefined;
+  "Vị trí": undefined;
+  "Vé của tôi": undefined;
 };
 
 export const rootStackRoutes: (keyof RootStackParamList)[] = [

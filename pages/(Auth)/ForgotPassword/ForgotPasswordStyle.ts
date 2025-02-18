@@ -33,5 +33,6 @@ export const styles = StyleSheet.create({
     gap: 16,
     borderRadius: 20,
     marginBottom: 10,
+    marginTop: 12,
   },
 });

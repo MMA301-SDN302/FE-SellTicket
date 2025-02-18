@@ -86,6 +86,7 @@ export const Home = () => {
             type="text"
             error={isError && !from ? "Vui lòng nhập nơi xuất phát." : ""}
             fieldName="from"
+            icon="search"
             errorName="fromError"
           />
           <TextInputCommon
@@ -95,6 +96,7 @@ export const Home = () => {
             onChangeText={setTo}
             type="text"
             error={isError && !to ? "Vui lòng nhập nơi đến." : ""}
+            icon="search"
             fieldName="to"
             errorName="toError"
           />

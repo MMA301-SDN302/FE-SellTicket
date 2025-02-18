@@ -9,10 +9,10 @@ import {
 import type { StackNavigationProp } from "@react-navigation/stack";
 import type PhoneInput from "react-native-phone-number-input";
 import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useRef, useState } from "react";
 
 import type { RootTabParamList } from "../../../types/NavigationTypes";
 import { styles } from "./ProfileStyle";
-import { useRef, useState } from "react";
 import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 import {
   checkFormError,
@@ -20,29 +20,40 @@ import {
   ValidateUserName,
 } from "../../../utils";
 import ResetPassword from "../../(Auth)/ResetPassword/ResetPassword";
-const Person = require("../../../assets/favicon.png");
+import { useAuth } from "../../../context/AuthContext";
+import ButtonCommon from "../../../components/Common/Button/ButtonCommon";
 
-type ProfileProp = StackNavigationProp<RootTabParamList, "Profile">;
+type ProfileProp = StackNavigationProp<RootTabParamList, "Trang cá nhân">;
 
 type Props = {
   navigation: ProfileProp;
 };
-const Profile: React.FC<Props> = ({ navigation }: Props) => {
-  const [isPerson, setIsPerson] = useState(false);
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [gender, setGender] = useState("Male");
-  const [userName, setUserName] = useState("Thanh Thủy");
+
+const Profile: React.FC<Props> = ({ navigation }) => {
+  const { userInfo } = useAuth();
+
+  const [email, setEmail] = useState(userInfo?.email || "");
+  const [phone, setPhone] = useState(userInfo?.phoneNumber || "");
+  const [gender, setGender] = useState(userInfo?.gender || "Male");
+  const [userName, setUserName] = useState(userInfo?.displayName || "");
+  const [date, setDate] = useState(new Date());
 
   const phoneCurrent = useRef<PhoneInput>(null);
-
   const [showError, setShowError] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [date, setDate] = useState(new Date(1598051730000));
+  // Cập nhật state khi `userInfo` thay đổi
+  useEffect(() => {
+    if (userInfo) {
+      setEmail(userInfo.email || "");
+      setPhone(userInfo.phoneNumber || "");
+      setGender(userInfo.gender || "Male");
+      setUserName(userInfo.displayName || "");
+    }
+  }, [userInfo]);
 
   const Update = async () => {
-    var formHasError = checkFormError([
+    const formHasError = checkFormError([
       ValidateEmail(email),
       ValidateUserName(userName),
       phoneCurrent.current?.isValidNumber(phone) ? "" : "error",
@@ -52,130 +63,103 @@ const Profile: React.FC<Props> = ({ navigation }: Props) => {
       setShowError(true);
     } else {
       Alert.alert("Update success");
-      navigation.navigate("Home");
+      navigation.navigate("Trang chủ");
     }
   };
+
   return (
-    <View style={{ width: "100%" }}>
-      <ResetPassword
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-      />
-      <View style={styles.profileContainer}>
-        <TouchableOpacity onPress={() => {}}>
-          {isPerson ? (
-            <Image source={Person} style={styles.avatarStyle} />
-          ) : (
-            <Ionicons name="person-circle" size={150} color={"gray"} />
-          )}
-        </TouchableOpacity>
-        {/* UserName */}
+    userInfo && (
+      <View style={{ width: "100%" }}>
+        <ResetPassword
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
+        <View style={styles.profileContainer}>
+          <TouchableOpacity onPress={() => {}}>
+            {userInfo.avatar ? (
+              <Image
+                source={{ uri: userInfo.avatar }}
+                style={styles.avatarStyle}
+              />
+            ) : (
+              <Ionicons name="person-circle" size={150} color={"gray"} />
+            )}
+          </TouchableOpacity>
 
-        <TextInputCommon
-          type={"text"}
-          textTitle="Full name"
-          value={userName}
-          onChangeText={setUserName}
-          fieldName={""}
-          errorName={"text"}
-        />
-        {/* Phone */}
-        <TextInputCommon
-          type={"phone"}
-          textTitle="Phone number"
-          value={phone}
-          onChangeText={setPhone}
-          fieldName={""}
-          errorName={"Phone number"}
-        />
-        {/* Email */}
-        <TextInputCommon
-          type={"email"}
-          textTitle="Email"
-          value={email}
-          onChangeText={setEmail}
-          fieldName={""}
-          errorName={""}
-        />
-        <TextInputCommon
-          type={"date"}
-          textTitle="Day of birth"
-          value={date}
-          onChangeText={(text) => setDate(new Date(text))}
-          fieldName={""}
-          errorName={""}
-        />
-        {/* Gender */}
-        <View style={{ width: "100%" }}>
-          <Text
-            style={{
-              color: "gray",
-            }}
-          >
-            Gender
-          </Text>
-          <View style={styles.genderButton}>
-            <TouchableOpacity
-              style={[
-                styles.buttonGender,
-                gender === "Male" && styles.buttonActive,
-              ]}
-              onPress={() => setGender("Male")}
-            >
-              <Text
-                style={
-                  (styles.buttonText, gender === "Male" && { color: "#fff" })
-                }
-              >
-                Male
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.buttonGender,
-                gender === "Female" && styles.buttonActive,
-              ]}
-              onPress={() => setGender("Female")}
-            >
-              <Text
-                style={
-                  (styles.buttonText, gender === "Female" && { color: "#fff" })
-                }
-              >
-                Female
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.buttonGender,
-                gender === "Other" && styles.buttonActive,
-              ]}
-              onPress={() => setGender("Other")}
-            >
-              <Text
-                style={
-                  (styles.buttonText, gender === "Other" && { color: "#fff" })
-                }
-              >
-                Other
-              </Text>
-            </TouchableOpacity>
+          {/* UserName */}
+          <TextInputCommon
+            type="text"
+            textTitle="Tên người dùng"
+            value={userName}
+            onChangeText={setUserName}
+            fieldName=""
+            errorName="text"
+          />
+          {/* Phone */}
+          <TextInputCommon
+            type="phone"
+            textTitle="Số điện thoại"
+            value={phone}
+            onChangeText={setPhone}
+            fieldName=""
+            errorName="Phone number"
+          />
+          {/* Email */}
+          <TextInputCommon
+            type="email"
+            textTitle="Email"
+            value={email}
+            onChangeText={setEmail}
+            fieldName=""
+            errorName=""
+          />
+          {/* Date of Birth */}
+          <TextInputCommon
+            type="date"
+            textTitle="Ngày tháng năm sinh"
+            value={date.toISOString().split("T")[0]}
+            onChangeText={(text) => setDate(new Date(text))}
+            fieldName=""
+            errorName=""
+          />
+          {/* Gender */}
+          <View style={{ width: "100%" }}>
+            <Text style={{ color: "gray" }}>Giới tính</Text>
+            <View style={styles.genderButton}>
+              {["Nam", "Nữ", "Khác"].map((g) => (
+                <TouchableOpacity
+                  key={g}
+                  style={[
+                    styles.buttonGender,
+                    gender === g && styles.buttonActive,
+                  ]}
+                  onPress={() => setGender(g)}
+                >
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      gender === g && { color: "#fff" },
+                    ]}
+                  >
+                    {g}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
+          {/* Update */}
+          <View style={styles.buttonConfirm}>
+            <ButtonCommon title="Cập nhật" onPress={Update} />
+          </View>
+          <TouchableOpacity
+            style={{ marginTop: 10 }}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text>Đặt lại mật khẩu</Text>
+          </TouchableOpacity>
         </View>
-        {/* Update */}
-        <View style={styles.buttonConfirm}>
-          <Button title="Update" color="#4D5995" onPress={Update} />
-        </View>
-        <TouchableOpacity
-          style={{ marginTop: 10 }}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text>Reset Password</Text>
-        </TouchableOpacity>
       </View>
-    </View>
+    )
   );
 };
 

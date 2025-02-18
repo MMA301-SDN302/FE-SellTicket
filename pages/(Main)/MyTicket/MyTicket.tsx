@@ -3,8 +3,11 @@ import { ScrollView, View, Text } from "react-native";
 import { styles } from "./MyTicketStyle";
 import { PreviewLayout } from "../../../components/PreviewLayout/PreviewLayout";
 import { Ticket, type TicketProps } from "../../../components/Ticket/Ticket";
+import { useAuth } from "../../../context/AuthContext";
 const MyTickets = () => {
-  const [direction, setDirection] = useState("CURRENT");
+  const { userInfo } = useAuth();
+
+  const [direction, setDirection] = useState("Hiện tại");
   const tickets: TicketProps[] = [
     {
       ticketNo: "RLT-0123",
@@ -41,14 +44,19 @@ const MyTickets = () => {
   ];
 
   const filteredTickets = useMemo(() => {
-    return tickets.filter((ticket) => ticket?.status === direction);
+    return tickets.filter((ticket) => {
+      if (direction === "Hiện tại") return ticket.status === "CURRENT";
+      if (direction === "Đã hoàn thành") return ticket.status === "COMPLETED";
+      if (direction === "Đã hủy") return ticket.status === "CANCELLED";
+      return false;
+    });
   }, [direction, tickets]);
 
   return (
     <PreviewLayout
-      label="My Tickets"
+      label="Vé của tôi"
       selectedValue={direction}
-      values={["CURRENT", "COMPLETED", "CANCELLED"]}
+      values={["Hiện tại", "Đã hoàn thành", "Đã hủy"]}
       setSelectedValue={setDirection}
     >
       <ScrollView style={styles.container}>

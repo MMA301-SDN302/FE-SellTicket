@@ -1,12 +1,30 @@
-// AuthContext.tsx
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useContext,
+} from "react";
+import { AsyncStorageLocal } from "../utils/AsyncStorageLocal";
+
+interface UserInfo {
+  _id: string;
+  dateOfBirth: string;
+  displayName: string;
+  email?: string;
+  phoneNumber: string;
+  gender: string;
+  avatar: string;
+}
 
 // Định nghĩa kiểu cho Context
 type AuthContextType = {
-    userToken: string | null;
-    isLoading: boolean;
-    login: (token: string) => void;
-    logout: () => void;
+  userToken: string | null;
+  isLoading: boolean;
+  login: (token: string) => void;
+  logout: () => void;
+  userInfo: UserInfo | undefined;
+  setUserInfo: React.Dispatch<React.SetStateAction<UserInfo | undefined>>;
 };
 
 // Tạo Context với kiểu dữ liệu
@@ -14,48 +32,75 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 // Định nghĩa kiểu cho AuthProvider props
 type AuthProviderProps = {
-    children: ReactNode;
+  children: ReactNode;
 };
 
 // Tạo Provider
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-    const [userToken, setUserToken] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [userToken, setUserToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [userInfo, setUserInfo] = useState<UserInfo | undefined>(undefined);
 
-    // Hàm đăng nhập
-    const login = (token: string) => {
+  // Hàm đăng nhập
+  const login = (token: string) => {
+    setUserToken(token);
+    AsyncStorageLocal.set("userToken", token);
+    setUserInfo({
+      _id: "abc",
+      dateOfBirth: "ssdazsd",
+      displayName: "Thanh Thuy",
+      email: "string",
+      phoneNumber: "string",
+      gender: "string",
+      avatar: "../assets/Auth.png",
+    });
+    setIsLoading(false);
+  };
+
+  // Hàm đăng xuất
+  const logout = () => {
+    setUserToken(null);
+    setUserInfo(undefined);
+    AsyncStorageLocal.remove("userToken");
+    setIsLoading(false);
+  };
+
+  // Kiểm tra trạng thái đăng nhập khi khởi động ứng dụng
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const token = await AsyncStorageLocal.get("userToken");
+      if (token) {
         setUserToken(token);
-        // Lưu token vào AsyncStorage hoặc SecureStore nếu cần
-        // AsyncStorage.setItem('userToken', token);
-        setIsLoading(false);
+        setUserInfo({
+          _id: "abc",
+          dateOfBirth: "ssdazsd",
+          displayName: "Thanh Thuy",
+          email: "string",
+          phoneNumber: "string",
+          gender: "string",
+          avatar: "../assets/Auth.png",
+        });
+      }
+      setIsLoading(false);
     };
 
-    // Hàm đăng xuất
-    const logout = () => {
-        setUserToken(null);
-        // Xóa token từ AsyncStorage hoặc SecureStore nếu cần
-        // AsyncStorage.removeItem('userToken');
-        setIsLoading(false);
-    };
+    checkLoginStatus();
+  }, []);
 
-    // Kiểm tra trạng thái đăng nhập khi khởi động ứng dụng
-    useEffect(() => {
-        const checkLoginStatus = async () => {
-            // Kiểm tra xem có token trong AsyncStorage hoặc SecureStore không
-            // const token = await AsyncStorage.getItem('userToken');
-            const token = null; // Thay bằng logic lấy token từ AsyncStorage
-            if (token) {
-                setUserToken(token);
-            }
-            setIsLoading(false);
-        };
+  return (
+    <AuthContext.Provider
+      value={{ userToken, isLoading, login, logout, userInfo, setUserInfo }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
 
-        checkLoginStatus();
-    }, []);
-
-    return (
-        <AuthContext.Provider value={{ userToken, isLoading, login, logout }}>
-            {children}
-        </AuthContext.Provider>
-    );
+// Hook sử dụng AuthContext
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };

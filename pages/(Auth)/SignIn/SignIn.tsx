@@ -17,6 +17,7 @@ import TextInputCommon from "../../../components/Common/TextInput/TextInputCommo
 import FormArea from "../../../components/Common/Form/FormArea";
 import { CheckUserAccount } from "../../../utils";
 import { AsyncStorageLocal } from "../../../utils/AsyncStorageLocal";
+import { useAuth } from "../../../context/AuthContext";
 
 const SignInImg = require("../../../assets/Auth.png");
 
@@ -32,16 +33,13 @@ type FormValues = {
 
 export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
   const [remember, setRemember] = useState(false);
-
+  const { login } = useAuth();
   const CheckAccount = (formdata: FormValues) => {
-    if (CheckUserAccount(formdata.phone, formdata.password)) {
-      AsyncStorageLocal.set("user", formdata.phone);
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "HomeStack" }],
-      });
-    } else {
-    }
+    login("abc");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "HomeStack" }],
+    });
   };
 
   return (
@@ -63,9 +61,10 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 color: "#000000",
                 fontWeight: 500,
                 fontSize: 32,
+                marginTop: 32,
               }}
             >
-              Welcome
+              Chào mừng trở lại
             </Text>
             <Text
               style={{ color: "#A0A0A0", fontWeight: 400, fontSize: 18 }}
@@ -74,13 +73,14 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
           <FormArea
             initialValues={{ phone: "", password: "" }}
             onSubmit={CheckAccount}
-            buttonTitle="Sign In"
+            buttonTitle="Đăng nhập"
             buttonStyle={styles.buttonContinue}
           >
             <TextInputCommon
               type={"phone"}
               fieldName="phone"
               errorName="Phone number"
+              placeholder="Nhập số điện thoại"
               required={true}
             />
 
@@ -89,6 +89,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
               type={"password"}
               fieldName="password"
               errorName="Password"
+              placeholder="Nhập mật khẩu"
               required={true}
               minLength={6}
             />
@@ -106,7 +107,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 size={24}
                 color="#4D5995"
               />
-              <Text style={{ color: "gray" }}>Remember me?</Text>
+              <Text style={{ color: "gray" }}>Ghi nhớ?</Text>
             </TouchableOpacity>
           </FormArea>
           <View style={styles.textForgotContainer}>
@@ -120,7 +121,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 navigation.navigate("ForgotPassword");
               }}
             >
-              Forgot password?
+              Quên mật khẩu?
             </Text>
             <Text
               style={{ color: "#4D5995", textDecorationLine: "underline" }}
@@ -128,7 +129,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 navigation.navigate("SignUp");
               }}
             >
-              SignUp
+              Đăng ký
             </Text>
           </View>
         </View>

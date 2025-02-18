@@ -10,6 +10,7 @@ import {
   checkFormError,
   ValidatePassword,
 } from "../../../utils";
+import ButtonCommon from "../../../components/Common/Button/ButtonCommon";
 
 interface ResetPasswordProps {
   modalVisible: boolean;
@@ -58,48 +59,49 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={styles.header}>
-                <Text style={styles.modalText}>RESET PASSWORD</Text>
+                <Text style={styles.modalText}>ĐẶT LẠI MẬT KHẨU</Text>
                 <Ionicons onPress={Reset} name="close" size={20} />
               </View>
               <>
                 {/* Password */}
                 <TextInputCommon
                   type={"password"}
-                  fieldName="Input old password"
+                  placeholder="Nhập mật khẩu cũ"
                   errorName="Password"
                   required={true}
-                  textTitle="Old password"
+                  textTitle="Mật khẩu cũ"
                   minLength={6}
                   value={password}
                   onChangeText={setPassword}
+                  fieldName={"password"}
                 />
                 {/* Password */}
                 <TextInputCommon
                   type={"password"}
-                  fieldName="Input old password"
                   value={newPassword}
                   errorName="Password"
+                  placeholder="Mật khẩu mới"
                   required={true}
                   minLength={6}
-                  textTitle="New password"
+                  textTitle="Mật khẩu mới"
                   onChangeText={setNewPassword}
+                  fieldName={""}
                 />
                 {/* Password */}
                 <TextInputCommon
                   type={"password"}
-                  fieldName="Input old password"
                   value={confirmPassword}
                   errorName="Password"
                   required={true}
                   minLength={6}
-                  textTitle="Confirm new password"
+                  textTitle="Nhập lại mật khẩu"
                   onChangeText={setConfirmPassword}
+                  fieldName={""}
                 />
               </>
               <View style={styles.buttonContinue}>
-                <Button
-                  title="Reset password"
-                  color="#4D5995"
+                <ButtonCommon
+                  title="Đặt lại mật khẩu"
                   onPress={CheckPassword}
                 />
               </View>

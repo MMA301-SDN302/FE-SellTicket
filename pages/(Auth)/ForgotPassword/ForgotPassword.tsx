@@ -7,6 +7,7 @@ import type { RootStackParamList } from "../../../types/NavigationTypes";
 import { styles } from "./ForgotPasswordStyle";
 import { CheckUserAccount } from "../../../utils";
 import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
+import ButtonCommon from "../../../components/Common/Button/ButtonCommon";
 
 const ForgotPasswordImg = require("../../../assets/Auth.png");
 
@@ -52,23 +53,24 @@ const ForgotPassword = ({ navigation }: Props) => {
                 fontSize: 32,
               }}
             >
-              Welcome
+              Quên mật khẩu
             </Text>
             <Text style={{ color: "#A0A0A0", fontWeight: 400, fontSize: 18 }}>
-              Enter email to reset your password
+              Nhập email để xác thưuc
             </Text>
           </View>
 
           <>
-            {/* Email */}
+            {/* Phone */}
             <TextInputCommon
-              type={"email"}
-              value={email}
-              setValue={setEmail}
-              showError={showError}
+              type={"phone"}
+              fieldName="phone"
+              errorName="Phone number"
+              placeholder="Nhập số điện thoại"
+              required={true}
             />
             <View style={styles.buttonContinue}>
-              <Button title="Send OTP" color="#4D5995" onPress={CheckAccount} />
+              <ButtonCommon title={"Gửi mã xác thực"} onPress={() => {}} />
             </View>
             <View style={styles.textForgotContainer}>
               <Text
@@ -80,7 +82,7 @@ const ForgotPassword = ({ navigation }: Props) => {
                   });
                 }}
               >
-                SignIn
+                Đăng nhập
               </Text>
             </View>
           </>

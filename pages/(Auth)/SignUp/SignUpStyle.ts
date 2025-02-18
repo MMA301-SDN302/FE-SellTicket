@@ -16,17 +16,18 @@ export const styles = StyleSheet.create({
   textForgotContainer: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
-
+    justifyContent: "flex-start",
+    width: "100%",
+    marginTop: 5,
     marginBottom: 40,
-    width: 320,
   },
 
   titleWelcome: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 32,
+    marginTop: 24,
+    marginBottom: 24,
   },
 
   buttonContinue: {

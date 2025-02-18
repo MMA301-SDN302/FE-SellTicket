@@ -15,6 +15,7 @@ import type {
 import { PreviewLayout } from "../../../components/PreviewLayout/PreviewLayout";
 import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../../context/AuthContext";
 
 interface ChatScreenProps {
   id: string;

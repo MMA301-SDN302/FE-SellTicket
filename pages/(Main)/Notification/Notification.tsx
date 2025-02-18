@@ -7,7 +7,7 @@ import {
   type NotificationProps,
 } from "../../../components/NotificationDetail/NotificationDetail";
 export const Notification = () => {
-  const [direction, setDirection] = useState("ALL");
+  const [direction, setDirection] = useState("Tất cả");
   const notifications: NotificationProps[] = [
     {
       id: "1",
@@ -30,7 +30,7 @@ export const Notification = () => {
   ];
 
   const filteredNotification = useMemo(() => {
-    if (direction == "ALL") {
+    if (direction == "Tất cả") {
       return notifications;
     } else {
       return notifications.filter((noti) => {
@@ -41,9 +41,9 @@ export const Notification = () => {
 
   return (
     <PreviewLayout
-      label="Notification"
+      label="Thông báo"
       selectedValue={direction}
-      values={["ALL", "UNREAD"]}
+      values={["Tất cả", "Chưa đọc"]}
       setSelectedValue={setDirection}
     >
       <ScrollView style={styles.container}>

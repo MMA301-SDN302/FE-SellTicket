@@ -64,16 +64,17 @@ export const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderStyle: "dashed",
     height: "auto",
-    gap: 8,
   },
   detailBox: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-evenly",
-
+    justifyContent: "space-between",
     width: "100%",
     gap: 10,
-    padding: 5,
+    marginLeft: 20,
+  },
+  detailTime: {
+    width: "40%",
   },
   location: {
     display: "flex",
@@ -107,5 +108,14 @@ export const styles = StyleSheet.create({
   },
   dateText: {
     color: "#0c1440",
+  },
+  buttonCurrent: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    marginBottom: 10,
   },
 });
