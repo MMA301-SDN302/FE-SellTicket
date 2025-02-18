@@ -24,10 +24,12 @@ export const PreviewLayout = ({
     {label && <Text style={styles.label}>{label}</Text>}
     {searchText !== undefined && (
       <TextInputCommon
-        type={"search"}
+        type={"text"}
         value={searchText}
-        setValue={setSearchText}
-        showError={false}
+        onChangeText={setSearchText}
+        fieldName={"Search"}
+        errorName={""}
+        icon="search"
       />
     )}
     <View style={styles.row}>

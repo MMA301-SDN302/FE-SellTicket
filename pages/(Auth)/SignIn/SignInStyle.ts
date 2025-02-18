@@ -24,14 +24,12 @@ export const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 45,
   },
 
   buttonContinue: {
     width: "100%",
-    gap: 16,
+    textAlign: "center",
     borderRadius: 20,
-    marginBottom: 10,
   },
 
   textRememberMe: {
@@ -42,7 +40,7 @@ export const styles = StyleSheet.create({
 
     color: "#A0A0A0",
     width: "100%",
-    marginBottom: 40,
+    marginBottom: 24,
     gap: 5,
   },
 });

@@ -1,4 +1,5 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
+fontFamily: Platform.OS === "android" ? "Inter" : "sans-serif";
 
 export const styles = StyleSheet.create({
   headerContainer: {
@@ -7,6 +8,30 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     height: 100,
     paddingTop: 10,
+  },
+  welcomeText: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  welcomeTitle: {
+    textAlign: "center",
+    color: "#9c9eab",
+    fontSize: 18,
+    fontWeight: "500",
+    fontFamily: "Inter",
+    lineHeight: 20,
+    gap: 5,
+  },
+  userName: {
+    textAlign: "center",
+    color: "#022e2f",
+    fontSize: 24,
+    fontWeight: "800",
+    fontFamily: "Inter",
+    lineHeight: 26,
+    maxWidth: 150,
   },
   container: {
     flexDirection: "row",
@@ -40,5 +65,11 @@ export const styles = StyleSheet.create({
     height: 40,
     width: 40,
     borderRadius: 20,
+  },
+  iconContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 20,
   },
 });

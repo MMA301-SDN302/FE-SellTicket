@@ -117,6 +117,7 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
               patternMess="Số điện thoại không hợp lệ"
               required
             />
+
             {/* Password */}
             <TextInputCommon
               type={"password"}
@@ -147,6 +148,7 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
                 defaultValue: ["Male"],
               }}
             />
+
             {/* Extend */}
           </FormArea>
 
@@ -160,6 +162,7 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
               <Text style={{ color: "red", textDecorationLine: "underline" }}>
                 Điều Khoản & Điều Kiện
               </Text>
+              của ứng dụng
             </Text>
           </View>
         </View>

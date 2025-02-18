@@ -25,13 +25,13 @@ export function ValidateUserName(userName: string) {
   }
   return "";
 }
-
-export function CheckUserAccount(email: string, password?: string) {
+//
+export function CheckUserAccount(phone: string, password?: string) {
   if (password === undefined) {
-    if (email === "admin") {
+    if (phone === "admin") {
       return true;
     }
-  } else if (email === "admin" && password === "12345678") {
+  } else if (phone === "admin" && password === "12345678") {
     return true;
   }
   return false;

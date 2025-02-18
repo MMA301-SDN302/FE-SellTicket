@@ -5,11 +5,9 @@ import { ErrorMessages } from "../../../hooks/useFormBasic";
 export type FormAreaProps<T> = {
   children: ReactNode;
   onSubmit: (values: T) => void;
-  ApiError?: ErrorMessages;
   initialValues: T;
   buttonTitle?: string;
   wrapStyle?: StyleProp<TextStyle>;
-  buttonStyle?: StyleProp<TextStyle>;
   titleStyle?: StyleProp<TextStyle>;
 };
 export type ErrorCondition = {

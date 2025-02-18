@@ -1,73 +1,104 @@
-import { TouchableOpacity, View, Image } from "react-native";
+import { TouchableOpacity, View, Image, Text, Button } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
 import type { StackNavigationProp } from "@react-navigation/stack";
 
 import type { RootStackParamList } from "../../types/NavigationTypes";
 import { styles } from "./HeaderStyle";
+import { useAuth } from "../../context/AuthContext";
+import ButtonCommon from "../Common/Button/ButtonCommon";
 
 const BackgroundImg = require("../../assets/HeaderBG.png");
-const Person = require("../../assets/favicon.png");
 const Logo = require("../../assets/logo.png");
 
-type headerProps = {
+type HeaderProps = {
   back?: boolean;
   goHome?: boolean;
 };
-export const Header = ({ back, goHome }: headerProps) => {
+
+export const Header = ({ back, goHome }: HeaderProps) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const [isPerson, setIsPerson] = useState(false);
+  const { userInfo } = useAuth();
+  // const user
   return (
     <View style={styles.headerContainer}>
       <Image source={BackgroundImg} style={styles.drawerContent} />
       <View style={styles.container}>
         {back ? (
           <Ionicons
-            onPress={() => {
-              navigation.goBack();
-            }}
+            onPress={() => navigation.goBack()}
             name="arrow-back"
-            size={40}
+            size={30}
             color={"#0c1440"}
           />
         ) : goHome ? (
           <Ionicons
             onPress={() => {
-              navigation.navigate("Home");
+              navigation.reset({ index: 0, routes: [{ name: "HomeStack" }] });
             }}
             name="home-outline"
-            size={40}
+            size={30}
             color={"#0c1440"}
           />
+        ) : userInfo != undefined ? (
+          <View style={styles.welcomeText}>
+            <Text style={styles.welcomeTitle}>Xin chào</Text>
+            <Text
+              style={styles.userName}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {userInfo.displayName}
+            </Text>
+          </View>
         ) : (
-          <Ionicons
-            onPress={() => {
-              navigation.navigate("MyTicket");
-            }}
-            name="ticket-outline"
-            size={40}
-            color={"#0c1440"}
-          />
+          <View style={styles.welcomeText}>
+            <Text
+              style={styles.userName}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              Ứng dụng
+            </Text>
+            <Text
+              style={styles.welcomeTitle}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              Fast Ticket
+            </Text>
+          </View>
         )}
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Home");
-          }}
-        >
+
+        <TouchableOpacity onPress={() => navigation.navigate("HomeStack")}>
           <Image style={styles.logoStyle} source={Logo} />
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Profile");
-          }}
-        >
-          {isPerson ? (
-            <Image source={Person} style={styles.avatarStyle} />
-          ) : (
-            <Ionicons name="person-circle" size={40} color={"#0c1440"} />
-          )}
-        </TouchableOpacity>
+        {userInfo != undefined ? (
+          <View style={styles.iconContainer}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Notification")}
+            >
+              <Ionicons
+                name="notifications-outline"
+                size={30}
+                color={"#0c1440"}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Chat")}>
+              <Ionicons name="chatbubble-outline" size={30} color={"#0c1440"} />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.welcomeText}>
+            <ButtonCommon
+              title="SIGN IN"
+              onPress={() => navigation.navigate("SignIn")}
+              backgroundColor="#fff"
+              borderColor="blue"
+              activeTextColor="#fff"
+            />
+          </View>
+        )}
       </View>
     </View>
   );

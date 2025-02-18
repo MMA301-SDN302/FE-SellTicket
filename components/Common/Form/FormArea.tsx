@@ -3,20 +3,18 @@ import { View, Button, TouchableOpacity, Text } from "react-native";
 import { TextInputCommonProps } from "../TextInput/InputType/type";
 import useFormBasic from "../../../hooks/useFormBasic";
 import { FormAreaProps, FormErrors } from "./Type";
+import ButtonCommon from "../Button/ButtonCommon";
 
 const FormArea = <T extends Record<string, any>>({
   children,
   onSubmit,
-  ApiError = {},
   initialValues,
   buttonTitle = "Submit",
   wrapStyle = {},
-  buttonStyle = {},
   titleStyle = {},
 }: FormAreaProps<T>) => {
   const { handleSubmit, values, handleChange, errorsMessage } =
     useFormBasic<T>(initialValues);
-
   const [errors, setErrors] = useState<FormErrors<T>>({});
 
   useEffect(() => {
@@ -39,7 +37,6 @@ const FormArea = <T extends Record<string, any>>({
       }
     });
   }, [children]);
-
   const render = () => {
     return React.Children.map(children, (child) => {
       if (React.isValidElement<TextInputCommonProps>(child)) {
@@ -67,32 +64,11 @@ const FormArea = <T extends Record<string, any>>({
       ]}
     >
       {render()}
-      <TouchableOpacity
-        style={[
-          {
-            backgroundColor: "#007BFF",
-            padding: 10,
-            borderRadius: 5,
-            alignItems: "center",
-            justifyContent: "center",
-          },
-          buttonStyle,
-        ]}
+      <ButtonCommon
+        title={buttonTitle}
         onPress={() => handleSubmit(onSubmit, errors)}
-      >
-        <Text
-          style={[
-            {
-              color: "#FFFFFF",
-              fontSize: 16,
-            },
-            titleStyle,
-          ]}
-        >
-          {" "}
-          {buttonTitle}{" "}
-        </Text>
-      </TouchableOpacity>
+        titleStyle={titleStyle}
+      />
     </View>
   );
 };

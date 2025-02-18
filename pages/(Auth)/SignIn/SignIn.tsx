@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -57,6 +58,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 color: "#000000",
                 fontWeight: 500,
                 fontSize: 32,
+                marginTop: 32,
               }}
             >
               Welcome
@@ -68,8 +70,8 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
           <FormArea
             initialValues={formValues}
             onSubmit={CheckAccount}
-            buttonTitle="Sign In"
-            buttonStyle={styles.buttonContinue}
+            buttonTitle="Đăng nhập"
+            titleStyle={styles.buttonContinue}
           >
             <TextInputCommon
               type={"phone"}
@@ -99,7 +101,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 size={24}
                 color="#4D5995"
               />
-              <Text style={{ color: "gray" }}>Remember me?</Text>
+              <Text style={{ color: "gray" }}>Ghi nhớ ?</Text>
             </TouchableOpacity>
           </FormArea>
           <View style={styles.textForgotContainer}>
@@ -113,7 +115,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 navigation.navigate("ForgotPassword");
               }}
             >
-              Forgot password?
+              Quên Mật Khẩu?
             </Text>
             <Text
               style={{ color: "#4D5995", textDecorationLine: "underline" }}
@@ -121,7 +123,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 navigation.navigate("SignUp");
               }}
             >
-              SignUp
+              Đăng Ký
             </Text>
           </View>
         </View>

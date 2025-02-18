@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
     width: "90%",
     backgroundColor: "#fff",
     borderRadius: 10,
+    overflow: "hidden",
   },
   header: {
     display: "flex",
@@ -59,32 +60,33 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
 
-    width: "50%",
+    maxWidth: "60%",
     borderRightWidth: 1,
     borderStyle: "dashed",
     height: "auto",
-    gap: 20,
   },
   detailBox: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-evenly",
-
+    justifyContent: "space-between",
     width: "100%",
     gap: 10,
-    padding: 5,
+    marginLeft: 20,
+  },
+  detailTime: {
+    width: "40%",
   },
   location: {
     display: "flex",
     justifyContent: "space-evenly",
     alignItems: "center",
 
-    width: "50%",
+    width: "40%",
     height: 150,
   },
   locationText: {
     fontWeight: "bold",
-    fontSize: 24,
+    fontSize: 20,
     color: "#0c1440",
   },
   inforTicket: {
@@ -95,16 +97,25 @@ export const styles = StyleSheet.create({
     width: "100%",
   },
   inforText: {
-    fontSize: 18,
+    fontSize: 16,
     color: "gray",
   },
   detailText: {
-    fontSize: 18,
+    fontSize: 14,
     color: "#0c1440",
     fontWeight: "bold",
     width: "auto",
   },
   dateText: {
     color: "#0c1440",
+  },
+  buttonCurrent: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    marginBottom: 10,
   },
 });

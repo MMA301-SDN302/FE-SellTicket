@@ -1,13 +1,17 @@
+import { ROLE_NAME } from "./../utils/constant";
 export type RootStackParamList = {
-  Home: undefined;
+  HomeStack: undefined;
   Welcome: undefined;
   SignIn: undefined;
   SignUp: undefined;
   Logout: undefined;
   ForgotPassword: undefined;
   ResetPassword: undefined;
-  Profile: undefined;
-  MyTicket: undefined;
+  Chat: undefined;
+  Notification: undefined;
+  ChatDetail: {
+    chatId: string;
+  };
   Route: {
     from: string;
     to: string;
@@ -37,31 +41,40 @@ export type RootStackParamList = {
   OtpVerify: {
     mobilePhone: string;
   };
+  AdminPage: undefined;
+  ProductDashboard: undefined;
+  UserManagement: undefined;
+  Orders: undefined;
+  Reports: undefined;
+  Settings: undefined;
+  Admin: undefined;
+};
+
+export type AdminDrawerParamList = {
+  AdminPage: undefined;
+  ProductDashboard: undefined;
 };
 
 export type RootTabParamList = {
-  Home: undefined;
-  ProfileTab: undefined;
-  Logout: undefined;
-  Chat: undefined;
-  Notification: undefined;
-  ChatDetail: {
-    chatId: string;
-  };
+  "Trang chủ": undefined;
+  "Trang cá nhân": undefined;
+  "Đăng xuất": undefined;
+  "Vị trí": undefined;
+  "Vé của tôi": undefined;
 };
 
 export const rootStackRoutes: (keyof RootStackParamList)[] = [
-  "Home",
+  "HomeStack",
   "Welcome",
   "SignIn",
   "SignUp",
   "Logout",
   "ForgotPassword",
   "ResetPassword",
-  "Profile",
-  "MyTicket",
   "Route",
   "Booking",
   "PlaceOrder",
   "OtpVerify",
+  "Chat",
+  "Notification",
 ];

@@ -15,6 +15,7 @@ import type {
 import { PreviewLayout } from "../../../components/PreviewLayout/PreviewLayout";
 import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../../context/AuthContext";
 
 interface ChatScreenProps {
   id: string;
@@ -24,7 +25,7 @@ interface ChatScreenProps {
   time: Date;
   avatar: string;
 }
-type ProfileProp = StackNavigationProp<RootTabParamList, "Chat">;
+type ProfileProp = StackNavigationProp<RootStackParamList, "Chat">;
 
 type Props = {
   navigation: ProfileProp;
