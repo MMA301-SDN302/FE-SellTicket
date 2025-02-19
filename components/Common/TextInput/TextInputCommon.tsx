@@ -102,7 +102,7 @@ const TextInputCommon = ({
     <View
       style={{
         display: "flex",
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "flex-end",
         width: w ?? "100%",
         height: 70,

@@ -1,4 +1,6 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions} from "react-native";
+
+const { width, height } = Dimensions.get("window");
 
 export const styles = StyleSheet.create({
   container: {
@@ -44,6 +46,7 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     backgroundColor: "#f2f2f2",
+    width: width * 0.8,
   },
   floorLabel: {
     fontSize: 18,
@@ -54,10 +57,12 @@ export const styles = StyleSheet.create({
   sheetStyles: {
     flexDirection: "row",
     justifyContent: "space-evenly",
+    display: "flex",
+    flexWrap: "wrap"
   },
   busContainer: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-evenly"
   },
   seatRow: {
     flexDirection: "column",
@@ -74,8 +79,8 @@ export const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderRadius: 15,
-    width: 50,
-    height: 50,
+    width: width * 0.15,
+    height: height * 0.1,
     justifyContent: "center",
     alignItems: "center",
   },
