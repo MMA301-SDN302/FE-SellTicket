@@ -6,16 +6,7 @@ import React, {
   useContext,
 } from "react";
 import { AsyncStorageLocal } from "../utils/AsyncStorageLocal";
-
-interface UserInfo {
-  _id: string;
-  dateOfBirth: string;
-  displayName: string;
-  email?: string;
-  phoneNumber: string;
-  gender: string;
-  avatar: string;
-}
+import type { UserResponse } from "../pages/(Auth)/SignIn/Types";
 
 // Định nghĩa kiểu cho Context
 type AuthContextType = {
@@ -23,8 +14,8 @@ type AuthContextType = {
   isLoading: boolean;
   login: (token: string) => void;
   logout: () => void;
-  userInfo: UserInfo | undefined;
-  setUserInfo: React.Dispatch<React.SetStateAction<UserInfo | undefined>>;
+  userInfo: UserResponse | undefined;
+  setUserInfo: React.Dispatch<React.SetStateAction<UserResponse | undefined>>;
 };
 
 // Tạo Context với kiểu dữ liệu
@@ -39,21 +30,25 @@ type AuthProviderProps = {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [userToken, setUserToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [userInfo, setUserInfo] = useState<UserInfo | undefined>(undefined);
+  const [userInfo, setUserInfo] = useState<UserResponse | undefined>(undefined);
 
   // Hàm đăng nhập
   const login = (token: string) => {
     setUserToken(token);
     AsyncStorageLocal.set("userToken", token);
-    setUserInfo({
-      _id: "abc",
-      dateOfBirth: "ssdazsd",
+
+    const userData: UserResponse = {
+      userId: "abc",
+      dateOfBirth: new Date("2003-04-27"),
       displayName: "Thanh Thuy",
-      email: "string",
-      phoneNumber: "string",
-      gender: "string",
-      avatar: "../assets/Auth.png",
-    });
+      email: "ntthanhthuy@gmail.com",
+      phoneNumber: "0123456789",
+      gender: "Female",
+      avatar: require("../assets/Auth.png"),
+    };
+
+    setUserInfo(userData);
+    AsyncStorageLocal.set("userInfo", JSON.stringify(userData));
     setIsLoading(false);
   };
 
@@ -70,16 +65,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const checkLoginStatus = async () => {
       const token = await AsyncStorageLocal.get("userToken");
       if (token) {
-        setUserToken(token);
-        setUserInfo({
-          _id: "abc",
-          dateOfBirth: "ssdazsd",
-          displayName: "Thanh Thuy",
-          email: "string",
-          phoneNumber: "string",
-          gender: "string",
-          avatar: "../assets/Auth.png",
-        });
+        login(token);
       }
       setIsLoading(false);
     };

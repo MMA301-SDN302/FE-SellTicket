@@ -21,10 +21,12 @@ const DateInputType = ({
   const showDatepicker = () => {
     setShow(true);
   };
+
   const onChange = (selectedDate: Date | undefined) => {
-    const currentDate = selectedDate;
-    setShow(false);
-    onChangeText && onChangeText(currentDate?.toString() ?? "");
+    if (selectedDate) {
+      setShow(false);
+      onChangeText && onChangeText(selectedDate.toISOString());
+    }
   };
 
   const formatDate = (date: Date): string => {
@@ -38,9 +40,9 @@ const DateInputType = ({
       {show && (
         <DateTimePicker
           display="spinner"
-          value={value instanceof Date ? value : new Date()}
+          value={value ? new Date(value) : new Date()}
           mode={"date"}
-          onChange={(_, date) => onChange(date)}
+          onChange={(_, date) => onChange(date ?? new Date())}
         />
       )}
       <TitleInput title={title} />
@@ -54,7 +56,7 @@ const DateInputType = ({
             style={style}
             selectionColor={"gray"}
             editable={false}
-            value={value instanceof Date ? formatDate(value) : ""}
+            value={value ? formatDate(new Date(value)) : ""}
             placeholder={placeholder}
             {...options}
           />

@@ -17,8 +17,11 @@ export type LoginRequest = {
 export type UserResponse = {
   userId: string;
   phoneNumber: string;
-  firstName: string;
-  lastName: string;
+  email: string;
+  displayName: string;
+  avatar: any;
+  gender: "Male" | "Female" | "Other";
+  dateOfBirth: Date;
 };
 
 export type LoginResponse = {

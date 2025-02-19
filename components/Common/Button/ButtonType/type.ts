@@ -12,4 +12,5 @@ export interface ButtonCommonProps {
   activeTextColor?: string;
   titleStyle?: StyleProp<TextStyle>;
   buttonStyle?: StyleProp<TextStyle>;
+  disabled?: boolean;
 }

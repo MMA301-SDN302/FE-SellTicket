@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Image, Text, Button, SafeAreaView, Alert } from "react-native";
+import { View, Image, Text, ScrollView } from "react-native";
 
 import { styles } from "./SignUpStyle";
 import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
@@ -62,7 +62,7 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView>
+    <ScrollView>
       <View
         style={{
           display: "flex",
@@ -161,12 +161,21 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
               và {""}
               <Text style={{ color: "red", textDecorationLine: "underline" }}>
                 Điều Khoản & Điều Kiện
-              </Text>
+              </Text>{" "}
               của ứng dụng
             </Text>
           </View>
+          <Text style={{ marginTop: 20 }}>Đã có tài khoản?</Text>
+          <Text
+            style={{ color: "#4D5995", textDecorationLine: "underline" }}
+            onPress={() => {
+              navigation.navigate("SignIn");
+            }}
+          >
+            Đăng Nhập
+          </Text>
         </View>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };

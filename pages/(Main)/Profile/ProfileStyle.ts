@@ -15,12 +15,7 @@ export const styles = StyleSheet.create({
     borderRadius: 50,
     marginBottom: 20,
   },
-  buttonConfirm: {
-    paddingTop: 40,
-    width: "100%",
-    gap: 16,
-    borderRadius: 20,
-  },
+
   genderButton: {
     flexDirection: "row",
     display: "flex",

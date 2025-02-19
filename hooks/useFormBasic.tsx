@@ -23,9 +23,11 @@ const useFormBasic = <T extends Record<string, any>>(
   const [values, setValues] = useState<T>(initialValues);
   const [errorsMessage, setErrorsMessage] = useState<ErrorMessages>({});
   const handleChange = (name: keyof T, value: string | Array<string>) => {
+    const newValue =
+      value instanceof Date ? value.toISOString().split("T")[0] : value;
     setValues({
       ...values,
-      [name]: value,
+      [name]: newValue,
     });
   };
 
