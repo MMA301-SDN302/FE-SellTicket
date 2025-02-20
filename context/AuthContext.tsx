@@ -37,7 +37,7 @@ type AuthProviderProps = {
 // Tạo Provider
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [userInfo, setUserInfo] = useState<UserInfo | undefined>(undefined);
+  const [userInfo, setUserInfo] = useState<UserResponse | undefined>(undefined);
 
   // Hàm đăng nhập
   const saveUser = async (userInfo: UserInfo) => {

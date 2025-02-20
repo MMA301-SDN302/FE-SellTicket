@@ -36,7 +36,9 @@ const ButtonCommon = ({
           backgroundColor: isActive ? "#4D5995" : "#fff",
         },
         buttonStyle,
+        disabled && { backgroundColor: "#B0C4DE" },
       ]}
+      disabled={disabled}
       onPress={onPress}
       disabled={disabled}
     >

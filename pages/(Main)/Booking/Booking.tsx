@@ -77,6 +77,7 @@ const Booking = ({ route }: Props) => {
           styles.seatItem,
           item.isAvailable ? styles.available : styles.unavailable,
           isSelected && styles.selected,
+        
         ]}
         onPress={() => item.isAvailable && handleSelectSeat(item.id)}
         disabled={!item.isAvailable}

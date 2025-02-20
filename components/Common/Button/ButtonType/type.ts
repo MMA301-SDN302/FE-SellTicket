@@ -13,4 +13,5 @@ export interface ButtonCommonProps {
   disabled?: boolean;
   titleStyle?: StyleProp<TextStyle>;
   buttonStyle?: StyleProp<TextStyle>;
+  disabled?: boolean;
 }

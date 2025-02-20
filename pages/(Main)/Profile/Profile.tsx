@@ -1,13 +1,5 @@
-import {
-  View,
-  Image,
-  TouchableOpacity,
-  Button,
-  Text,
-  Alert,
-} from "react-native";
+import { View, Image, TouchableOpacity, Text } from "react-native";
 import type { StackNavigationProp } from "@react-navigation/stack";
-import type PhoneInput from "react-native-phone-number-input";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from "react";
 
@@ -21,7 +13,9 @@ import {
 } from "../../../utils";
 import ResetPassword from "../../(Auth)/ResetPassword/ResetPassword";
 import { useAuth } from "../../../context/AuthContext";
-import ButtonCommon from "../../../components/Common/Button/ButtonCommon";
+import FormArea from "../../../components/Common/Form/FormArea";
+import type { UserResponse } from "../../(Auth)/SignIn/Types";
+import useToast from "../../../hooks/useToast";
 
 type ProfileProp = StackNavigationProp<RootTabParamList, "Trang cá nhân">;
 
@@ -30,41 +24,26 @@ type Props = {
 };
 
 const Profile: React.FC<Props> = ({ navigation }) => {
-  const { userInfo } = useAuth();
+  const { userInfo, setUserInfo } = useAuth();
 
-  const [email, setEmail] = useState(userInfo?.email || "");
-  const [phone, setPhone] = useState(userInfo?.phoneNumber || "");
-  const [gender, setGender] = useState(userInfo?.gender || "Male");
-  const [userName, setUserName] = useState(userInfo?.displayName || "");
-  const [date, setDate] = useState(new Date());
-
-  const phoneCurrent = useRef<PhoneInput>(null);
-  const [showError, setShowError] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const { showToast } = useToast();
 
-  // Cập nhật state khi `userInfo` thay đổi
-  useEffect(() => {
-    if (userInfo) {
-      setEmail(userInfo.email || "");
-      setPhone(userInfo.phoneNumber || "");
-      setGender(userInfo.gender || "Male");
-      setUserName(userInfo.displayName || "");
+  const Update = async (formdata: UserResponse) => {
+    if (!formdata) {
+      console.error("Dữ liệu cập nhật không hợp lệ");
+      return;
     }
-  }, [userInfo]);
 
-  const Update = async () => {
-    const formHasError = checkFormError([
-      ValidateEmail(email),
-      ValidateUserName(userName),
-      phoneCurrent.current?.isValidNumber(phone) ? "" : "error",
-    ]);
-
-    if (formHasError) {
-      setShowError(true);
-    } else {
-      Alert.alert("Update success");
-      navigation.navigate("Trang chủ");
-    }
+    setUserInfo((prevUserInfo: any) => ({
+      ...prevUserInfo,
+      ...formdata,
+      userId: prevUserInfo?.userId || "",
+    }));
+    showToast({
+      type: "success",
+      message: "Cập nhật thành công",
+    });
   };
 
   return (
@@ -75,82 +54,90 @@ const Profile: React.FC<Props> = ({ navigation }) => {
           setModalVisible={setModalVisible}
         />
         <View style={styles.profileContainer}>
-          <TouchableOpacity onPress={() => {}}>
-            {userInfo.avatar ? (
-              <Image
-                source={{ uri: userInfo.avatar }}
-                style={styles.avatarStyle}
-              />
-            ) : (
-              <Ionicons name="person-circle" size={150} color={"gray"} />
-            )}
-          </TouchableOpacity>
+          <FormArea
+            initialValues={{ ...userInfo, userId: userInfo.userId }}
+            onSubmit={Update}
+            buttonTitle="Cập nhật"
+          >
+            <TouchableOpacity onPress={() => {}}>
+              {userInfo.avatar ? (
+                typeof userInfo.avatar === "string" ? (
+                  <Image
+                    source={{ uri: userInfo.avatar }}
+                    style={styles.avatarStyle}
+                  />
+                ) : (
+                  <Image source={userInfo.avatar} style={styles.avatarStyle} />
+                )
+              ) : (
+                <Ionicons name="person-circle" size={150} color={"gray"} />
+              )}
+            </TouchableOpacity>
 
-          {/* UserName */}
-          <TextInputCommon
-            type="text"
-            textTitle="Tên người dùng"
-            value={userName}
-            onChangeText={setUserName}
-            fieldName=""
-            errorName="text"
-          />
-          {/* Phone */}
-          <TextInputCommon
-            type="phone"
-            textTitle="Số điện thoại"
-            value={phone}
-            onChangeText={setPhone}
-            fieldName=""
-            errorName="Phone number"
-          />
-          {/* Email */}
-          <TextInputCommon
-            type="email"
-            textTitle="Email"
-            value={email}
-            onChangeText={setEmail}
-            fieldName=""
-            errorName=""
-          />
-          {/* Date of Birth */}
-          <TextInputCommon
-            type="date"
-            textTitle="Ngày tháng năm sinh"
-            value={date.toISOString().split("T")[0]}
-            onChangeText={(text) => setDate(new Date(text))}
-            fieldName=""
-            errorName=""
-          />
-          {/* Gender */}
-          <View style={{ width: "100%" }}>
-            <Text style={{ color: "gray" }}>Giới tính</Text>
-            <View style={styles.genderButton}>
-              {["Nam", "Nữ", "Khác"].map((g) => (
-                <TouchableOpacity
-                  key={g}
-                  style={[
-                    styles.buttonGender,
-                    gender === g && styles.buttonActive,
-                  ]}
-                  onPress={() => setGender(g)}
-                >
-                  <Text
-                    style={[
-                      styles.buttonText,
-                      gender === g && { color: "#fff" },
-                    ]}
-                  >
-                    {g}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-          {/* Update */}
-          <View style={styles.buttonConfirm}>
-            <ButtonCommon title="Cập nhật" onPress={Update} />
-          </View>
+            {/* UserName */}
+            <TextInputCommon
+              type="text"
+              textTitle="Tên người dùng"
+              fieldName="displayName"
+              errorName="tên người dùng"
+              value={userInfo?.displayName}
+              required
+            />
+            {/* Phone */}
+            <TextInputCommon
+              type="phone"
+              textTitle="Số điện thoại"
+              fieldName="phoneNumber"
+              value={userInfo?.phoneNumber}
+              errorName="số điện thoại"
+            />
+            {/* Email */}
+            <TextInputCommon
+              type="email"
+              textTitle="Email"
+              fieldName="email"
+              value={userInfo.email}
+              errorName="email"
+            />
+            {/* Date of Birth */}
+            <TextInputCommon
+              type="date"
+              textTitle="Ngày tháng năm sinh"
+              value={
+                userInfo.dateOfBirth
+                  ? new Date(userInfo.dateOfBirth).toISOString().split("T")[0]
+                  : ""
+              }
+              fieldName="dateOfBirth"
+              errorName="ngày tháng năm sinh"
+            />
+
+            {/* Gender */}
+            <TextInputCommon
+              type={"checkbox"}
+              fieldName="gender"
+              checkBoxOptions={{
+                type: "single",
+                labels: [
+                  {
+                    title: "Nam",
+                    value: "Male",
+                  },
+                  {
+                    title: "Nữ",
+                    value: "Female",
+                  },
+                  {
+                    title: "Khác",
+                    value: "Other",
+                  },
+                ],
+                defaultValue: [userInfo?.gender],
+              }}
+            />
+            {/* Update */}
+          </FormArea>
+
           <TouchableOpacity
             style={{ marginTop: 10 }}
             onPress={() => setModalVisible(true)}
