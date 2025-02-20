@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "FE-SellTicket",
-    "slug": "FE-SellTicket",
+    "name": "Fast Ticket",
+    "slug": "Fast Ticket",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/appInstall.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,9 +17,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/appInstall.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.kaidophan37.FastTicket"
     },
     "web": {
       "favicon": "./assets/favicon.png"

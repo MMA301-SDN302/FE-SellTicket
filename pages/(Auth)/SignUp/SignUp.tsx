@@ -28,8 +28,6 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
     sex: "Male",
   });
   const handleSignUp = async (formData: SignUpRequest) => {
-    console.log("formData", formData);
-
     await fetchData(formData)
       .then((res) => {
         navigation.navigate("OtpVerify", {
@@ -107,6 +105,7 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
               fieldName="lastName"
               placeholder="Nhập Tên của bạn"
               required
+              
             />
             {/* Email */}
             <TextInputCommon

@@ -15,27 +15,43 @@ import FormArea from "../../../components/Common/Form/FormArea";
 import { FormValues, LoginResponse, Props } from "./Types";
 import useApi from "../../../hooks/useApi";
 import { ErrorResponse } from "../../../types/ApiTypes";
+import { useAuth } from "../../../hooks/useAuth";
+import ERROR_CODES from "../../../data/ErrorCode";
+import useToast from "../../../hooks/useToast";
 const SignInImg = require("../../../assets/Auth.png");
 
 export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
   const [remember, setRemember] = useState(false);
-  const [formValues, setFormValues] = useState<FormValues>({
-    phoneNumber: "",
-    password: "",
-  });
+  const { saveUser } = useAuth();
   const { fetchData } = useApi<LoginResponse>({
     method: "POST",
     url: "/auth/login",
   });
+  const { showToast } = useToast();
 
-  const CheckAccount = async (formdata: FormValues) => {
-    setFormValues(formdata);
+  const handleSignUp = async (formdata: FormValues) => {
     await fetchData(formdata)
       .then((res) => {
-        console.log(res.user);
+        saveUser({
+          token: res.token,
+          user: res.user,
+        });
+        navigation.navigate("HomeStack");
       })
       .catch((err: ErrorResponse) => {
-        console.log(err);
+        if (err.error_code === ERROR_CODES.MISSING_FIELD) {
+          showToast({
+            type: "error",
+            message: "Đăng Nhập Thất Bại",
+            description: "Vui lòng điền đầy đủ thông tin",
+          });
+        } else if (err.error_code === ERROR_CODES.INVALID_CREDENTIALS) {
+          showToast({
+            type: "error",
+            message: "Đăng Nhập Thất Bại",
+            description: "Số điện thoại hoặc mật khẩu không chính xác",
+          });
+        }
       });
   };
 
@@ -68,8 +84,11 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
             ></Text>
           </View>
           <FormArea
-            initialValues={formValues}
-            onSubmit={CheckAccount}
+            initialValues={{
+              phoneNumber: "",
+              password: "",
+            }}
+            onSubmit={handleSignUp}
             buttonTitle="Đăng nhập"
             titleStyle={styles.buttonContinue}
           >

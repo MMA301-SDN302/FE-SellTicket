@@ -18,6 +18,7 @@ const ButtonCommon = ({
   activeTextColor = "#fff",
   titleStyle = {},
   buttonStyle = {},
+  disabled = false,
 }: ButtonCommonProps) => {
   return (
     <TouchableOpacity
@@ -37,6 +38,7 @@ const ButtonCommon = ({
         buttonStyle,
       ]}
       onPress={onPress}
+      disabled={disabled}
     >
       <Text
         style={[
