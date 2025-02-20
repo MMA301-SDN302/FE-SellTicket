@@ -1,8 +1,11 @@
 import { NavigationContainer } from "@react-navigation/native";
 import "tailwindcss/tailwind.css";
-import { AuthProvider, useAuth } from "./context/AuthContext";
+import { AuthProvider } from "./context/AuthContext";
 import StackNavigator from "./route/StackNavigator";
 import { LogBox } from "react-native";
+import ToastMessage from "./components/Common/ToastMessage/ToastMessage";
+import { SpinnerProvider } from "./hooks/useSpinner";
+import SpinnerLoading from "./components/Common/SpinLoading/SpinLoading";
 
 LogBox.ignoreLogs([
   "Warning: Main: Support for defaultProps will be removed from function components in a future major release.",
@@ -15,9 +18,13 @@ LogBox.ignoreLogs([
 export default function App() {
   return (
     <AuthProvider>
-      <NavigationContainer>
-        <StackNavigator />
-      </NavigationContainer>
+      <SpinnerProvider>
+        <NavigationContainer>
+          <StackNavigator />
+          <ToastMessage />
+          <SpinnerLoading />
+        </NavigationContainer>
+      </SpinnerProvider>
     </AuthProvider>
   );
 }

@@ -2,11 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { View, Text, Alert, Keyboard, Image, SafeAreaView } from "react-native";
 import RNAndroidOtpVerify from "react-native-otp-verify";
 import { OtpInput, OtpInputRef } from "react-native-otp-entry";
-import Button from "../../../components/Common/Button/Button";
 import { styles } from "./Styles";
 import { Props, VerifyOtpResponse } from "./Type";
 import useApi from "../../../hooks/useApi";
 import { ApiConstant } from "../../../data/ApiConstant";
+import Button from "../../../components/Common/Button/Button";
+import { useAuth } from "../../../hooks/useAuth";
+import useToast from "../../../hooks/useToast";
 const SignUpImg = require("../../../assets/Auth.png");
 
 const VerifyOtp = ({ navigation, route }: Props) => {
@@ -16,7 +18,8 @@ const VerifyOtp = ({ navigation, route }: Props) => {
   const [androidDisabled, setAndroidDisabled] = useState(true);
   const androidRef = useRef<OtpInputRef>(null);
   const { mobilePhone } = route.params;
-
+  const { saveUser } = useAuth();
+  const { showToast } = useToast();
   const { fetchData } = useApi<VerifyOtpResponse>({
     method: "POST",
     url: ApiConstant.VerifyOTP,
@@ -63,11 +66,15 @@ const VerifyOtp = ({ navigation, route }: Props) => {
   const handleVerifyOtp = async () => {
     await fetchData({ otpNumber: otp, mobilePhone: mobilePhone })
       .then((res) => {
-        console.log("res", res);
-
-        // navigation.navigate("Login");
+        saveUser(res);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        showToast({
+          type: "error",
+          message: "Xác Thực Thất bại",
+          description: "Mã OTP không chính xác",
+        });
+      });
   };
 
   const handleResendOtp = () => {};

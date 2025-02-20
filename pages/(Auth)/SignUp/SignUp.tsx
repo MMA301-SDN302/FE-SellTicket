@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Image, Text, ScrollView } from "react-native";
+import { View, Image, Text, Button, SafeAreaView, Alert, ScrollView } from "react-native";
 
 import { styles } from "./SignUpStyle";
 import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
@@ -28,8 +28,6 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
     sex: "Male",
   });
   const handleSignUp = async (formData: SignUpRequest) => {
-    console.log("formData", formData);
-
     await fetchData(formData)
       .then((res) => {
         navigation.navigate("OtpVerify", {
@@ -107,6 +105,7 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
               fieldName="lastName"
               placeholder="Nhập Tên của bạn"
               required
+              
             />
             {/* Email */}
             <TextInputCommon
@@ -161,7 +160,7 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
               và {""}
               <Text style={{ color: "red", textDecorationLine: "underline" }}>
                 Điều Khoản & Điều Kiện
-              </Text>{" "}
+              </Text>
               của ứng dụng
             </Text>
           </View>

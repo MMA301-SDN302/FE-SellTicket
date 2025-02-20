@@ -5,8 +5,8 @@ import type { StackNavigationProp } from "@react-navigation/stack";
 
 import type { RootStackParamList } from "../../types/NavigationTypes";
 import { styles } from "./HeaderStyle";
-import { useAuth } from "../../context/AuthContext";
 import ButtonCommon from "../Common/Button/ButtonCommon";
+import { useAuth } from "../../hooks/useAuth";
 
 const BackgroundImg = require("../../assets/HeaderBG.png");
 const Logo = require("../../assets/logo.png");

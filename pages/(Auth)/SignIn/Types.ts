@@ -16,12 +16,12 @@ export type LoginRequest = {
 };
 export type UserResponse = {
   userId: string;
-  phoneNumber: string;
-  email: string;
+  dateOfBirth?: string;
   displayName: string;
-  avatar: any;
-  gender: "Male" | "Female" | "Other";
-  dateOfBirth: Date;
+  email?: string;
+  phoneNumber: string;
+  gender: string;
+  avatar?: string;
 };
 
 export type LoginResponse = {
