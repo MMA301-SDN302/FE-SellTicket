@@ -11,12 +11,11 @@ import {
 import { styles } from "./HomeStyle";
 import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 import useNavigate from "../../../components/Navigate/Navigate";
-import { MaterialIcons } from "@expo/vector-icons";
 
 const recentSearches = [
   { id: "1", from: "Hồ Chí Minh", to: "Hà Nội", date: "20/01/2025" },
   { id: "2", from: "Đà Lạt", to: "Sài Gòn", date: "15/01/2025" },
-  { id: "3", from: "Hà Tĩnh", to: "Huế", date: "22/01/2025" },
+  { id: "3", from: "Hà Nội", to: "Đà Nẵng", date: "22/01/2025" },
   { id: "4", from: "Nha Trang", to: "Hà Nội", date: "17/01/2025" },
 ];
 
@@ -34,6 +33,12 @@ export const Home = () => {
     setTo(search.to);
     const parsedDate = new Date(search.date.split("/").reverse().join("-"));
     if (!isNaN(parsedDate.getTime())) setDate(parsedDate);
+  };
+
+  const handleTextChange = (text: string | string[]) => {
+    if (typeof text === "string") {
+      setFrom(text);
+    }
   };
 
   const handleSubmit = () => {
@@ -62,6 +67,7 @@ export const Home = () => {
             error={isError && !from ? "Vui lòng nhập nơi xuất phát." : ""}
             fieldName="from"
             icon="search"
+            onChangeText={handleTextChange}
           />
           <TextInputCommon
             textTitle="Bạn muốn đi đâu?"
@@ -71,14 +77,23 @@ export const Home = () => {
             error={isError && !to ? "Vui lòng nhập nơi đến." : ""}
             icon="search"
             fieldName="to"
+            onChangeText={handleTextChange}
           />
           <TextInputCommon
             textTitle="Ngày đi"
             placeholder="Chọn ngày"
-            value={date.toISOString().split("T")[0]}
+            value={date}
             type="date"
             error={isError && !date ? "Vui lòng chọn ngày đi." : ""}
             fieldName="date"
+            onChangeText={(text) => {
+              if (typeof text === "string") {
+                const parsedDate = new Date(text);
+                if (!isNaN(parsedDate.getTime())) {
+                  setDate(parsedDate);
+                }
+              }
+            }}
           />
           <View style={styles.roundTrip}>
             <Text style={styles.roundTripLabel}>Khứ hồi</Text>

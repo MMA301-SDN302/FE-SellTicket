@@ -36,13 +36,15 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     padding: width * 0.05,
     marginVertical: height * 0.01,
-    borderRadius: 15, // Bo góc
+    borderRadius: 15,
+    borderColor: "green",
+    borderWidth: width*0.005,
     backgroundColor: "#fff",
     shadowColor: "#000",
     shadowOpacity: 0.15,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
-    elevation: 5, // Đổ bóng trên Android
+    elevation: 5,
   },
   busName: {
     fontSize: scaledSize(18, width),
