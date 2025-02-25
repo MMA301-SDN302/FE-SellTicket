@@ -1,9 +1,11 @@
-import { View, Text, FlatList, TouchableOpacity, useWindowDimensions } from "react-native";
+import { useState, useEffect } from "react";
+import { View, Text, FlatList, TouchableOpacity, useWindowDimensions, ActivityIndicator } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { styles, scaledSize } from "./RouteStyle";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import type { RouteProp } from "@react-navigation/native";
 import type { RootStackParamList } from "../../../types/NavigationTypes";
+import useApi from "../../../hooks/useApi"; // Import useApi
 
 type RouteScreenProp = StackNavigationProp<RootStackParamList, "Route">;
 type RouteScreenRouteProp = RouteProp<RootStackParamList, "Route">;
@@ -13,32 +15,64 @@ type Props = {
   route: RouteScreenRouteProp;
 };
 
-// Danh sách các chuyến xe (dữ liệu mẫu)
-const busRoutes = [
-  { id: "1", busName: "Bus A", time: "08:00 AM", price: "100,000 VND", travelTime: 5 },
-  { id: "2", busName: "Bus B", time: "10:00 AM", price: "120,000 VND", travelTime: 4 },
-  { id: "3", busName: "Bus C", time: "02:00 PM", price: "110,000 VND", travelTime: 6 },
-];
-
 const Route = ({ navigation, route }: Props) => {
-  const { width } = useWindowDimensions(); // Lấy chiều rộng màn hình
+  const { width } = useWindowDimensions();
   const { from = "", to = "", date = "" } = route.params || {};
 
-  const handleSelectRoute = (selectedBus: { busName: string; time: string; price: string; travelTime: number }) => {
+  // State để lưu dữ liệu từ API
+  const [busRoutes, setBusRoutes] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Hook API
+  const { fetchData } = useApi<any[]>({
+    url: "/route/search",
+    method: "GET",
+  });
+
+  useEffect(() => {
+    if (from && to && date) {
+      setLoading(true);
+      fetchData({ startLocation: from, endLocation: to, date })
+        .then((res) => {
+          console.log("API Response:", res);
+          setBusRoutes(res || []); // Đảm bảo có dữ liệu
+          setError(null);
+        })
+        .catch((err) => {
+          console.error("API Fetch Error:", err);
+          setError(err.message || "Lỗi khi tải dữ liệu");
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [from, to, date]);
+
+  // 🛠 **Giữ nguyên định dạng ngày tháng**
+  const formatDateTime = (dateString: string) => {
+    const date = new Date(dateString);
+    return `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}/${date.getFullYear()} ${date.getHours().toString().padStart(2, "0")}:${date.getMinutes()
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
+  const handleSelectRoute = (selectedBus: any) => {
     navigation.navigate("Booking", {
       from,
       to,
       date,
-      busName: selectedBus.busName,
-      time: selectedBus.time,
-      price: selectedBus.price,
-      travelTime: selectedBus.travelTime, 
+      busName: selectedBus.car.car_code,
+      time: selectedBus.timeStartLocationPart,
+      price: selectedBus.pricePart,
+      travelTime:
+        new Date(selectedBus.timeEndLocationPart).getTime() -
+        new Date(selectedBus.timeStartLocationPart).getTime(),
     });
   };
 
   return (
     <View style={styles.container}>
-      {/* Tiêu đề màn hình */}
       <View style={styles.header}>
         <Text style={[styles.headerTitle, { fontSize: scaledSize(20, width) }]}>Chọn chuyến xe</Text>
         {from && to && date ? (
@@ -50,23 +84,44 @@ const Route = ({ navigation, route }: Props) => {
         )}
       </View>
 
-      {/* Danh sách chuyến xe */}
-      <FlatList
-        data={busRoutes}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={[styles.routeItem, { width: width * 0.9 }]} onPress={() => handleSelectRoute(item)}>
-            <View>
-              <Text style={[styles.busName, { fontSize: scaledSize(18, width) }]}>{item.busName}</Text>
-              <Text style={styles.busDetails}>Thời gian: {item.time}</Text>
-              <Text style={styles.busDetails}>Giá: {item.price}</Text>
-              <Text style={styles.busDetails}>Thời gian đến: {item.travelTime} giờ</Text>
-            </View>
-            <MaterialIcons name="arrow-forward" size={24} color="#007bff" />
-          </TouchableOpacity>
-        )}
-        contentContainerStyle={{ alignItems: "center" }} // Canh giữa các item
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#007bff" style={{ marginTop: 20 }} />
+      ) : error ? (
+        <Text style={{ textAlign: "center", color: "red", marginTop: 20 }}>{error}</Text>
+      ) : busRoutes.length === 0 ? (
+        <Text style={{ textAlign: "center", marginTop: 20 }}>Không tìm thấy chuyến xe</Text>
+      ) : (
+        <FlatList
+          data={busRoutes}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={[styles.routeItem, { width: width * 0.9 }]}
+              onPress={() => handleSelectRoute(item)}
+            >
+              <View>
+                <Text style={[styles.busName, { fontSize: scaledSize(width * 0.05, width) }]}>{item.car.car_code}</Text>
+                <Text style={styles.busDetails}>
+                  Nhà xe: {item.car?.bus_company_id?.bus_company_name || "Không có thông tin"}
+                </Text>
+                <Text style={styles.busDetails}>
+                  Số ghế còn lại: {item.remainingSeat}/{item.car?.amount_seat || "Không có thông tin"}
+                </Text>
+                <Text style={styles.busDetails}>Đi: {formatDateTime(item.timeStartLocationPart)}</Text>
+                <Text style={styles.busDetails}>Đến: {formatDateTime(item.timeEndLocationPart)}</Text>
+                <Text style={styles.busDetails}>
+                  Giá: {item.pricePart?.toLocaleString() || "Không có giá"} VNĐ
+                </Text>
+                <Text style={styles.busDetails}>
+                  Chính sách: {item.policy || "Không có thông tin"}
+                </Text>
+              </View>
+              <MaterialIcons name="arrow-forward" size={24} color="#007bff" />
+            </TouchableOpacity>
+          )}
+          contentContainerStyle={{ alignItems: "center" }}
+        />
+      )}
     </View>
   );
 };
