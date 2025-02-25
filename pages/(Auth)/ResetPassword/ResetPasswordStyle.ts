@@ -2,9 +2,11 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   centeredView: {
-    flex: 1,
+    display: "flex",
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 20,
   },
   header: {
     display: "flex",
@@ -15,22 +17,16 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 40,
   },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+  imageSignUp: {
+    width: "100%",
+    height: 220,
   },
-
+  modalView: {
+    width: "90%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   modalText: {
     textAlign: "center",
     width: "80%",

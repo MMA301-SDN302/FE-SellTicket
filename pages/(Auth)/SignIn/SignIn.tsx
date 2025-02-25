@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
-  ScrollView,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -15,41 +14,58 @@ import FormArea from "../../../components/Common/Form/FormArea";
 import { FormValues, LoginResponse, Props } from "./Types";
 import useApi from "../../../hooks/useApi";
 import { ErrorResponse } from "../../../types/ApiTypes";
+import { ApiConstant } from "../../../data/ApiConstant";
 import { useAuth } from "../../../hooks/useAuth";
-import ERROR_CODES from "../../../data/ErrorCode";
 import useToast from "../../../hooks/useToast";
+import ERROR_CODES from "../../../data/ErrorCode";
+import { AsyncStorageLocal } from "../../../utils/AsyncStorageLocal";
 const SignInImg = require("../../../assets/Auth.png");
 
 export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
   const [remember, setRemember] = useState(false);
-  const { saveUser } = useAuth();
+  const [formValues, setFormValues] = useState<FormValues>({
+    phoneNumber: "",
+    password: "",
+  });
   const { fetchData } = useApi<LoginResponse>({
     method: "POST",
-    url: "/auth/login",
+    url: ApiConstant.Login,
   });
+  const { saveUser } = useAuth();
   const { showToast } = useToast();
 
-  const handleSignUp = async (formdata: FormValues) => {
+  useEffect(() => {
+    AsyncStorageLocal.get("account").then((res) => {
+      if (res) {
+        setFormValues(JSON.parse(res));
+      }
+    });
+  }, []);
+
+  const CheckAccount = async (formdata: FormValues) => {
+    setFormValues(formdata);
     await fetchData(formdata)
       .then((res) => {
-        saveUser({
-          token: res.token,
-          user: res.user,
-        });
-        navigation.navigate("HomeStack");
+        if (remember) {
+          AsyncStorageLocal.set("account", JSON.stringify(formdata));
+        } else {
+          AsyncStorageLocal.remove("account");
+        }
+        saveUser(res);
+        navigation.pop();
       })
       .catch((err: ErrorResponse) => {
         if (err.error_code === ERROR_CODES.MISSING_FIELD) {
           showToast({
             type: "error",
-            message: "Đăng Nhập Thất Bại",
-            description: "Vui lòng điền đầy đủ thông tin",
+            message: "Thất bại",
+            description: "Vui lòng nhập đầy đủ thông tin",
           });
         } else if (err.error_code === ERROR_CODES.INVALID_CREDENTIALS) {
           showToast({
             type: "error",
-            message: "Đăng Nhập Thất Bại",
-            description: "Số điện thoại hoặc mật khẩu không chính xác",
+            message: "Thất bại",
+            description: "Số điện thoại hoặc mật khẩu không đúng",
           });
         }
       });
@@ -74,7 +90,6 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 color: "#000000",
                 fontWeight: 500,
                 fontSize: 32,
-                marginTop: 32,
               }}
             >
               Welcome
@@ -84,26 +99,25 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
             ></Text>
           </View>
           <FormArea
-            initialValues={{
-              phoneNumber: "",
-              password: "",
-            }}
-            onSubmit={handleSignUp}
-            buttonTitle="Đăng nhập"
-            titleStyle={styles.buttonContinue}
+            initialValues={formValues}
+            onSubmit={CheckAccount}
+            buttonTitle="Sign In"
           >
             <TextInputCommon
               type={"phone"}
+              errorName="Số Điện Thoại"
               fieldName="phoneNumber"
-              errorName="Phone Number"
-              required={true}
+              pattern={/(84|0[3|5|7|8|9])+([0-9]{8})\b/}
+              patternMess="Số điện thoại không hợp lệ"
+              required
             />
 
             {/* Password */}
             <TextInputCommon
               type={"password"}
               fieldName="password"
-              errorName="Password"
+              errorName="Mật Khẩu"
+              minLength={8}
               required={true}
             />
 
@@ -120,7 +134,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 size={24}
                 color="#4D5995"
               />
-              <Text style={{ color: "gray" }}>Ghi nhớ ?</Text>
+              <Text style={{ color: "gray" }}>Remember me?</Text>
             </TouchableOpacity>
           </FormArea>
           <View style={styles.textForgotContainer}>
@@ -134,7 +148,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 navigation.navigate("ForgotPassword");
               }}
             >
-              Quên Mật Khẩu?
+              Forgot password?
             </Text>
             <Text
               style={{ color: "#4D5995", textDecorationLine: "underline" }}
@@ -142,7 +156,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
                 navigation.navigate("SignUp");
               }}
             >
-              Đăng Ký
+              SignUp
             </Text>
           </View>
         </View>

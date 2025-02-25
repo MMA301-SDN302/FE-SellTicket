@@ -3,7 +3,7 @@ import { View, Text, Alert, Keyboard, Image, SafeAreaView } from "react-native";
 import RNAndroidOtpVerify from "react-native-otp-verify";
 import { OtpInput, OtpInputRef } from "react-native-otp-entry";
 import { styles } from "./Styles";
-import { Props, VerifyOtpResponse } from "./Type";
+import { Props, ResendOtpResponse, VerifyOtpResponse } from "./Type";
 import useApi from "../../../hooks/useApi";
 import { ApiConstant } from "../../../data/ApiConstant";
 import Button from "../../../components/Common/Button/Button";
@@ -17,12 +17,16 @@ const VerifyOtp = ({ navigation, route }: Props) => {
   const [messageCount, setMessageCount] = useState("Gửi lại OTP : 90s");
   const [androidDisabled, setAndroidDisabled] = useState(true);
   const androidRef = useRef<OtpInputRef>(null);
-  const { mobilePhone } = route.params;
+  const { mobilePhone, sendType } = route.params;
   const { saveUser } = useAuth();
   const { showToast } = useToast();
   const { fetchData } = useApi<VerifyOtpResponse>({
     method: "POST",
     url: ApiConstant.VerifyOTP,
+  });
+  const { fetchData: resendOtp } = useApi<ResendOtpResponse>({
+    method: "POST",
+    url: ApiConstant.ResendOTP,
   });
 
   const countDown = () => {
@@ -64,9 +68,20 @@ const VerifyOtp = ({ navigation, route }: Props) => {
 
   // Hàm xử lý khi nhấn nút xác nhận OTP
   const handleVerifyOtp = async () => {
-    await fetchData({ otpNumber: otp, mobilePhone: mobilePhone })
+    await fetchData({ otpNumber: otp, mobilePhone, sendType })
       .then((res) => {
-        saveUser(res);
+        if (sendType === "SIGNUP") {
+          saveUser(res);
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "HomeStack" }],
+          });
+        } else {
+          navigation.navigate("ResetPassword", {
+            mobilePhone: res.mobilePhone,
+            userId: res.userId,
+          });
+        }
       })
       .catch((err) => {
         showToast({
@@ -77,7 +92,20 @@ const VerifyOtp = ({ navigation, route }: Props) => {
       });
   };
 
-  const handleResendOtp = () => {};
+  const handleResendOtp = () => {
+    resendOtp({ mobilePhone, sendType })
+      .then(() => {
+        setAndroidDisabled(true);
+        countDown();
+      })
+      .catch(() => {
+        showToast({
+          type: "error",
+          message: "Gửi lại OTP thất bại",
+          description: "Vui lòng thử lại sau",
+        });
+      });
+  };
 
   return (
     <SafeAreaView
