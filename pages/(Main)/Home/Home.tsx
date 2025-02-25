@@ -9,6 +9,7 @@ import {
   Image,
 } from "react-native";
 import { styles } from "./HomeStyle";
+import { MaterialIcons } from "@expo/vector-icons";
 import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 import useNavigate from "../../../components/Navigate/Navigate";
 
@@ -28,17 +29,16 @@ export const Home = () => {
 
   const { navigateTo } = useNavigate();
 
+  const handleSwapLocations = () => {
+    setFrom(to);
+    setTo(from);
+  };
+
   const handleRecentSearchClick = (search: { from: string; to: string; date: string }) => {
     setFrom(search.from);
     setTo(search.to);
     const parsedDate = new Date(search.date.split("/").reverse().join("-"));
     if (!isNaN(parsedDate.getTime())) setDate(parsedDate);
-  };
-
-  const handleTextChange = (text: string | string[]) => {
-    if (typeof text === "string") {
-      setFrom(text);
-    }
   };
 
   const handleSubmit = () => {
@@ -59,26 +59,31 @@ export const Home = () => {
         />
 
         <View style={styles.searchForm}>
-          <TextInputCommon
-            textTitle="Nơi xuất phát:"
-            placeholder="Nhập nơi xuất phát"
-            value={from}
-            type="text"
-            error={isError && !from ? "Vui lòng nhập nơi xuất phát." : ""}
-            fieldName="from"
-            icon="search"
-            onChangeText={handleTextChange}
-          />
+          <View style={styles.inputContainer}>
+            <TextInputCommon
+              textTitle="Nơi xuất phát:"
+              placeholder="Nhập nơi xuất phát"
+              value={from}
+              type="text"
+              error={isError && !from ? "Vui lòng nhập nơi xuất phát." : ""}
+              fieldName="from"
+              onChangeText={setFrom}
+            />
+            <TouchableOpacity onPress={handleSwapLocations} style={styles.swapButton}>
+              <MaterialIcons name="swap-vert" size={24} color="#007AFF" />
+            </TouchableOpacity>
+          </View>
+
           <TextInputCommon
             textTitle="Bạn muốn đi đâu?"
             placeholder="Nhập nơi đến"
             value={to}
             type="text"
             error={isError && !to ? "Vui lòng nhập nơi đến." : ""}
-            icon="search"
             fieldName="to"
-            onChangeText={handleTextChange}
+            onChangeText={setTo}
           />
+          
           <TextInputCommon
             textTitle="Ngày đi"
             placeholder="Chọn ngày"
@@ -87,18 +92,18 @@ export const Home = () => {
             error={isError && !date ? "Vui lòng chọn ngày đi." : ""}
             fieldName="date"
             onChangeText={(text) => {
-              if (typeof text === "string") {
-                const parsedDate = new Date(text);
-                if (!isNaN(parsedDate.getTime())) {
-                  setDate(parsedDate);
-                }
+              const parsedDate = new Date(text);
+              if (!isNaN(parsedDate.getTime())) {
+                setDate(parsedDate);
               }
             }}
           />
+
           <View style={styles.roundTrip}>
             <Text style={styles.roundTripLabel}>Khứ hồi</Text>
             <Switch value={isRoundTrip} onValueChange={setIsRoundTrip} />
           </View>
+
           <TouchableOpacity style={styles.searchButton} onPress={handleSubmit}>
             <Text style={styles.searchButtonText}>Tìm kiếm</Text>
           </TouchableOpacity>

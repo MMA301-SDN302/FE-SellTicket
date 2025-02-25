@@ -1,10 +1,11 @@
+import { useState, useEffect } from "react";
 import { View, Text, FlatList, TouchableOpacity, useWindowDimensions, ActivityIndicator } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { styles, scaledSize } from "./RouteStyle";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import type { RouteProp } from "@react-navigation/native";
 import type { RootStackParamList } from "../../../types/NavigationTypes";
-import { useEffect, useState } from "react";
+import useApi from "../../../hooks/useApi"; // Import useApi
 
 type RouteScreenProp = StackNavigationProp<RootStackParamList, "Route">;
 type RouteScreenRouteProp = RouteProp<RootStackParamList, "Route">;
@@ -18,72 +19,55 @@ const Route = ({ navigation, route }: Props) => {
   const { width } = useWindowDimensions();
   const { from = "", to = "", date = "" } = route.params || {};
 
+  // State để lưu dữ liệu từ API
   const [busRoutes, setBusRoutes] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchRoutes = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await fetch(
-          `http://192.168.0.2:8080/v1/api/route/search?startLocation=${encodeURIComponent(from)}&endLocation=${encodeURIComponent(to)}&date=${encodeURIComponent(date)}`
-        );
-        const data = await response.json();
-        if (data.status === "success") {
-          setBusRoutes(data.data || []);
-        } else {
-          setError("Không tìm thấy chuyến xe nào.");
-        }
-      } catch (err) {
-        setError("Lỗi khi tải dữ liệu.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Hook API
+  const { fetchData } = useApi<any[]>({
+    url: "/route/search",
+    method: "GET",
+  });
 
-    fetchRoutes();
+  useEffect(() => {
+    if (from && to && date) {
+      setLoading(true);
+      fetchData({ startLocation: from, endLocation: to, date })
+        .then((res) => {
+          console.log("API Response:", res);
+          setBusRoutes(res || []); // Đảm bảo có dữ liệu
+          setError(null);
+        })
+        .catch((err) => {
+          console.error("API Fetch Error:", err);
+          setError(err.message || "Lỗi khi tải dữ liệu");
+        })
+        .finally(() => setLoading(false));
+    }
   }, [from, to, date]);
 
-  const calculateTravelTime = (startTime: string, endTime: string) => {
-    let start = new Date(startTime).getTime();
-    let end = new Date(endTime).getTime();
-    if (end < start) {
-      end += 24 * 60 * 60 * 1000; 
-    }
-    const diffMs = end - start;
-    const hours = Math.floor(diffMs / (1000 * 60 * 60));
-    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    
-    return `${hours}h ${minutes}m`;
-  };
-  
+  // 🛠 **Giữ nguyên định dạng ngày tháng**
   const formatDateTime = (dateString: string) => {
     const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0"); 
-    const year = date.getFullYear();
-    
-    let hours = date.getHours();
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    const seconds = String(date.getSeconds()).padStart(2, "0");
-    
-    const amPm = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12 || 12;
-  
-    return `${day}/${month}/${year} ${String(hours).padStart(2, "0")}:${minutes}:${seconds} ${amPm}`;
+    return `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}/${date.getFullYear()} ${date.getHours().toString().padStart(2, "0")}:${date.getMinutes()
+      .toString()
+      .padStart(2, "0")}`;
   };
-  
+
   const handleSelectRoute = (selectedBus: any) => {
     navigation.navigate("Booking", {
       from,
       to,
       date,
-      busName: selectedBus.name,
-      time: selectedBus.routeStartTime,
-      price: selectedBus.price,
-      travelTime: new Date(selectedBus.routeEndTime).getTime() - new Date(selectedBus.routeStartTime).getTime(),
+      busName: selectedBus.car.car_code,
+      time: selectedBus.timeStartLocationPart,
+      price: selectedBus.pricePart,
+      travelTime:
+        new Date(selectedBus.timeEndLocationPart).getTime() -
+        new Date(selectedBus.timeStartLocationPart).getTime(),
     });
   };
 
@@ -104,20 +88,33 @@ const Route = ({ navigation, route }: Props) => {
         <ActivityIndicator size="large" color="#007bff" style={{ marginTop: 20 }} />
       ) : error ? (
         <Text style={{ textAlign: "center", color: "red", marginTop: 20 }}>{error}</Text>
+      ) : busRoutes.length === 0 ? (
+        <Text style={{ textAlign: "center", marginTop: 20 }}>Không tìm thấy chuyến xe</Text>
       ) : (
         <FlatList
           data={busRoutes}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
-            <TouchableOpacity style={[styles.routeItem, { width: width * 0.9 }]} onPress={() => handleSelectRoute(item)}>
+            <TouchableOpacity
+              style={[styles.routeItem, { width: width * 0.9 }]}
+              onPress={() => handleSelectRoute(item)}
+            >
               <View>
                 <Text style={[styles.busName, { fontSize: scaledSize(width * 0.05, width) }]}>{item.car.car_code}</Text>
-                <Text style={styles.busDetails}>Nhà xe: {item.car.bus_company_id.bus_company_name}</Text>
-                <Text style={styles.busDetails}>Số ghế còn lại: {item.remainingSeat}/{item.car.amount_seat}</Text>
-                <Text style={styles.busDetails}>Giờ đi: {formatDateTime(item.routeStartTime)}</Text>
-                <Text style={styles.busDetails}>Giờ đến: {formatDateTime(item.routeEndTime)}</Text>
-                <Text style={styles.busDetails}>Thời gian di chuyển: {calculateTravelTime(item.routeStartTime, item.routeEndTime)}</Text>
-                <Text style={styles.busDetails}>Giá: {item.price.toLocaleString()} VNĐ</Text>
+                <Text style={styles.busDetails}>
+                  Nhà xe: {item.car?.bus_company_id?.bus_company_name || "Không có thông tin"}
+                </Text>
+                <Text style={styles.busDetails}>
+                  Số ghế còn lại: {item.remainingSeat}/{item.car?.amount_seat || "Không có thông tin"}
+                </Text>
+                <Text style={styles.busDetails}>Đi: {formatDateTime(item.timeStartLocationPart)}</Text>
+                <Text style={styles.busDetails}>Đến: {formatDateTime(item.timeEndLocationPart)}</Text>
+                <Text style={styles.busDetails}>
+                  Giá: {item.pricePart?.toLocaleString() || "Không có giá"} VNĐ
+                </Text>
+                <Text style={styles.busDetails}>
+                  Chính sách: {item.policy || "Không có thông tin"}
+                </Text>
               </View>
               <MaterialIcons name="arrow-forward" size={24} color="#007bff" />
             </TouchableOpacity>
