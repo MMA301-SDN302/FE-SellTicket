@@ -14,5 +14,5 @@ export type SignUpRequest = {
   sex: "Male" | "Female" | "Other";
 };
 export type SignUpResponse = {
-  phone_number: string;
+  mobilePhone: string;
 };

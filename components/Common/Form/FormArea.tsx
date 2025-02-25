@@ -32,6 +32,7 @@ const FormArea = <T extends Record<string, any>>({
             pattern: child.props.pattern || undefined,
             patternMess: child.props.patternMess || "",
             errorName: child.props.errorName || child.props.fieldName,
+            isMatch: child.props.isMatch || "",
           },
         }));
       }

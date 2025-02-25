@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, ReactNode } from "react";
 import { AsyncStorageLocal } from "../utils/AsyncStorageLocal";
+import { UserResponse } from "../pages/(Auth)/SignIn/Types";
 
 interface UserInfo {
   user: {
@@ -37,7 +38,7 @@ type AuthProviderProps = {
 // Tạo Provider
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [userInfo, setUserInfo] = useState<UserResponse | undefined>(undefined);
+  const [userInfo, setUserInfo] = useState<UserInfo | undefined>(undefined);
 
   // Hàm đăng nhập
   const saveUser = async (userInfo: UserInfo) => {

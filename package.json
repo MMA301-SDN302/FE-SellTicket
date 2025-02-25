@@ -23,7 +23,6 @@
     "axios": "^1.7.9",
     "expo": "~52.0.25",
     "expo-status-bar": "~2.0.1",
-    "fe-sellticket": "file:",
     "nativewind": "^4.1.23",
     "postcss": "^8.5.2",
     "react": "^18.3.1",

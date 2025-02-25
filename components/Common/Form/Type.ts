@@ -17,6 +17,7 @@ export type ErrorCondition = {
   pattern: RegExp;
   patternMess: string;
   errorName: string;
+  isMatch: string;
 };
 export type FormErrors<T> = {
   [K in keyof T]?: ErrorCondition; // Key là tên trường, value là thông báo lỗi

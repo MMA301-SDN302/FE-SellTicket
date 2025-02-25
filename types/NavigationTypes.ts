@@ -6,7 +6,10 @@ export type RootStackParamList = {
   SignUp: undefined;
   Logout: undefined;
   ForgotPassword: undefined;
-  ResetPassword: undefined;
+  ResetPassword: {
+    mobilePhone: string;
+    userId: string;
+  };
   Chat: undefined;
   Notification: undefined;
   ChatDetail: {
@@ -40,6 +43,7 @@ export type RootStackParamList = {
   }; // Thêm travelTime vào PlaceOrder
   OtpVerify: {
     mobilePhone: string;
+    sendType: string;
   };
   AdminPage: undefined;
   ProductDashboard: undefined;

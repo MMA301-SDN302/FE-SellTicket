@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { View, Image, Text, Button, SafeAreaView, Alert, ScrollView } from "react-native";
+import {
+  View,
+  Image,
+  Text,
+  Button,
+  SafeAreaView,
+  Alert,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 
 import { styles } from "./SignUpStyle";
 import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
@@ -31,7 +40,8 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
     await fetchData(formData)
       .then((res) => {
         navigation.navigate("OtpVerify", {
-          mobilePhone: res.phone_number,
+          mobilePhone: res.mobilePhone,
+          sendType: "SIGNUP",
         });
       })
       .catch((err: ErrorResponse) => {
@@ -79,10 +89,20 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
                 fontSize: 32,
               }}
             >
-              Welcome
+              Đăng Ký
             </Text>
-            <Text style={{ color: "#A0A0A0", fontWeight: 400, fontSize: 18 }}>
-              Đăng ký tài khoản để bắt đầu
+            <Text style={{ color: "#A0A0A0", fontWeight: 300, fontSize: 16 }}>
+              Điền thông tin hoặc{" "}
+              <Text
+                style={{
+                  color: "#000",
+                  fontWeight: 500,
+                  fontSize: 16,
+                }}
+                onPress={() => navigation.pop()}
+              >
+                Đăng Nhập
+              </Text>
             </Text>
           </View>
 
@@ -105,7 +125,6 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
               fieldName="lastName"
               placeholder="Nhập Tên của bạn"
               required
-              
             />
             {/* Email */}
             <TextInputCommon
@@ -164,15 +183,6 @@ export const SignUp: React.FC<Props> = ({ navigation }) => {
               của ứng dụng
             </Text>
           </View>
-          <Text style={{ marginTop: 20 }}>Đã có tài khoản?</Text>
-          <Text
-            style={{ color: "#4D5995", textDecorationLine: "underline" }}
-            onPress={() => {
-              navigation.navigate("SignIn");
-            }}
-          >
-            Đăng Nhập
-          </Text>
         </View>
       </View>
     </ScrollView>

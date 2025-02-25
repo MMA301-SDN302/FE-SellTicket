@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios, { AxiosRequestConfig } from "axios";
 import ERROR_CODES from "../data/ErrorCode";
 import { AsyncStorageLocal } from "../utils/AsyncStorageLocal";
@@ -32,6 +32,14 @@ const useApi = <ResponseType extends Record<string, any>>({
   const [error, setError] = useState<ErrorResponse>({} as ErrorResponse);
   const { userInfo, setUserInfo } = useAuth();
   const { showSpinner, hideSpinner } = useSpinner();
+
+  const AxiosInstant = axios.create({
+    baseURL: "http://",
+  });
+
+  AxiosInstant.interceptors.response.use((response: any) => {
+    return response;
+  });
 
   const handleError = useCallback(async (error: any, payload: any) => {
     if (error.code === 403 && error.error_code === ERROR_CODES.JWT_EXPIRED) {
@@ -133,7 +141,7 @@ const useApi = <ResponseType extends Record<string, any>>({
         }
       }
     },
-    [url, method, options, handleError]
+    [url, method, options, security]
   );
 
   return { data, loading, error, fetchData };

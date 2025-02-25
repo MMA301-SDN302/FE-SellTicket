@@ -23,4 +23,10 @@ export type VerifyOtpResponse = {
     accessToken: string;
     refreshToken: string;
   };
+  mobilePhone: string;
+  userId: string;
+};
+
+export type ResendOtpResponse = {
+  mobilePhone: string;
 };

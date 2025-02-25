@@ -37,6 +37,7 @@ export interface TextInputCommonProps {
   minLength?: number;
   pattern?: RegExp;
   patternMess?: string;
+  isMatch?: string;
   checkBoxOptions?: CheckBoxOptions;
 }
 
