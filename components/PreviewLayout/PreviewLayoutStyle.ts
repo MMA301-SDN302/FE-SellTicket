@@ -23,7 +23,6 @@ export const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginHorizontal: "1%",
     marginBottom: 6,
-    minWidth: "30%",
     textAlign: "center",
   },
   selected: {

@@ -38,7 +38,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     AsyncStorageLocal.set("userToken", token);
 
     const userData: UserResponse = {
-      userId: "abc",
+      userId: "67bede4e2d76c088dd6ef072",
       dateOfBirth: new Date("2003-04-27"),
       displayName: "Thanh Thuy",
       email: "ntthanhthuy@gmail.com",

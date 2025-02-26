@@ -3,4 +3,5 @@ export const ApiConstant = {
   Logout: "/auth/logout",
   Register: "/auth/register",
   VerifyOTP: "/auth/verify-otp",
+  Ticket: "/tickets",
 };

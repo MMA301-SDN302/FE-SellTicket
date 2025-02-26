@@ -1,75 +1,75 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ScrollView, View, Text } from "react-native";
 import { styles } from "./MyTicketStyle";
 import { PreviewLayout } from "../../../components/PreviewLayout/PreviewLayout";
-import { Ticket, type TicketProps } from "../../../components/Ticket/Ticket";
+import { Ticket } from "../../../components/Ticket/Ticket";
 import { useAuth } from "../../../context/AuthContext";
+import { ApiConstant } from "../../../data/ApiConstant";
+import useApi from "../../../hooks/useApi";
+import type { TicketResponse } from "../../../components/Ticket/type";
 const MyTickets = () => {
   const { userInfo } = useAuth();
 
-  const [direction, setDirection] = useState("Hiện tại");
-  const tickets: TicketProps[] = [
-    {
-      ticketNo: "RLT-0123",
-      seatNO: ["3B"],
-      Passenger: "Thanh Thuyy",
-      Depature: "Ha Tinh",
-      Arrive: "Da Nang",
-      DepatureTime: new Date("2025-01-18T20:00"),
-      ArriveTime: new Date("2025-01-19T05:00"),
-      status: "CURRENT",
-    },
-    {
-      ticketNo: "RLT-0123",
-      seatNO: ["4B"],
-      Passenger: "Labubu",
-      Depature: "Ha Tinh",
-      Arrive: "Da Nang",
-      DepatureTime: new Date("2025-01-18T20:00"),
-      ArriveTime: new Date("2025-01-19T05:00"),
-      status: "CURRENT",
-      Price: "500,000 VND",
-    },
-    {
-      ticketNo: "RLT-0456",
-      seatNO: ["5A"],
-      Passenger: "Baby three",
-      Depature: "Hanoi",
-      Arrive: "Ho Chi Minh",
-      DepatureTime: new Date("2025-01-15T10:00"),
-      ArriveTime: new Date("2025-01-15T20:00"),
-      status: "COMPLETED",
-      Price: "600,000 VND",
-    },
-  ];
-
+  const { fetchData } = useApi<TicketResponse[]>({
+    method: "GET",
+    url: `${ApiConstant.Ticket}/`,
+  });
+  const [direction, setDirection] = useState("Chờ thanh toán");
+  const [tickets, setTickets] = useState<TicketResponse[]>([]);
+  const fetchTickets = async () => {
+    try {
+      await fetchData().then((res) => {
+        const formattedTickets = res
+          .filter((ticket) => ticket.user_id === userInfo?.userId)
+          .map((ticket) => ({
+            ...ticket,
+            trip_id: {
+              ...ticket.trip_id,
+              tripStartTime: new Date(ticket.trip_id.tripStartTime),
+              tripEndTime: new Date(ticket.trip_id.tripEndTime),
+            },
+          }));
+        setTickets(formattedTickets);
+        console.log("res", res);
+      });
+    } catch (err) {
+      console.error("Lỗi khi lấy danh sách vé:", err);
+    }
+  };
+  useEffect(() => {
+    fetchTickets();
+  }, []);
   const filteredTickets = useMemo(() => {
-    return tickets.filter((ticket) => {
-      if (direction === "Hiện tại") return ticket.status === "CURRENT";
-      if (direction === "Đã hoàn thành") return ticket.status === "COMPLETED";
-      if (direction === "Đã hủy") return ticket.status === "CANCELLED";
-      return false;
-    });
+    if (!Array.isArray(tickets)) return [];
+
+    const statusMap: any = {
+      "Hiện tại": "confirmed",
+      "Đã hoàn thành": "completed",
+      "Đã hủy": "cancelled",
+      "Chờ thanh toán": "pending",
+    };
+
+    return tickets.filter(
+      (ticket) => ticket.ticket_status === statusMap[direction]
+    );
   }, [direction, tickets]);
 
   return (
     <PreviewLayout
       label="Vé của tôi"
       selectedValue={direction}
-      values={["Hiện tại", "Đã hoàn thành", "Đã hủy"]}
+      values={["Chờ thanh toán", "Hiện tại", "Đã hoàn thành", "Đã hủy"]}
       setSelectedValue={setDirection}
     >
       <ScrollView style={styles.container}>
         <View style={styles.containerView}>
           {!filteredTickets || filteredTickets.length === 0 ? (
-            <Text style={styles.textNoDisplay}>
-              Oops! No Tickets to Display
-            </Text>
+            <Text style={styles.textNoDisplay}>Không có vé để hiển thị</Text>
           ) : (
             <>
               {filteredTickets?.map((ticket, _) => (
                 <View key={_}>
-                  <Ticket {...ticket} />
+                  <Ticket {...ticket} onCancel={fetchTickets} />
                 </View>
               ))}
             </>

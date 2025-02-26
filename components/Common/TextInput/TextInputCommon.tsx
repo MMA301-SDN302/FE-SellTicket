@@ -9,6 +9,7 @@ import PasswordInputType from "./InputType/PasswordInputType";
 import TextInputType from "./InputType/TextInputType";
 import { useState } from "react";
 import CheckBoxInputType from "./InputType/CheckBoxType";
+import SearchInputType from "./InputType/SearchInputProps";
 
 const TextInputCommon = ({
   type,
@@ -85,6 +86,19 @@ const TextInputCommon = ({
     ),
     checkbox: (
       <CheckBoxInputType
+        value={typeof value === "string" ? value : ""}
+        w={w}
+        style={style}
+        options={options}
+        title={textTitle || ""}
+        placeholder={placeholder}
+        onChangeText={onChangeText}
+        icon={icon}
+        checkBoxOptions={checkBoxOptions}
+      />
+    ),
+    search: (
+      <SearchInputType
         value={typeof value === "string" ? value : ""}
         w={w}
         style={style}

@@ -31,7 +31,7 @@ export interface TextInputCommonProps {
   error?: string;
   fieldName: string;
   errorName?: string;
-  onChangeText?: (text: string | Array<string>) => void;
+  onChangeText?: (text: string | Array<string>) => void | undefined;
   required?: boolean;
   maxLength?: number;
   minLength?: number;

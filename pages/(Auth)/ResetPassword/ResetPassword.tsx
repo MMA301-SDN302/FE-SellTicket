@@ -1,4 +1,4 @@
-import { Modal, View, Text, Alert, Button } from "react-native";
+import { Modal, View, Text } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -10,7 +10,9 @@ import {
   checkFormError,
   ValidatePassword,
 } from "../../../utils";
-import ButtonCommon from "../../../components/Common/Button/ButtonCommon";
+import FormArea from "../../../components/Common/Form/FormArea";
+import type { ResetPasswordValues } from "../SignIn/Types";
+import useToast from "../../../hooks/useToast";
 
 interface ResetPasswordProps {
   modalVisible: boolean;
@@ -21,37 +23,34 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
   modalVisible,
   setModalVisible,
 }) => {
-  const [password, setPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const { showToast } = useToast();
 
-  const [showError, setShowError] = useState(false);
-  const [errorMessConfirm, setErrorMessConfirm] = useState("");
-
-  const CheckPassword = () => {
+  const [formValues, setFormValues] = useState<ResetPasswordValues>({
+    password: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const CheckPassword = (formdata: ResetPasswordValues) => {
     const formHasError = checkFormError([
-      ValidatePassword(password),
-      ValidatePassword(newPassword),
-      ValidatePassword(confirmPassword),
+      ValidatePassword(formdata.password),
+      ValidatePassword(formdata.newPassword),
+      ValidatePassword(formdata.confirmPassword),
     ]);
-    const error = CheckConfirmPassword(newPassword, confirmPassword);
-    setErrorMessConfirm(error);
-    if (formHasError || error !== "") {
-      setShowError(true);
-      return;
-    }
-    Alert.alert("Update success");
-    Reset();
+    const error = CheckConfirmPassword(
+      formdata.newPassword,
+      formdata.confirmPassword
+    );
+    showToast({
+      type: "success",
+      message: "Cập nhật mật khẩu thành công",
+    });
+    Reset(formdata);
   };
-  const Reset = () => {
-    setShowError(false);
-    setPassword("");
-    setNewPassword("");
-    setErrorMessConfirm("");
-    setConfirmPassword("");
+
+  const Reset = async (formdata: ResetPasswordValues) => {
+    setFormValues(formdata);
     setModalVisible(!modalVisible);
   };
-
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.centeredView}>
@@ -60,10 +59,22 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
             <View style={styles.modalView}>
               <View style={styles.header}>
                 <Text style={styles.modalText}>ĐẶT LẠI MẬT KHẨU</Text>
-                <Ionicons onPress={Reset} name="close" size={20} />
+                <Ionicons
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                  }}
+                  name="close"
+                  size={20}
+                />
               </View>
-              <>
-                {/* Password */}
+              <FormArea
+                initialValues={formValues}
+                onSubmit={CheckPassword}
+                buttonTitle="Đặt lại mật khẩu"
+                wrapStyle={{
+                  gap: 20,
+                }}
+              >
                 <TextInputCommon
                   type={"password"}
                   placeholder="Nhập mật khẩu cũ"
@@ -71,40 +82,31 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
                   required={true}
                   textTitle="Mật khẩu cũ"
                   minLength={6}
-                  value={password}
-                  onChangeText={setPassword}
+                  value={formValues.password}
                   fieldName={"password"}
                 />
                 {/* Password */}
                 <TextInputCommon
                   type={"password"}
-                  value={newPassword}
+                  value={formValues.newPassword}
                   errorName="Password"
                   placeholder="Mật khẩu mới"
                   required={true}
                   minLength={6}
                   textTitle="Mật khẩu mới"
-                  onChangeText={setNewPassword}
-                  fieldName={""}
+                  fieldName={"newPassword"}
                 />
                 {/* Password */}
                 <TextInputCommon
                   type={"password"}
-                  value={confirmPassword}
+                  value={formValues.confirmPassword}
                   errorName="Password"
                   required={true}
                   minLength={6}
                   textTitle="Nhập lại mật khẩu"
-                  onChangeText={setConfirmPassword}
-                  fieldName={""}
+                  fieldName={"confirmPassword"}
                 />
-              </>
-              <View style={styles.buttonContinue}>
-                <ButtonCommon
-                  title="Đặt lại mật khẩu"
-                  onPress={CheckPassword}
-                />
-              </View>
+              </FormArea>
             </View>
           </View>
         </Modal>
