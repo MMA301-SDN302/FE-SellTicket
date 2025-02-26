@@ -31,12 +31,13 @@ export interface TextInputCommonProps {
   error?: string;
   fieldName: string;
   errorName?: string;
-  onChangeText?: (text: string | Array<string>) => void | undefined;
+  onChangeText?: (text: any) => void;
   required?: boolean;
   maxLength?: number;
   minLength?: number;
   pattern?: RegExp;
   patternMess?: string;
+  isMatch?: string;
   checkBoxOptions?: CheckBoxOptions;
 }
 

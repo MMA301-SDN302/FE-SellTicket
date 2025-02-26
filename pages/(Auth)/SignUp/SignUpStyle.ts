@@ -25,12 +25,12 @@ export const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 24,
   },
 
   buttonContinue: {
     width: "100%",
     paddingLeft: 20,
     justifyContent: "center",
+    
   },
 });

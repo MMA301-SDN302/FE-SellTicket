@@ -10,11 +10,23 @@ export type Props = {
 };
 
 export type VerifyOtpResponse = {
-  phone_number: string;
-  userId: string;
-  name: string;
+  user: {
+    userId: string;
+    dateOfBirth?: string;
+    displayName: string;
+    email?: string;
+    phoneNumber: string;
+    gender: string;
+    avatar?: string;
+  };
   token: {
     accessToken: string;
     refreshToken: string;
   };
+  mobilePhone: string;
+  userId: string;
+};
+
+export type ResendOtpResponse = {
+  mobilePhone: string;
 };

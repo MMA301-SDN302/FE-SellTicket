@@ -1,115 +1,107 @@
-import { Modal, View, Text } from "react-native";
+import { View, Text, Image } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
 
 import { styles } from "./ResetPasswordStyle";
-import { useState } from "react";
 import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
-import {
-  CheckConfirmPassword,
-  checkFormError,
-  ValidatePassword,
-} from "../../../utils";
+
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../../../types/NavigationTypes";
 import FormArea from "../../../components/Common/Form/FormArea";
-import type { ResetPasswordValues } from "../SignIn/Types";
+import { RouteProp } from "@react-navigation/native";
+import useApi from "../../../hooks/useApi";
+import { ApiConstant } from "../../../data/ApiConstant";
+import { ErrorResponse } from "../../../types/ApiTypes";
 import useToast from "../../../hooks/useToast";
+import ERROR_CODES from "../../../data/ErrorCode";
+type ResetPasswordProp = StackNavigationProp<
+  RootStackParamList,
+  "ResetPassword"
+>;
+type RouteProps = RouteProp<RootStackParamList, "ResetPassword">;
+type Props = {
+  navigation: ResetPasswordProp;
+  route: RouteProps;
+};
 
-interface ResetPasswordProps {
-  modalVisible: boolean;
-  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const ResetPassword: React.FC<ResetPasswordProps> = ({
-  modalVisible,
-  setModalVisible,
-}) => {
+const ResetPassword = ({ navigation, route }: Props) => {
+  const { mobilePhone, userId } = route.params;
   const { showToast } = useToast();
-
-  const [formValues, setFormValues] = useState<ResetPasswordValues>({
-    password: "",
-    newPassword: "",
-    confirmPassword: "",
+  const { fetchData } = useApi<any>({
+    method: "POST",
+    url: ApiConstant.ResetPassword,
   });
-  const CheckPassword = (formdata: ResetPasswordValues) => {
-    const formHasError = checkFormError([
-      ValidatePassword(formdata.password),
-      ValidatePassword(formdata.newPassword),
-      ValidatePassword(formdata.confirmPassword),
-    ]);
-    const error = CheckConfirmPassword(
-      formdata.newPassword,
-      formdata.confirmPassword
-    );
-    showToast({
-      type: "success",
-      message: "Cập nhật mật khẩu thành công",
-    });
-    Reset(formdata);
-  };
-
-  const Reset = async (formdata: ResetPasswordValues) => {
-    setFormValues(formdata);
-    setModalVisible(!modalVisible);
+  const handleResetPassword = (value: any) => {
+    if (value.password === value.confirmPassword) {
+      fetchData({
+        userId: userId,
+        mobilePhone: mobilePhone,
+        password: value.password,
+      })
+        .then((res) => {
+          navigation.reset({
+            index: 1,
+            routes: [{ name: "SignIn" }],
+          });
+        })
+        .catch((error: ErrorResponse) => {
+          if (error.error_code === ERROR_CODES.MISSING_FIELD) {
+            showToast({
+              type: "error",
+              message: "Thất Bại",
+              description: "Vui lòng nhập đầy đủ thông tin",
+            });
+          } else if (error.error_code === ERROR_CODES.INVALID_PHONE_NUMBER) {
+            showToast({
+              type: "error",
+              message: "Thất Bại",
+              description: "Số điện thoại không hợp lệ",
+            });
+          } else {
+            showToast({
+              type: "error",
+              message: "Thất Bại",
+              description: "Đặt lại mật khẩu không thành công",
+            });
+          }
+        });
+    }
   };
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.centeredView}>
-        <Modal animationType="slide" transparent={true} visible={modalVisible}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <View style={styles.header}>
-                <Text style={styles.modalText}>ĐẶT LẠI MẬT KHẨU</Text>
-                <Ionicons
-                  onPress={() => {
-                    setModalVisible(!modalVisible);
-                  }}
-                  name="close"
-                  size={20}
-                />
-              </View>
-              <FormArea
-                initialValues={formValues}
-                onSubmit={CheckPassword}
-                buttonTitle="Đặt lại mật khẩu"
-                wrapStyle={{
-                  gap: 20,
-                }}
-              >
-                <TextInputCommon
-                  type={"password"}
-                  placeholder="Nhập mật khẩu cũ"
-                  errorName="Password"
-                  required={true}
-                  textTitle="Mật khẩu cũ"
-                  minLength={6}
-                  value={formValues.password}
-                  fieldName={"password"}
-                />
-                {/* Password */}
-                <TextInputCommon
-                  type={"password"}
-                  value={formValues.newPassword}
-                  errorName="Password"
-                  placeholder="Mật khẩu mới"
-                  required={true}
-                  minLength={6}
-                  textTitle="Mật khẩu mới"
-                  fieldName={"newPassword"}
-                />
-                {/* Password */}
-                <TextInputCommon
-                  type={"password"}
-                  value={formValues.confirmPassword}
-                  errorName="Password"
-                  required={true}
-                  minLength={6}
-                  textTitle="Nhập lại mật khẩu"
-                  fieldName={"confirmPassword"}
-                />
-              </FormArea>
-            </View>
+        <View style={styles.modalView}>
+          <Image
+            style={styles.imageSignUp}
+            source={require("../../../assets/Auth.png")}
+          />
+          <View style={styles.header}>
+            <Text style={styles.modalText}>ĐẶT LẠI MẬT KHẨU</Text>
           </View>
-        </Modal>
+          <FormArea
+            initialValues={{ password: "", confirmPassword: "" }}
+            onSubmit={handleResetPassword}
+            buttonTitle="Đặt lại mật khẩu"
+          >
+            <TextInputCommon
+              type={"password"}
+              placeholder="Nhập mật khẩu mới"
+              errorName="Mật Khẩu mới"
+              required={true}
+              minLength={8}
+              fieldName={"password"}
+            />
+            {/* Password */}
+            <TextInputCommon
+              type={"password"}
+              errorName="Mật Khẩu mới"
+              placeholder="Nhập lại Mật khẩu mới"
+              required={true}
+              minLength={8}
+              isMatch="password"
+              fieldName={"confirmPassword"}
+            />
+          </FormArea>
+        </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );

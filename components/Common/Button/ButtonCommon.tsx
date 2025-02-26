@@ -40,6 +40,7 @@ const ButtonCommon = ({
       ]}
       disabled={disabled}
       onPress={onPress}
+      disabled={disabled}
     >
       <Text
         style={[

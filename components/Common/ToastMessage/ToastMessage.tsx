@@ -111,7 +111,6 @@ const ToastBasic = ({
               color: backgroundColorType[type].descriptionColor,
               fontSize: 16,
               paddingLeft: 10,
-              width: "50%",
               paddingRight: 10,
               fontStyle: "italic",
             }}

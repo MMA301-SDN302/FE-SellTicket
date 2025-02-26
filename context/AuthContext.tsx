@@ -1,21 +1,30 @@
-import React, {
-  createContext,
-  useState,
-  useEffect,
-  ReactNode,
-  useContext,
-} from "react";
+import React, { createContext, useState, useEffect, ReactNode } from "react";
 import { AsyncStorageLocal } from "../utils/AsyncStorageLocal";
-import type { UserResponse } from "../pages/(Auth)/SignIn/Types";
+import { UserResponse } from "../pages/(Auth)/SignIn/Types";
+
+interface UserInfo {
+  user: {
+    userId: string;
+    dateOfBirth?: string;
+    displayName: string;
+    email?: string;
+    phoneNumber: string;
+    gender: string;
+    avatar?: string;
+  };
+  token: {
+    accessToken: string;
+    refreshToken: string;
+  };
+}
 
 // Định nghĩa kiểu cho Context
 type AuthContextType = {
-  userToken: string | null;
   isLoading: boolean;
-  login: (token: string) => void;
-  logout: () => void;
-  userInfo: UserResponse | undefined;
-  setUserInfo: React.Dispatch<React.SetStateAction<UserResponse | undefined>>;
+  saveUser: (userInfo: UserInfo) => Promise<void>;
+  clearUser: () => Promise<void>;
+  userInfo: UserInfo | undefined;
+  setUserInfo: React.Dispatch<React.SetStateAction<UserInfo | undefined>>;
 };
 
 // Tạo Context với kiểu dữ liệu
@@ -28,44 +37,38 @@ type AuthProviderProps = {
 
 // Tạo Provider
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [userToken, setUserToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [userInfo, setUserInfo] = useState<UserResponse | undefined>(undefined);
+  const [userInfo, setUserInfo] = useState<UserInfo | undefined>(undefined);
 
   // Hàm đăng nhập
-  const login = (token: string) => {
-    setUserToken(token);
-    AsyncStorageLocal.set("userToken", token);
-
-    const userData: UserResponse = {
-      userId: "67bede4e2d76c088dd6ef072",
-      dateOfBirth: new Date("2003-04-27"),
-      displayName: "Thanh Thuy",
-      email: "ntthanhthuy@gmail.com",
-      phoneNumber: "0123456789",
-      gender: "Female",
-      avatar: require("../assets/Auth.png"),
-    };
-
-    setUserInfo(userData);
-    AsyncStorageLocal.set("userInfo", JSON.stringify(userData));
+  const saveUser = async (userInfo: UserInfo) => {
+    await AsyncStorageLocal.set("access_token", userInfo.token.accessToken);
+    await AsyncStorageLocal.set("refresh_token", userInfo.token.refreshToken);
+    await AsyncStorageLocal.set("user", JSON.stringify(userInfo.user));
+    setUserInfo(userInfo);
     setIsLoading(false);
   };
 
   // Hàm đăng xuất
-  const logout = () => {
-    setUserToken(null);
+  const clearUser = async () => {
     setUserInfo(undefined);
-    AsyncStorageLocal.remove("userToken");
+    await AsyncStorageLocal.remove("access_token");
+    await AsyncStorageLocal.remove("refresh_token");
+    await AsyncStorageLocal.remove("user");
     setIsLoading(false);
   };
 
   // Kiểm tra trạng thái đăng nhập khi khởi động ứng dụng
   useEffect(() => {
     const checkLoginStatus = async () => {
-      const token = await AsyncStorageLocal.get("userToken");
-      if (token) {
-        login(token);
+      const accessToken = await AsyncStorageLocal.get("access_token");
+      const refreshToken = await AsyncStorageLocal.get("refresh_token");
+      const user = await AsyncStorageLocal.get("user");
+      if (accessToken && refreshToken && user) {
+        setUserInfo({
+          user: JSON.parse(user),
+          token: { accessToken, refreshToken },
+        });
       }
       setIsLoading(false);
     };
@@ -73,20 +76,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkLoginStatus();
   }, []);
 
-  return (
-    <AuthContext.Provider
-      value={{ userToken, isLoading, login, logout, userInfo, setUserInfo }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const value = React.useMemo(
+    () => ({ isLoading, saveUser, clearUser, userInfo, setUserInfo }),
+    [isLoading, saveUser, clearUser, userInfo, setUserInfo]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 // Hook sử dụng AuthContext
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};

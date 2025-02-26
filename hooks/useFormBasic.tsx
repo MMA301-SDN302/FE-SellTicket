@@ -58,6 +58,8 @@ const useFormBasic = <T extends Record<string, any>>(
       return `${condition.errorName} không được vượt quá ${condition.maxLength} ký tự`;
     } else if (condition?.pattern && !condition.pattern?.test(value)) {
       return condition.patternMess;
+    } else if (condition?.isMatch && value !== values[condition.isMatch]) {
+      return `${condition.errorName} không khớp`;
     }
     return null;
   };

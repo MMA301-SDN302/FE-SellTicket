@@ -7,12 +7,11 @@ import type { RootTabParamList } from "../types/NavigationTypes";
 import { Ionicons } from "@expo/vector-icons";
 import { Header } from "../components/Header/Header";
 import { Alert } from "react-native";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 export function TabNavigatorHome({ navigation }: any) {
   const { logout, userInfo } = useAuth();
-
   return (
     <Tab.Navigator
       initialRouteName={"Trang chủ"}
