@@ -12,6 +12,7 @@ import { Notification } from "../pages/(Main)/Notification/Notification";
 import { TabNavigatorHome } from "./TabNavigator";
 import RoutePage from "../pages/(Main)/Route/Route";
 import ResetPassword from "../pages/(Auth)/ResetPassword/ResetPassword";
+import VerifyOtp from "../pages/(Auth)/VerifyOtp/VerifyOtp";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -89,11 +90,11 @@ const StackNavigator = () => {
           headerShown: true,
         }}
       />
-      {/* <Stack.Screen
+      <Stack.Screen
         name="OtpVerify"
         component={VerifyOtp}
         options={{ headerShown: false }}
-      /> */}
+      />
       <Stack.Screen
         name="ResetPassword"
         component={ResetPassword}
