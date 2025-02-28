@@ -11,7 +11,7 @@ import { useAuth } from "../hooks/useAuth";
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 export function TabNavigatorHome({ navigation }: any) {
-  const { logout, userInfo } = useAuth();
+  const { clearUser, userInfo } = useAuth();
   return (
     <Tab.Navigator
       initialRouteName={"Trang chủ"}
@@ -84,7 +84,7 @@ export function TabNavigatorHome({ navigation }: any) {
                     text: "Đăng xuất",
                     onPress: async () => {
                       await AsyncStorageLocal.remove("user");
-                      logout();
+                      clearUser();
                       navigation.reset({
                         index: 0,
                         routes: [{ name: "SignIn" }],

@@ -1,21 +1,16 @@
 import { View, Image, TouchableOpacity, Text } from "react-native";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 import type { RootTabParamList } from "../../../types/NavigationTypes";
 import { styles } from "./ProfileStyle";
 import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
-import {
-  checkFormError,
-  ValidateEmail,
-  ValidateUserName,
-} from "../../../utils";
-import ResetPassword from "../../(Auth)/ResetPassword/ResetPassword";
-import { useAuth } from "../../../context/AuthContext";
 import FormArea from "../../../components/Common/Form/FormArea";
 import type { UserResponse } from "../../(Auth)/SignIn/Types";
 import useToast from "../../../hooks/useToast";
+import { useAuth } from "../../../hooks/useAuth";
+import ChangePassword from "../ChangePassword/ChangePassword";
 
 type ProfileProp = StackNavigationProp<RootTabParamList, "Trang cá nhân">;
 
@@ -49,25 +44,36 @@ const Profile: React.FC<Props> = ({ navigation }) => {
   return (
     userInfo && (
       <View style={{ width: "100%" }}>
-        <ResetPassword
+        <ChangePassword
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
         />
         <View style={styles.profileContainer}>
           <FormArea
-            initialValues={{ ...userInfo, userId: userInfo.userId }}
             onSubmit={Update}
             buttonTitle="Cập nhật"
+            initialValues={{
+              userId: userInfo?.user.userId,
+              dateOfBirth: userInfo?.user.dateOfBirth,
+              displayName: userInfo?.user.displayName,
+              email: userInfo?.user.email,
+              phoneNumber: userInfo?.user.phoneNumber,
+              gender: userInfo?.user.gender,
+              avatar: userInfo?.user.avatar,
+            }}
           >
             <TouchableOpacity onPress={() => {}}>
-              {userInfo.avatar ? (
-                typeof userInfo.avatar === "string" ? (
+              {userInfo.user.avatar ? (
+                typeof userInfo.user.avatar === "string" ? (
                   <Image
-                    source={{ uri: userInfo.avatar }}
+                    source={{ uri: userInfo.user.avatar }}
                     style={styles.avatarStyle}
                   />
                 ) : (
-                  <Image source={userInfo.avatar} style={styles.avatarStyle} />
+                  <Image
+                    source={userInfo.user.avatar}
+                    style={styles.avatarStyle}
+                  />
                 )
               ) : (
                 <Ionicons name="person-circle" size={150} color={"gray"} />
@@ -80,7 +86,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
               textTitle="Tên người dùng"
               fieldName="displayName"
               errorName="tên người dùng"
-              value={userInfo?.displayName}
+              value={userInfo?.user.displayName}
               required
             />
             {/* Phone */}
@@ -88,7 +94,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
               type="phone"
               textTitle="Số điện thoại"
               fieldName="phoneNumber"
-              value={userInfo?.phoneNumber}
+              value={userInfo?.user.phoneNumber}
               errorName="số điện thoại"
             />
             {/* Email */}
@@ -96,7 +102,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
               type="email"
               textTitle="Email"
               fieldName="email"
-              value={userInfo.email}
+              value={userInfo.user.email}
               errorName="email"
             />
             {/* Date of Birth */}
@@ -104,8 +110,10 @@ const Profile: React.FC<Props> = ({ navigation }) => {
               type="date"
               textTitle="Ngày tháng năm sinh"
               value={
-                userInfo.dateOfBirth
-                  ? new Date(userInfo.dateOfBirth).toISOString().split("T")[0]
+                userInfo.user.dateOfBirth
+                  ? new Date(userInfo.user.dateOfBirth)
+                      .toISOString()
+                      .split("T")[0]
                   : ""
               }
               fieldName="dateOfBirth"
@@ -132,7 +140,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                     value: "Other",
                   },
                 ],
-                defaultValue: [userInfo?.gender],
+                defaultValue: [userInfo?.user.gender],
               }}
             />
             {/* Update */}

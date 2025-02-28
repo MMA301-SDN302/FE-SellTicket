@@ -6,5 +6,7 @@ export const ApiConstant = {
   ResendOTP: "/auth/resend-otp",
   RefreshToken: "/auth/refreshToken",
   ResetPassword: "/auth/reset-password",
+  ChangePassword: "/auth/change-password",
   ForgotPassword: "/auth/forgot-password",
+  Ticket: "/tickets",
 };

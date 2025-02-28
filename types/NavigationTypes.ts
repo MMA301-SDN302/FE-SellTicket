@@ -10,6 +10,7 @@ export type RootStackParamList = {
     mobilePhone: string;
     userId: string;
   };
+  ChangePassword: undefined;
   Chat: undefined;
   Notification: undefined;
   ChatDetail: {
