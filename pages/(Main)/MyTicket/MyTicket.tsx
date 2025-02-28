@@ -3,10 +3,10 @@ import { ScrollView, View, Text } from "react-native";
 import { styles } from "./MyTicketStyle";
 import { PreviewLayout } from "../../../components/PreviewLayout/PreviewLayout";
 import { Ticket } from "../../../components/Ticket/Ticket";
-import { useAuth } from "../../../context/AuthContext";
 import { ApiConstant } from "../../../data/ApiConstant";
 import useApi from "../../../hooks/useApi";
 import type { TicketResponse } from "../../../components/Ticket/type";
+import { useAuth } from "../../../hooks/useAuth";
 const MyTickets = () => {
   const { userInfo } = useAuth();
 
@@ -20,7 +20,7 @@ const MyTickets = () => {
     try {
       await fetchData().then((res) => {
         const formattedTickets = res
-          .filter((ticket) => ticket.user_id === userInfo?.userId)
+          .filter((ticket) => ticket.user_id === userInfo?.user.userId)
           .map((ticket) => ({
             ...ticket,
             trip_id: {
@@ -32,9 +32,7 @@ const MyTickets = () => {
         setTickets(formattedTickets);
         console.log("res", res);
       });
-    } catch (err) {
-      console.error("Lỗi khi lấy danh sách vé:", err);
-    }
+    } catch (err) {}
   };
   useEffect(() => {
     fetchTickets();
