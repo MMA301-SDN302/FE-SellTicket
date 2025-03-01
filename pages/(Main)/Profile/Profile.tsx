@@ -11,6 +11,10 @@ import type { UserResponse } from "../../(Auth)/SignIn/Types";
 import useToast from "../../../hooks/useToast";
 import { useAuth } from "../../../hooks/useAuth";
 import ChangePassword from "../ChangePassword/ChangePassword";
+import useApi from "../../../hooks/useApi";
+import { ApiConstant } from "../../../data/ApiConstant";
+import ERROR_CODES from "../../../data/ErrorCode";
+import type { ErrorResponse } from "../../../types/ApiTypes";
 
 type ProfileProp = StackNavigationProp<RootTabParamList, "Trang cá nhân">;
 
@@ -20,25 +24,69 @@ type Props = {
 
 const Profile: React.FC<Props> = ({ navigation }) => {
   const { userInfo, setUserInfo } = useAuth();
-
+  const [formValues, setFormValues] = useState<UserResponse>({
+    userId: userInfo?.user.userId || "",
+    dateOfBirth: userInfo?.user.dateOfBirth,
+    displayName: userInfo?.user.displayName || "",
+    email: userInfo?.user.email,
+    phoneNumber: userInfo?.user.phoneNumber || "",
+    gender: userInfo?.user.gender || "",
+    avatar: userInfo?.user.avatar,
+  });
   const [modalVisible, setModalVisible] = useState(false);
   const { showToast } = useToast();
-
+  const { fetchData } = useApi<UserResponse>({
+    method: "PUT",
+    url: `${ApiConstant.Profile}/${userInfo?.user.userId}`,
+  });
   const Update = async (formdata: UserResponse) => {
     if (!formdata) {
       console.error("Dữ liệu cập nhật không hợp lệ");
       return;
     }
 
-    setUserInfo((prevUserInfo: any) => ({
-      ...prevUserInfo,
-      ...formdata,
-      userId: prevUserInfo?.userId || "",
-    }));
-    showToast({
-      type: "success",
-      message: "Cập nhật thành công",
-    });
+    let firstName = "";
+    let lastName = "";
+
+    const nameParts = formdata.displayName.trim().split(" ");
+
+    if (nameParts.length > 1) {
+      firstName = nameParts[0];
+      lastName = nameParts[nameParts.length - 1];
+    } else {
+      firstName = nameParts[0];
+    }
+
+    await fetchData({
+      firstName: firstName,
+      lastName: lastName,
+      email: formdata.email,
+      sex: formdata.gender,
+      dateOfBirth: formdata.dateOfBirth,
+      phoneNumber: formdata.phoneNumber,
+      avatar: formdata.avatar,
+    })
+      .then((res) => {
+        showToast({
+          type: "success",
+          message: "Cập nhật thành công",
+        });
+        setFormValues(res);
+
+        setUserInfo({
+          user: res,
+          token: userInfo?.token || { accessToken: "", refreshToken: "" },
+        });
+      })
+      .catch((err: ErrorResponse) => {
+        if (err.error_code === ERROR_CODES.MISSING_FIELD) {
+          showToast({
+            type: "error",
+            message: "Thất bại",
+            description: "Vui lòng nhập đầy đủ thông tin",
+          });
+        }
+      });
   };
 
   return (
@@ -52,15 +100,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
           <FormArea
             onSubmit={Update}
             buttonTitle="Cập nhật"
-            initialValues={{
-              userId: userInfo?.user.userId,
-              dateOfBirth: userInfo?.user.dateOfBirth,
-              displayName: userInfo?.user.displayName,
-              email: userInfo?.user.email,
-              phoneNumber: userInfo?.user.phoneNumber,
-              gender: userInfo?.user.gender,
-              avatar: userInfo?.user.avatar,
-            }}
+            initialValues={formValues}
           >
             <TouchableOpacity onPress={() => {}}>
               {userInfo.user.avatar ? (
@@ -86,7 +126,6 @@ const Profile: React.FC<Props> = ({ navigation }) => {
               textTitle="Tên người dùng"
               fieldName="displayName"
               errorName="tên người dùng"
-              value={userInfo?.user.displayName}
               required
             />
             {/* Phone */}
@@ -94,7 +133,6 @@ const Profile: React.FC<Props> = ({ navigation }) => {
               type="phone"
               textTitle="Số điện thoại"
               fieldName="phoneNumber"
-              value={userInfo?.user.phoneNumber}
               errorName="số điện thoại"
             />
             {/* Email */}
@@ -102,7 +140,6 @@ const Profile: React.FC<Props> = ({ navigation }) => {
               type="email"
               textTitle="Email"
               fieldName="email"
-              value={userInfo.user.email}
               errorName="email"
             />
             {/* Date of Birth */}
@@ -140,10 +177,9 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                     value: "Other",
                   },
                 ],
-                defaultValue: [userInfo?.user.gender],
+                defaultValue: [userInfo.user.gender],
               }}
             />
-            {/* Update */}
           </FormArea>
 
           <TouchableOpacity

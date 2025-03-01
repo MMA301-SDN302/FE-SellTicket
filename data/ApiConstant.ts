@@ -9,4 +9,5 @@ export const ApiConstant = {
   ChangePassword: "/auth/change-password",
   ForgotPassword: "/auth/forgot-password",
   Ticket: "/tickets",
+  Profile: "/profile",
 };
