@@ -26,7 +26,7 @@ const Route = ({ navigation, route }: Props) => {
 
   // Hook API
   const { fetchData } = useApi<any[]>({
-    url: "/route/search",
+    url: "/routes/search",
     method: "GET",
   });
 
@@ -36,7 +36,7 @@ const Route = ({ navigation, route }: Props) => {
       fetchData({ startLocation: from, endLocation: to, date })
         .then((res) => {
           console.log("API Response:", res);
-          setBusRoutes(res || []); // Đảm bảo có dữ liệu
+          setBusRoutes(res || []);
           setError(null);
         })
         .catch((err) => {
@@ -47,7 +47,7 @@ const Route = ({ navigation, route }: Props) => {
     }
   }, [from, to, date]);
 
-  // 🛠 **Giữ nguyên định dạng ngày tháng**
+  // **Giữ nguyên định dạng ngày tháng**
   const formatDateTime = (dateString: string) => {
     const date = new Date(dateString);
     return `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1)
@@ -66,10 +66,11 @@ const Route = ({ navigation, route }: Props) => {
       time: selectedBus.timeStartLocationPart,
       price: selectedBus.pricePart,
       travelTime:
-        new Date(selectedBus.timeEndLocationPart).getTime() -
-        new Date(selectedBus.timeStartLocationPart).getTime(),
+        new Date(selectedBus.timeEndLocationPart).getTime() - new Date(selectedBus.timeStartLocationPart).getTime(),
+      routeId: selectedBus._id,
     });
   };
+  
 
   return (
     <View style={styles.container}>
