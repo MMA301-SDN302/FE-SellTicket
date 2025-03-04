@@ -13,13 +13,20 @@ const PhoneInputType = ({
   placeholder = "Số điện thoại",
   icon = "call",
   onChangeText,
+  disable = false,
 }: IInputTypeProps) => {
   return (
     <>
       <TitleInput title={title} />
-      <View style={[styles.textInputContainer, { width: w ?? "100%" }]}>
+      <View
+        style={[
+          styles.textInputContainer,
+          { width: w ?? "100%", backgroundColor: disable ? "#cbcccf" : "" },
+        ]}
+      >
         <Ionicons name={icon} size={24} color="#4D5995" />
         <PhoneInput
+          disabled={disable}
           containerStyle={styles.containerStylePhone}
           countryPickerButtonStyle={styles.countryPickerButtonStyle}
           textContainerStyle={styles.textContainerStyle}

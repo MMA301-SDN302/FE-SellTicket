@@ -1,7 +1,7 @@
-import { View, Image, TouchableOpacity, Text } from "react-native";
+import { View, Image, TouchableOpacity, Text, Alert } from "react-native";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import type { RootTabParamList } from "../../../types/NavigationTypes";
 import { styles } from "./ProfileStyle";
@@ -15,7 +15,9 @@ import useApi from "../../../hooks/useApi";
 import { ApiConstant } from "../../../data/ApiConstant";
 import ERROR_CODES from "../../../data/ErrorCode";
 import type { ErrorResponse } from "../../../types/ApiTypes";
-
+import * as ImagePicker from "expo-image-picker";
+import { useFocusEffect } from "@react-navigation/native";
+import { useChanges } from "../../../hooks/useChanges";
 type ProfileProp = StackNavigationProp<RootTabParamList, "Trang cá nhân">;
 
 type Props = {
@@ -23,15 +25,19 @@ type Props = {
 };
 
 const Profile: React.FC<Props> = ({ navigation }) => {
+  const { isDirty, markDirty, markClean } = useChanges();
+
   const { userInfo, setUserInfo } = useAuth();
+  const [image, setImage] = useState<string | undefined>(undefined);
+
   const [formValues, setFormValues] = useState<UserResponse>({
     userId: userInfo?.user.userId || "",
-    dateOfBirth: userInfo?.user.dateOfBirth,
-    displayName: userInfo?.user.displayName || "",
-    email: userInfo?.user.email,
     phoneNumber: userInfo?.user.phoneNumber || "",
+    displayName: userInfo?.user.displayName || "",
     gender: userInfo?.user.gender || "",
+    dateOfBirth: userInfo?.user.dateOfBirth,
     avatar: userInfo?.user.avatar,
+    email: userInfo?.user.email,
   });
   const [modalVisible, setModalVisible] = useState(false);
   const { showToast } = useToast();
@@ -45,6 +51,9 @@ const Profile: React.FC<Props> = ({ navigation }) => {
       return;
     }
 
+    if (image != undefined) {
+      formdata.avatar = image;
+    }
     let firstName = "";
     let lastName = "";
 
@@ -88,6 +97,47 @@ const Profile: React.FC<Props> = ({ navigation }) => {
         }
       });
   };
+  const selectImageSource: any = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      showToast({
+        type: "error",
+        message: "Không thể truy cập máy ảnh",
+        description: "Vui lòng cấp quyền sử dụng máy ảnh trong cài đặt.",
+      });
+      return;
+    }
+    Alert.alert("Chọn ảnh", "Bạn muốn chọn ảnh từ đâu?", [
+      { text: "Thư viện", onPress: pickImageFromLibrary },
+      { text: "Máy ảnh", onPress: pickImageFromCamera },
+      { text: "Hủy", style: "cancel" },
+    ]);
+  };
+  const pickImageFromLibrary = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images", "videos"],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+  const pickImageFromCamera = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   return (
     userInfo && (
@@ -101,12 +151,13 @@ const Profile: React.FC<Props> = ({ navigation }) => {
             onSubmit={Update}
             buttonTitle="Cập nhật"
             initialValues={formValues}
+            disableChange
           >
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={selectImageSource}>
               {userInfo.user.avatar ? (
                 typeof userInfo.user.avatar === "string" ? (
                   <Image
-                    source={{ uri: userInfo.user.avatar }}
+                    source={{ uri: image ?? userInfo.user.avatar }}
                     style={styles.avatarStyle}
                   />
                 ) : (
@@ -134,6 +185,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
               textTitle="Số điện thoại"
               fieldName="phoneNumber"
               errorName="số điện thoại"
+              disable
             />
             {/* Email */}
             <TextInputCommon

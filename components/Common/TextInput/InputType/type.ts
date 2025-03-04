@@ -39,6 +39,7 @@ export interface TextInputCommonProps {
   patternMess?: string;
   isMatch?: string;
   checkBoxOptions?: CheckBoxOptions;
+  disable?: boolean;
 }
 
 export type IInputTypeProps = {
@@ -51,6 +52,7 @@ export type IInputTypeProps = {
   icon?: React.ComponentProps<typeof Ionicons>["name"];
   onChangeText?: (text: string | Array<string>) => void;
   checkBoxOptions?: CheckBoxOptions;
+  disable?: boolean;
 };
 
 export type CheckBoxOptions = {
