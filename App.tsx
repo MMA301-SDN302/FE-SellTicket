@@ -6,6 +6,7 @@ import { LogBox } from "react-native";
 import ToastMessage from "./components/Common/ToastMessage/ToastMessage";
 import { SpinnerProvider } from "./hooks/useSpinner";
 import SpinnerLoading from "./components/Common/SpinLoading/SpinLoading";
+import { SocketProvider } from "./context/SocketContext";
 
 LogBox.ignoreLogs([
   "Warning: Main: Support for defaultProps will be removed from function components in a future major release.",
@@ -18,13 +19,15 @@ LogBox.ignoreLogs([
 export default function App() {
   return (
     <AuthProvider>
-      <SpinnerProvider>
-        <NavigationContainer>
-          <StackNavigator />
-          <ToastMessage />
-          <SpinnerLoading />
-        </NavigationContainer>
-      </SpinnerProvider>
+      <SocketProvider>
+        <SpinnerProvider>
+          <NavigationContainer>
+            <StackNavigator />
+            <ToastMessage />
+            <SpinnerLoading />
+          </NavigationContainer>
+        </SpinnerProvider>
+      </SocketProvider>
     </AuthProvider>
   );
 }

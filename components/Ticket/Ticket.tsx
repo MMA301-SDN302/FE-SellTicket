@@ -1,27 +1,44 @@
-import { View, Text, Button, TouchableOpacity } from "react-native";
+import { View, Text, Button, TouchableOpacity, Alert } from "react-native";
 import { styles } from "./TicketStyle";
 import { Ionicons } from "@expo/vector-icons";
 import ButtonCommon from "../Common/Button/ButtonCommon";
-import { useState } from "react";
+import useApi from "../../hooks/useApi";
+import { ApiConstant } from "../../data/ApiConstant";
+import type { TicketResponse } from "./type";
 
-export type TicketProps = {
-  seatNO?: string[];
-  ticketNo?: string;
-  DepatureTime: Date;
-  ArriveTime: Date;
-  Depature: String;
-  Arrive: String;
-  Passenger?: String;
-  Price?: string;
-  status?: string;
-  Quantity?: number;
+type TicketProps = TicketResponse & {
+  onCancel: () => Promise<void>;
 };
-export function Ticket(ticket: TicketProps) {
-  const [ticketStatus, setTicketStatus] = useState(ticket.status);
 
-  function CancelTicket() {
-    ticket.status = "CANCEL";
+export function Ticket({ onCancel, ...ticket }: TicketProps) {
+  const { fetchData } = useApi({
+    method: "DELETE",
+    url: `${ApiConstant.Ticket}/${ticket._id}`,
+  });
+  async function CancelTicket() {
+    if (!ticket._id) {
+      console.error("Lỗi: _id không tồn tại");
+      return;
+    }
+    Alert.alert("Hủy vé", `Bạn muốn hủy vé ${ticket.ticket_No}?`, [
+      { text: "Không", style: "cancel" },
+      {
+        text: "Có",
+        onPress: async () => {
+          try {
+            console.log("Hủy vé với _id:", ticket._id);
+            await fetchData();
+            if (onCancel) {
+              onCancel();
+            }
+          } catch (err) {
+            console.error("Lỗi khi hủy vé:", err);
+          }
+        },
+      },
+    ]);
   }
+
   function GenerateQRCode() {}
 
   return (
@@ -30,7 +47,7 @@ export function Ticket(ticket: TicketProps) {
         <Text style={styles.headerText}>Vé xe ô tô</Text>
 
         <View style={styles.priceBox}>
-          {ticket.Price == undefined ? (
+          {ticket.ticket_price == undefined ? (
             <Text
               style={
                 (styles.inforText,
@@ -50,7 +67,9 @@ export function Ticket(ticket: TicketProps) {
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {ticket.Price ?? " > 100,000 VND"}
+              {new Intl.NumberFormat("en-US").format(ticket.ticket_price) ??
+                " > 100,000 "}
+              VND
             </Text>
           </View>
         </View>
@@ -58,7 +77,7 @@ export function Ticket(ticket: TicketProps) {
       <View style={styles.inforTicket}>
         <View style={styles.detailTicket}>
           <View style={styles.detailBox}>
-            {ticket.seatNO && (
+            {ticket.ticket_No && (
               <View style={styles.detailTime}>
                 <Text
                   style={styles.inforText}
@@ -72,11 +91,11 @@ export function Ticket(ticket: TicketProps) {
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {ticket.seatNO}
+                  {ticket.ticket_No}
                 </Text>
               </View>
             )}
-            {ticket.ticketNo && (
+            {ticket.ticket_No && (
               <View style={styles.detailTime}>
                 <Text
                   style={styles.inforText}
@@ -90,7 +109,7 @@ export function Ticket(ticket: TicketProps) {
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {ticket.ticketNo}
+                  {ticket.ticket_No}
                 </Text>
               </View>
             )}
@@ -109,7 +128,7 @@ export function Ticket(ticket: TicketProps) {
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {ticket.DepatureTime?.toLocaleTimeString("vi-VN", {
+                {ticket.trip_id.tripStartTime?.toLocaleTimeString("vi-VN", {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
@@ -119,7 +138,7 @@ export function Ticket(ticket: TicketProps) {
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {ticket.DepatureTime?.toLocaleDateString("vi-VN", {})}
+                {ticket.trip_id.tripStartTime?.toLocaleDateString("vi-VN", {})}
               </Text>
             </View>
             <View style={styles.detailTime}>
@@ -135,7 +154,7 @@ export function Ticket(ticket: TicketProps) {
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {ticket.ArriveTime?.toLocaleTimeString("vi-VN", {
+                {ticket.trip_id.tripEndTime?.toLocaleTimeString("vi-VN", {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
@@ -150,7 +169,7 @@ export function Ticket(ticket: TicketProps) {
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {ticket.ArriveTime?.toLocaleDateString("vi-VN", {})}
+                  {ticket.trip_id.tripEndTime?.toLocaleDateString("vi-VN", {})}
                 </Text>
               </Text>
             </View>
@@ -171,7 +190,7 @@ export function Ticket(ticket: TicketProps) {
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {ticket.Depature}
+              {ticket.trip_id.depature}
             </Text>
             <View
               style={{
@@ -189,12 +208,12 @@ export function Ticket(ticket: TicketProps) {
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {ticket.Arrive}
+              {ticket.trip_id.arrive}
             </Text>
           </View>
         </View>
       </View>
-      {ticket.status == "CURRENT" && (
+      {ticket.ticket_status == "confirmed" && (
         <View style={styles.buttonCurrent}>
           <ButtonCommon
             title="Mã QR"
@@ -208,6 +227,29 @@ export function Ticket(ticket: TicketProps) {
           />
           <ButtonCommon
             title="Hủy vé"
+            isActive={true}
+            onPress={() => CancelTicket()}
+            backgroundColor="#fff"
+            borderColor="blue"
+            activeTextColor="#fff"
+            buttonStyle={{ width: "40%", backgroundColor: "#ff4747" }}
+          />
+        </View>
+      )}
+      {ticket.ticket_status == "pending" && (
+        <View style={styles.buttonCurrent}>
+          <ButtonCommon
+            title="Thanh toán"
+            isActive={true}
+            onPress={() => GenerateQRCode()}
+            backgroundColor="#f0f0f0"
+            textColor="black"
+            activeBackgroundColor="#4D5995"
+            activeTextColor="#fff"
+            buttonStyle={{ width: "40%" }}
+          />
+          <ButtonCommon
+            title="Hủy đặt vé"
             isActive={true}
             onPress={() => CancelTicket()}
             backgroundColor="#fff"

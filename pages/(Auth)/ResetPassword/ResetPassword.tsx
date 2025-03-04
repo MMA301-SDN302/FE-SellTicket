@@ -41,7 +41,6 @@ const ResetPassword = ({ navigation, route }: Props) => {
           navigation.reset({
             index: 1,
             routes: [{ name: "SignIn" }],
-            
           });
         })
         .catch((error: ErrorResponse) => {
@@ -67,7 +66,6 @@ const ResetPassword = ({ navigation, route }: Props) => {
         });
     }
   };
-
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.centeredView}>

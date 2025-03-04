@@ -10,6 +10,11 @@ export type FormValues = {
   phoneNumber: string;
   password: string;
 };
+export type ResetPasswordValues = {
+  password: string;
+  newPassword: string;
+  confirmPassword: string;
+};
 export type LoginRequest = {
   phone: string;
   password: string;

@@ -48,7 +48,7 @@ export const Header = ({ back, goHome }: HeaderProps) => {
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {userInfo.displayName}
+              {userInfo.user.displayName}
             </Text>
           </View>
         ) : (
