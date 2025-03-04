@@ -22,7 +22,8 @@ export type RootStackParamList = {
     date: string;
     isRoundTrip: boolean;
     travelTime: number;
-  }; // Thêm travelTime vào Route
+    routeId: string,
+  }; 
   Booking: {
     from: string;
     to: string;
@@ -31,7 +32,8 @@ export type RootStackParamList = {
     time: string;
     price: string;
     travelTime: number;
-  }; // Thêm travelTime vào Booking
+    routeId: string;
+  }; 
   PlaceOrder: {
     from: string;
     to: string;

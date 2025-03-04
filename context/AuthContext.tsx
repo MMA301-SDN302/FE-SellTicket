@@ -3,15 +3,7 @@ import { AsyncStorageLocal } from "../utils/AsyncStorageLocal";
 import { UserResponse } from "../pages/(Auth)/SignIn/Types";
 
 interface UserInfo {
-  user: {
-    userId: string;
-    dateOfBirth?: string;
-    displayName: string;
-    email?: string;
-    phoneNumber: string;
-    gender: string;
-    avatar?: string;
-  };
+  user: UserResponse;
   token: {
     accessToken: string;
     refreshToken: string;
