@@ -11,8 +11,8 @@ import PlaceOrder from "../pages/(Main)/PlaceOrder/PlaceOrder";
 import { Notification } from "../pages/(Main)/Notification/Notification";
 import { TabNavigatorHome } from "./TabNavigator";
 import RoutePage from "../pages/(Main)/Route/Route";
-import ResetPassword from "../pages/(Auth)/ResetPassword/ResetPassword";
 import VerifyOtp from "../pages/(Auth)/VerifyOtp/VerifyOtp";
+import ResetPassword from "../pages/(Auth)/ResetPassword/ResetPassword";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
