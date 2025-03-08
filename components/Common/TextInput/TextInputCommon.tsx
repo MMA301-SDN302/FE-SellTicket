@@ -41,7 +41,7 @@ const TextInputCommon = ({
     ),
     date: (
       <DateInputType
-        value={value instanceof Date ? value : new Date()}
+        value={value ?? ""}
         title={textTitle || ""}
         options={options}
         placeholder={placeholder}

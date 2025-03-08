@@ -25,6 +25,7 @@ const DateInputType = ({
   const onChange = (selectedDate: Date | undefined) => {
     if (selectedDate) {
       setShow(false);
+      value = selectedDate;
       onChangeText && onChangeText(selectedDate.toISOString());
     }
   };

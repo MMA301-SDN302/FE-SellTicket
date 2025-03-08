@@ -16,8 +16,6 @@ import { ApiConstant } from "../../../data/ApiConstant";
 import ERROR_CODES from "../../../data/ErrorCode";
 import type { ErrorResponse } from "../../../types/ApiTypes";
 import * as ImagePicker from "expo-image-picker";
-import { useFocusEffect } from "@react-navigation/native";
-import { useChanges } from "../../../hooks/useChanges";
 type ProfileProp = StackNavigationProp<RootTabParamList, "Trang cá nhân">;
 
 type Props = {
@@ -25,20 +23,21 @@ type Props = {
 };
 
 const Profile: React.FC<Props> = ({ navigation }) => {
-  const { isDirty, markDirty, markClean } = useChanges();
-
   const { userInfo, setUserInfo } = useAuth();
-  const [image, setImage] = useState<string | undefined>(undefined);
 
   const [formValues, setFormValues] = useState<UserResponse>({
     userId: userInfo?.user.userId || "",
     phoneNumber: userInfo?.user.phoneNumber || "",
     displayName: userInfo?.user.displayName || "",
-    gender: userInfo?.user.gender || "",
-    dateOfBirth: userInfo?.user.dateOfBirth,
-    avatar: userInfo?.user.avatar,
-    email: userInfo?.user.email,
+    gender: userInfo?.user.gender || null || "",
+    dateOfBirth: userInfo?.user.dateOfBirth || null || "",
+    avatar: userInfo?.user.avatar || null || "",
+    email: userInfo?.user.email || null || "",
   });
+  const [image, setImage] = useState<string | undefined | null>(
+    formValues.avatar
+  );
+
   const [modalVisible, setModalVisible] = useState(false);
   const { showToast } = useToast();
   const { fetchData } = useApi<UserResponse>({
@@ -120,7 +119,6 @@ const Profile: React.FC<Props> = ({ navigation }) => {
       aspect: [4, 3],
       quality: 1,
     });
-    console.log(result);
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
@@ -151,15 +149,12 @@ const Profile: React.FC<Props> = ({ navigation }) => {
             onSubmit={Update}
             buttonTitle="Cập nhật"
             initialValues={formValues}
-            disableChange
+            disableChange={image === formValues.avatar}
           >
             <TouchableOpacity onPress={selectImageSource}>
-              {userInfo.user.avatar ? (
+              {image != "" && image != undefined ? (
                 typeof userInfo.user.avatar === "string" ? (
-                  <Image
-                    source={{ uri: image ?? userInfo.user.avatar }}
-                    style={styles.avatarStyle}
-                  />
+                  <Image source={{ uri: image }} style={styles.avatarStyle} />
                 ) : (
                   <Image
                     source={userInfo.user.avatar}
@@ -198,13 +193,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
             <TextInputCommon
               type="date"
               textTitle="Ngày tháng năm sinh"
-              value={
-                userInfo.user.dateOfBirth
-                  ? new Date(userInfo.user.dateOfBirth)
-                      .toISOString()
-                      .split("T")[0]
-                  : ""
-              }
+              value={userInfo.user.dateOfBirth}
               fieldName="dateOfBirth"
               errorName="ngày tháng năm sinh"
             />
