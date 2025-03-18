@@ -27,6 +27,7 @@ export type UserResponse = {
   phoneNumber: string;
   gender: string;
   avatar?: string;
+  role?: string;
 };
 
 export type LoginResponse = {

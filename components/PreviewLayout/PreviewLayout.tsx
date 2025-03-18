@@ -22,61 +22,64 @@ export function PreviewLayout({
   setSearchText,
 }: PreviewLayoutProps) {
   return (
-    <View style={{ padding: 10, flex: 1 }}>
-      {label && <Text style={styles.label}>{label}</Text>}
-      {searchText !== undefined && (
-        <TextInputCommon
-          type={"search"}
-          value={searchText}
-          fieldName={"searchText"}
-          errorName={""}
-          icon="search"
-          onChangeText={(e) => {
-            if (setSearchText) {
-              setSearchText(e as string);
-            }
-          }}
-        />
-      )}
-      <View style={styles.row}>
-        {values &&
-          values.map(
-            (value, _) =>
-              setSelectedValue && (
-                <TouchableOpacity
-                  key={value}
-                  onPress={() => setSelectedValue(value)}
-                  style={[
-                    styles.button,
-                    selectedValue === value && styles.selected,
-                    {
-                      width:
-                        values.length === 2
-                          ? "35%"
-                          : values.length === 3
-                          ? "30%"
-                          : values.length === 4
-                          ? "20%"
-                          : "auto",
-                    },
-                  ]}
-                >
-                  <Text
+    <View style={{ flex: 1 }}>
+      <View style={{ padding: 10 }}>
+        {label && <Text style={styles.label}>{label}</Text>}
+        {searchText !== undefined && (
+          <TextInputCommon
+            type={"search"}
+            value={searchText}
+            fieldName={"searchText"}
+            errorName={""}
+            icon="search"
+            onChangeText={(e) => {
+              if (setSearchText) {
+                setSearchText(e as string);
+              }
+            }}
+          />
+        )}
+        <View style={styles.row}>
+          {values &&
+            values.map(
+              (value, _) =>
+                setSelectedValue && (
+                  <TouchableOpacity
+                    key={value}
+                    onPress={() => setSelectedValue(value)}
                     style={[
-                      styles.buttonLabel,
-                      selectedValue === value && styles.selectedLabel,
+                      styles.button,
+                      selectedValue === value && styles.selected,
+                      {
+                        width:
+                          values.length === 2
+                            ? "35%"
+                            : values.length === 3
+                            ? "30%"
+                            : values.length === 4
+                            ? "20%"
+                            : "auto",
+                      },
                     ]}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
                   >
-                    {value}
-                  </Text>
-                </TouchableOpacity>
-              )
-          )}
+                    <Text
+                      style={[
+                        styles.buttonLabel,
+                        selectedValue === value && styles.selectedLabel,
+                      ]}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {value}
+                    </Text>
+                  </TouchableOpacity>
+                )
+            )}
+        </View>
       </View>
 
-      <View style={[styles.container]}>{children}</View>
+      {/* Render children directly without wrapping in a scrollable container */}
+      {children}
     </View>
   );
 }
