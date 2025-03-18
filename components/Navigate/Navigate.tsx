@@ -34,7 +34,18 @@ const useNavigate = () => {
     }
   };
 
-  return { navigateTo };
+  const goBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      Alert.alert("Thông báo", "Không thể quay lại màn hình trước.");
+    }
+  };
+
+  return { 
+    navigateTo,
+    goBack 
+  };
 };
 
 export default useNavigate;
