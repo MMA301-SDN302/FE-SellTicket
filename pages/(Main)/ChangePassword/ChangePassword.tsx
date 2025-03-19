@@ -17,6 +17,9 @@ import FormArea from "../../../components/Common/Form/FormArea";
 import useToast from "../../../hooks/useToast";
 import useApi from "../../../hooks/useApi";
 import { ApiConstant } from "../../../data/ApiConstant";
+import { useAuth } from "../../../hooks/useAuth";
+import type { ErrorResponse } from "../../../types/ApiTypes";
+import ERROR_CODES from "../../../data/ErrorCode";
 
 interface ChangePasswordProps {
   modalVisible: boolean;
@@ -27,9 +30,60 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   modalVisible,
   setModalVisible,
 }) => {
+  const { userInfo } = useAuth();
+  const { showToast } = useToast();
+
+  const { fetchData } = useApi<any>({
+    method: "PUT",
+    url: ApiConstant.ChangePassword,
+  });
   const handleResetPassword = (value: any) => {
-    Alert.alert("Update success");
-    Reset();
+    if (value.newPassword === value.confirmPassword) {
+      fetchData({
+        userId: userInfo?.user.userId,
+        mobilePhone: userInfo?.user.phoneNumber,
+        password: value.password,
+        newPassword: value.newPassword,
+        confirmPassword: value.confirmPassword,
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            showToast({
+              type: "success",
+              message: "Thành Công",
+              description: "Đặt lại mật khẩu thành công",
+            });
+            setModalVisible(!modalVisible);
+          }
+        })
+        .catch((error: ErrorResponse) => {
+          if (error.error_code === ERROR_CODES.INVALID_PHONE_NUMBER) {
+            showToast({
+              type: "error",
+              message: "Thất Bại",
+              description: "Số điện thoại không hợp lệ",
+            });
+          } else if (error.error_code === ERROR_CODES.INVALID_CREDENTIALS) {
+            showToast({
+              type: "error",
+              message: "Thất Bại",
+              description: "Sai mật khẩu cũ",
+            });
+          } else {
+            showToast({
+              type: "error",
+              message: "Thất Bại",
+              description: "Thay đổi mật khẩu không thành công",
+            });
+          }
+        });
+    } else {
+      showToast({
+        type: "error",
+        message: "Thất Bại",
+        description: "Mật khẩu mới không trùng khớp",
+      });
+    }
   };
 
   const Reset = () => {
