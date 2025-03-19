@@ -38,59 +38,82 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
     url: ApiConstant.ChangePassword,
     security: true,
   });
+  
   const handleResetPassword = (value: any) => {
     console.log("valuevaluevalue", value);
 
-    if (value.newPassword === value.confirmPassword) {
-      fetchData({
-        userId: userInfo?.user.userId,
-        mobilePhone: userInfo?.user.phoneNumber,
-        password: value.password,
-        newPassword: value.newPassword,
-        confirmPassword: value.confirmPassword,
-      })
-        .then((res) => {
-          if (res.status === 200) {
-            showToast({
-              type: "success",
-              message: "Thành Công",
-              description: "Đặt lại mật khẩu thành công",
-            });
-            setModalVisible(!modalVisible);
-          }
-        })
-        .catch((error: ErrorResponse) => {
-          if (error.error_code === ERROR_CODES.INVALID_PHONE_NUMBER) {
-            showToast({
-              type: "error",
-              message: "Thất Bại",
-              description: "Số điện thoại không hợp lệ",
-            });
-          } else if (error.error_code === ERROR_CODES.INVALID_CREDENTIALS) {
-            showToast({
-              type: "error",
-              message: "Thất Bại",
-              description: "Sai mật khẩu cũ",
-            });
-          } else {
-            showToast({
-              type: "error",
-              message: "Thất Bại",
-              description: "Thay đổi mật khẩu không thành công",
-            });
-          }
-        });
-    } else {
+    // Validate password fields
+    if (!value.password || !value.newPassword || !value.confirmPassword) {
+      showToast({
+        type: "error",
+        message: "Thất Bại",
+        description: "Vui lòng điền đầy đủ thông tin",
+      });
+      return;
+    }
+
+    // Validate new password length
+    if (value.newPassword.length < 8) {
+      showToast({
+        type: "error",
+        message: "Thất Bại",
+        description: "Mật khẩu mới phải có ít nhất 8 ký tự",
+      });
+      return;
+    }
+
+    // Validate matching passwords
+    if (value.newPassword !== value.confirmPassword) {
       showToast({
         type: "error",
         message: "Thất Bại",
         description: "Mật khẩu mới không trùng khớp",
       });
+      return;
     }
+
+    // Call API
+    fetchData({
+      userId: userInfo?.user.userId,
+      mobilePhone: userInfo?.user.phoneNumber,
+      password: value.password,
+      newPassword: value.newPassword,
+      confirmPassword: value.confirmPassword,
+    })
+      .then((res) => {
+        showToast({
+          type: "success",
+          message: "Thành Công",
+          description: "Đặt lại mật khẩu thành công",
+        });
+        setModalVisible(false);
+      })
+      .catch((error: ErrorResponse) => {
+        console.log("Error changing password:", error);
+        if (error.error_code === ERROR_CODES.INVALID_PHONE_NUMBER) {
+          showToast({
+            type: "error",
+            message: "Thất Bại",
+            description: "Số điện thoại không hợp lệ",
+          });
+        } else if (error.error_code === ERROR_CODES.INVALID_CREDENTIALS) {
+          showToast({
+            type: "error",
+            message: "Thất Bại",
+            description: "Sai mật khẩu cũ",
+          });
+        } else {
+          showToast({
+            type: "error",
+            message: "Thất Bại",
+            description: error.message || "Thay đổi mật khẩu không thành công",
+          });
+        }
+      });
   };
 
   const Reset = () => {
-    setModalVisible(!modalVisible);
+    setModalVisible(false);
   };
 
   return (
