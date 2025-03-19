@@ -44,7 +44,8 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({
     try {
       setConnecting(true);
       // Create socket connection
-      const socketInstance = io("http://10.12.16.147:8080", {
+      console.log("Attempting to connect socket for user:", userInfo.user.userId);
+      const socketInstance = io("http://192.168.101.229:8080", {
         query: {
           userId: userInfo.user.userId,
           role: userInfo?.user.role || "user"
@@ -57,27 +58,38 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({
 
       // Handle connection events
       socketInstance.on("connect", () => {
-        console.log("Socket connected successfully");
+        console.log("Socket connected successfully", socketInstance.id);
         setConnecting(false);
       });
 
       socketInstance.on("connect_error", (error) => {
-        console.error("Socket connection error:", error);
+        console.error("Socket connection error:", error.message);
+        console.error("Connection error details:", {
+          message: error.message,
+          description: error.description,
+          context: error.context
+        });
         setConnecting(false);
       });
 
       socketInstance.on("getOnlineUsers", (data: { users: string[]; admin: string[] }) => {
+        console.log("Online users updated:", data);
         setUserOnline([...data.users, ...data.admin]);
       });
 
       socketInstance.on("forceDisconnect", async () => {
+        console.warn("Forced disconnection requested");
         clearUser();
       });
       
       socketInstance.on("messageError", (error) => {
-        console.error("Message error:", error);
+        console.error("Message error from server:", error);
       });
       
+      socketInstance.on("error", (error) => {
+        console.error("General socket error:", error);
+      });
+
       socketInstance.on("messageRead", ({ messageId }) => {
         // Update message read status if needed
       });
