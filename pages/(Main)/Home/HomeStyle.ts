@@ -92,4 +92,22 @@ export const styles = StyleSheet.create({
     fontSize: width * 0.035,
     color: "#666",
   },
+  suggestionList: {
+    position: "absolute",
+    top: 50,
+    left: 0,
+    right: 0,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    elevation: 5,
+    zIndex: 999,
+    maxHeight: 200,
+  },
+  
+  suggestionItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  
 });
