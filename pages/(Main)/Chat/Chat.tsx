@@ -60,18 +60,37 @@ const Chat: React.FC<Props> = ({ navigation }: Props) => {
       try {
         setLoading(true);
         // Use the correct API URL - make sure it matches your backend
+        console.log("Fetching conversations for user:", userInfo.user.userId);
         const response = await axios.get(
-          `http://192.168.101.229:8080/v1/api/message/conversations/${userInfo.user.userId}`
+          `http://192.168.101.229:8080/v1/api/message/conversations/${userInfo.user.userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${userInfo.token.accessToken}`
+            }
+          }
         );
         
         if (response.data.metadata) {
+          console.log("Conversations retrieved successfully:", response.data.metadata.length);
           setConversations(response.data.metadata);
           setFilteredConversations(response.data.metadata);
         }
       } catch (error) {
         console.error("Error fetching conversations:", error);
-        // Don't show alert for network errors in development
-        // Alert.alert("Error", "Failed to load conversations");
+        // Show more detailed error information
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.error("Response error data:", error.response.data);
+          console.error("Response error status:", error.response.status);
+          console.error("Response error headers:", error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.error("No response received:", error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error("Request setup error:", error.message);
+        }
         
         // Use empty array for conversations when there's an error
         setConversations([]);
@@ -86,6 +105,7 @@ const Chat: React.FC<Props> = ({ navigation }: Props) => {
     // Listen for new messages to update conversation list
     if (socket) {
       socket.on("receiveMessage", (message) => {
+        console.log("New message received, refreshing conversations", message);
         fetchConversations();
       });
       

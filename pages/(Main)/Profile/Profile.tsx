@@ -43,6 +43,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
   const { fetchData } = useApi<UserResponse>({
     method: "PUT",
     url: `${ApiConstant.Profile}/${userInfo?.user.userId}`,
+    security: true
   });
   const Update = async (formdata: UserResponse) => {
     if (!formdata) {
