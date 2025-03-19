@@ -91,7 +91,7 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {ticket.ticket_No}
+                  {ticket.ticket_seat}
                 </Text>
               </View>
             )}
@@ -128,7 +128,7 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {ticket.trip_id.tripStartTime?.toLocaleTimeString("vi-VN", {
+                {ticket.route_id.routeStartTime?.toLocaleTimeString("vi-VN", {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
@@ -138,7 +138,7 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {ticket.trip_id.tripStartTime?.toLocaleDateString("vi-VN", {})}
+                {ticket.route_id.routeEndTime?.toLocaleDateString("vi-VN", {})}
               </Text>
             </View>
             <View style={styles.detailTime}>
@@ -154,7 +154,7 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {ticket.trip_id.tripEndTime?.toLocaleTimeString("vi-VN", {
+                {ticket.route_id.routeStartTime?.toLocaleTimeString("vi-VN", {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
@@ -169,7 +169,10 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {ticket.trip_id.tripEndTime?.toLocaleDateString("vi-VN", {})}
+                  {ticket.route_id.routeEndTime?.toLocaleDateString(
+                    "vi-VN",
+                    {}
+                  )}
                 </Text>
               </Text>
             </View>
@@ -190,7 +193,7 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {ticket.trip_id.depature}
+              {ticket.startlocation}
             </Text>
             <View
               style={{
@@ -201,14 +204,14 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
               }}
             >
               <Ionicons name="bus" size={45} color={"#42509a"} />
-              <Text style={{ color: "#3e5221", fontWeight: "500" }}>TO</Text>
+              <Text style={{ color: "#3e5221", fontWeight: "500" }}>Tới</Text>
             </View>
             <Text
               style={styles.locationText}
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {ticket.trip_id.arrive}
+              {ticket.endlocation}
             </Text>
           </View>
         </View>

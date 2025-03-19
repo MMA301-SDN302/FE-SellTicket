@@ -12,7 +12,7 @@ const MyTickets = () => {
 
   const { fetchData } = useApi<TicketResponse[]>({
     method: "GET",
-    url: `${ApiConstant.Ticket}/`,
+    url: `${ApiConstant.Ticket}`,
   });
   const [direction, setDirection] = useState("Chờ thanh toán");
   const [tickets, setTickets] = useState<TicketResponse[]>([]);
@@ -23,14 +23,19 @@ const MyTickets = () => {
           .filter((ticket) => ticket.user_id === userInfo?.user.userId)
           .map((ticket) => ({
             ...ticket,
-            trip_id: {
-              ...ticket.trip_id,
-              tripStartTime: new Date(ticket.trip_id.tripStartTime),
-              tripEndTime: new Date(ticket.trip_id.tripEndTime),
+            route_id: {
+              ...ticket.route_id,
+              routeStartTime: ticket.route_id.routeStartTime
+                ? new Date(ticket.route_id.routeStartTime)
+                : new Date(),
+              routeEndTime: ticket.route_id.routeEndTime
+                ? new Date(ticket.route_id.routeEndTime)
+                : new Date(),
             },
           }));
-        setTickets(formattedTickets);
         console.log("res", res);
+
+        setTickets(formattedTickets);
       });
     } catch (err) {}
   };
