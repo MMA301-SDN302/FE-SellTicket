@@ -36,8 +36,11 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   const { fetchData } = useApi<any>({
     method: "PUT",
     url: ApiConstant.ChangePassword,
+    security: true,
   });
   const handleResetPassword = (value: any) => {
+    console.log("valuevaluevalue", value);
+
     if (value.newPassword === value.confirmPassword) {
       fetchData({
         userId: userInfo?.user.userId,
