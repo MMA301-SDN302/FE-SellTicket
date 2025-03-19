@@ -4,129 +4,206 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
-  ScrollView,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { styles } from "./ChatStyle";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import type {
   RootStackParamList,
-  RootTabParamList,
 } from "../../../types/NavigationTypes";
 import { PreviewLayout } from "../../../components/PreviewLayout/PreviewLayout";
-import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from "../../../hooks/useAuth";
+import { useSocketContext } from "../../../context/SocketContext";
+import axios from "axios";
 
-interface ChatScreenProps {
-  id: string;
-  name: string;
-  mess: string;
-  isYourMess?: boolean;
-  time: Date;
-  avatar: string;
+interface Conversation {
+  _id: string;
+  participants: Array<{
+    _id: string;
+    firstName: string;
+    lastName: string;
+    avatar: string;
+    isOnline: boolean;
+  }>;
+  lastMessage: {
+    _id: string;
+    content: string;
+    createdAt: string;
+    read: boolean;
+    senderId: string;
+    receiverId: string;
+  };
+  updatedAt: string;
 }
+
 type ProfileProp = StackNavigationProp<RootStackParamList, "Chat">;
 
 type Props = {
   navigation: ProfileProp;
 };
-const chats: ChatScreenProps[] = [
-  {
-    id: "1",
-    name: "Labubu",
-    mess: "Haaaaaaaaaaaaaaaaa",
-    isYourMess: true,
-    time: new Date("2025-01-19T05:00"),
-    avatar:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoBUH1O99-G_i6GP5Ij4T4xca7w8pC-o3QWw&s",
-  },
-  {
-    id: "2",
-    name: "Anh",
-    mess: "Hello, how are you?",
-    isYourMess: false,
-    time: new Date("2025-01-19T06:15"),
-    avatar:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3QOqpa4Po_LkiY7vW9IHIWWt0UV-bPUgXqg&s",
-  },
-  {
-    id: "3",
-    name: "Minh",
-    mess: "Let's catch up later!",
-    isYourMess: true,
-    time: new Date("2025-01-18T23:30"),
-    avatar: "https://nguoinoitieng.tv/images/nnt/105/0/biks.jpg",
-  },
-  {
-    id: "4",
-    name: "Linh",
-    mess: "Don't forget the meeting tomorrow.",
-    isYourMess: false,
-    time: new Date("2025-01-19T08:00"),
-    avatar:
-      "https://png.pngtree.com/thumb_back/fh260/background/20210908/pngtree-mens-emoji-pack-crazy-emoticon-portraits-work-stressed-man-portrait-photography-image_821554.jpg",
-  },
-  {
-    id: "5",
-    name: "Phương",
-    mess: "Can you send me the document?",
-    isYourMess: true,
-    time: new Date("2025-01-18T20:45"),
-    avatar:
-      "https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474053Auf/hinh-nguoi-that-dang-yeu_043419843.jpg",
-  },
-];
 
 const Chat: React.FC<Props> = ({ navigation }: Props) => {
-  const renderItem = ({ item }: any) => (
-    <TouchableOpacity
-      style={styles.chatItem}
-      onPress={() => navigation.navigate("ChatDetail", { chatId: item.id })}
-    >
-      <Image source={{ uri: item.avatar }} style={styles.avatar} />
-      <View style={styles.chatInfo}>
-        <Text style={styles.chatName}>{item.name}</Text>
-        <Text style={styles.chatMessage} numberOfLines={1}>
-          {item.isYourMess ? "Bạn:" : ""} {item.mess}
-        </Text>
-      </View>
-      <Text style={styles.chatTime}>
-        {item.time.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        })}
-      </Text>
-    </TouchableOpacity>
-  );
+  const { userInfo } = useAuth();
+  const { socket, userOnline } = useSocketContext();
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
-  const [filteredChats, setFilteredChats] = useState(chats);
+  const [filteredConversations, setFilteredConversations] = useState<Conversation[]>([]);
 
+  // Fetch conversations from the backend
   useEffect(() => {
-    setFilteredChats(
-      chats.filter((chat) => {
-        return chat.name.toLowerCase().includes(searchText.toLowerCase());
-      })
+    const fetchConversations = async () => {
+      if (!userInfo?.user?.userId) return;
+      
+      try {
+        setLoading(true);
+        // Use the correct API URL - make sure it matches your backend
+        const response = await axios.get(
+          `http://192.168.101.229:8080/v1/api/message/conversations/${userInfo.user.userId}`
+        );
+        
+        if (response.data.metadata) {
+          setConversations(response.data.metadata);
+          setFilteredConversations(response.data.metadata);
+        }
+      } catch (error) {
+        console.error("Error fetching conversations:", error);
+        // Don't show alert for network errors in development
+        // Alert.alert("Error", "Failed to load conversations");
+        
+        // Use empty array for conversations when there's an error
+        setConversations([]);
+        setFilteredConversations([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchConversations();
+    
+    // Listen for new messages to update conversation list
+    if (socket) {
+      socket.on("receiveMessage", (message) => {
+        fetchConversations();
+      });
+      
+      return () => {
+        socket.off("receiveMessage");
+      };
+    }
+  }, [userInfo, socket]);
+
+  // Filter conversations based on search text
+  useEffect(() => {
+    if (searchText.trim() === "") {
+      setFilteredConversations(conversations);
+    } else {
+      setFilteredConversations(
+        conversations.filter((conv) => {
+          // Find the other participant (not the current user)
+          const otherParticipant = conv.participants.find(
+            (p) => p._id !== userInfo?.user.userId
+          );
+          
+          if (!otherParticipant) return false;
+          
+          const fullName = `${otherParticipant.firstName} ${otherParticipant.lastName}`.toLowerCase();
+          return fullName.includes(searchText.toLowerCase());
+        })
+      );
+    }
+  }, [searchText, conversations, userInfo]);
+
+  const renderItem = ({ item }: { item: Conversation }) => {
+    // Find the other participant (not the current user)
+    const otherParticipant = item.participants.find(
+      (p) => p._id !== userInfo?.user.userId
     );
-  }, [searchText]);
+    
+    if (!otherParticipant) return null;
+    
+    const isOnline = userOnline.includes(otherParticipant._id);
+    const isMyLastMessage = item.lastMessage?.senderId === userInfo?.user.userId;
+    
+    return (
+      <TouchableOpacity
+        style={styles.chatItem}
+        onPress={() => navigation.navigate("ChatDetail", { chatId: item._id })}
+      >
+        <View style={styles.avatarContainer}>
+          <Image 
+            source={{ 
+              uri: otherParticipant.avatar || 
+                "https://ui-avatars.com/api/?name=" + 
+                encodeURIComponent(`${otherParticipant.firstName} ${otherParticipant.lastName}`)
+            }} 
+            style={styles.avatar} 
+          />
+          {isOnline && <View style={styles.onlineIndicator} />}
+        </View>
+        <View style={styles.chatInfo}>
+          <Text style={styles.chatName}>
+            {`${otherParticipant.firstName} ${otherParticipant.lastName}`}
+          </Text>
+          <Text style={styles.chatMessage} numberOfLines={1}>
+            {isMyLastMessage ? "Bạn: " : ""}{item.lastMessage?.content || ""}
+          </Text>
+        </View>
+        <Text style={styles.chatTime}>
+          {item.lastMessage?.createdAt 
+            ? new Date(item.lastMessage.createdAt).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : ""}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
   return (
-    <PreviewLayout
-      label=""
-      searchText={searchText}
-      setSearchText={setSearchText}
-    >
-      <View style={styles.container}>
-        <FlatList
-          data={filteredChats}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.chatList}
-          onEndReachedThreshold={0.5}
-          ItemSeparatorComponent={() => (
-            <View style={{ height: 1, backgroundColor: "gray" }} />
-          )}
-        />
-      </View>
-    </PreviewLayout>
+    <View style={styles.container}>
+      <PreviewLayout
+        label=""
+        searchText={searchText}
+        setSearchText={setSearchText}
+      >
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#0c1440" />
+          </View>
+        ) : filteredConversations.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>
+              {searchText.trim() !== "" 
+                ? "No conversations match your search" 
+                : "No conversations yet"}
+            </Text>
+            {searchText.trim() === "" && (
+              <TouchableOpacity 
+                style={styles.startChatButton}
+                onPress={() => navigation.navigate("ChatDetail", {})}
+              >
+                <Text style={styles.startChatButtonText}>Start a new chat</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        ) : (
+          <FlatList
+            data={filteredConversations}
+            renderItem={renderItem}
+            keyExtractor={(item) => item._id}
+            contentContainerStyle={styles.chatList}
+            onEndReachedThreshold={0.5}
+            ItemSeparatorComponent={() => (
+              <View style={{ height: 1, backgroundColor: "#eee" }} />
+            )}
+          />
+        )}
+      </PreviewLayout>
+    </View>
   );
 };
 

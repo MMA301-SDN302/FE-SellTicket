@@ -16,8 +16,8 @@ import useNavigate from "../../../components/Navigate/Navigate";
 const recentSearches = [
   { id: "1", from: "Hồ Chí Minh", to: "Hà Nội", date: "20/01/2025" },
   { id: "2", from: "Đà Lạt", to: "Sài Gòn", date: "15/01/2025" },
-  { id: "3", from: "Hà Nội", to: "Đà Nẵng", date: "22/01/2025" },
-  { id: "4", from: "Nha Trang", to: "Hà Nội", date: "17/01/2025" },
+  { id: "3", from: "Hà Nội", to: "Đà Nẵng", date: "05/03/2025" },
+  { id: "4", from: "Hà Nội", to: "Hà Tĩnh", date: "05/03/2025" },
 ];
 
 export const Home = () => {

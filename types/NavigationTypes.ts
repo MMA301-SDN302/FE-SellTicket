@@ -28,12 +28,13 @@ export type RootStackParamList = {
     from: string;
     to: string;
     date: string;
-    busName: string;
-    time: string;
-    price: string;
-    travelTime: number;
+    routeName: string; 
+    time: string; 
+    price: number | null; 
+    travelTime: number; 
     routeId: string;
-  }; 
+    policy: string | null; 
+  };
   PlaceOrder: {
     from: string;
     to: string;
