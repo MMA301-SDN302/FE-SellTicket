@@ -1,0 +1,143 @@
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    position: "relative",
+    backgroundColor: "#f5f7fa",
+  },
+  chatContainer: {
+    padding: 10,
+    paddingBottom: 20,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: "#fff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#eaeaea",
+  },
+  headerLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#0c1440",
+  },
+  statusText: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+  img: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#eaeaea",
+  },
+  messageBubble: {
+    maxWidth: "75%",
+    padding: 12,
+    borderRadius: 18,
+    marginBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 1,
+    elevation: 1,
+  },
+  myMessage: {
+    backgroundColor: "#0c1440",
+    alignSelf: "flex-end",
+    borderBottomRightRadius: 4,
+  },
+  otherMessage: {
+    backgroundColor: "#fff",
+    alignSelf: "flex-start",
+    borderBottomLeftRadius: 4,
+  },
+  messageText: {
+    fontSize: 16,
+    color: "#fff",
+    lineHeight: 22,
+  },
+  otherMessageText: {
+    color: "#333",
+  },
+  messageTime: {
+    fontSize: 11,
+    color: "rgba(255, 255, 255, 0.7)",
+    marginTop: 5,
+    alignSelf: "flex-end",
+  },
+  otherMessageTime: {
+    color: "#999",
+  },
+  readStatus: {
+    fontSize: 10,
+    color: "rgba(255, 255, 255, 0.7)",
+    marginTop: 2,
+    alignSelf: "flex-end",
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    borderTopWidth: 1,
+    borderColor: "#eaeaea",
+    backgroundColor: "#fff",
+  },
+  textInput: {
+    flex: 1,
+    height: 44,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+    borderRadius: 22,
+    paddingHorizontal: 16,
+    backgroundColor: "#f9f9f9",
+    fontSize: 16,
+  },
+  sendButton: {
+    marginLeft: 10,
+    backgroundColor: "#0c1440",
+    borderRadius: 22,
+    width: 44,
+    height: 44,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  startChatButton: {
+    backgroundColor: "#0c1440",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  startChatButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+});

@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "types": ["nativewind/types"]
+  },
+  "extends": "expo/tsconfig.base"
+}
