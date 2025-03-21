@@ -92,17 +92,23 @@ export const styles = StyleSheet.create({
     fontSize: width * 0.035,
     color: "#666",
   },
-  suggestionList: {
+  suggestionsContainer: {
     position: "absolute",
-    top: 50,
+    top: height * 0.15, 
     left: 0,
-    right: 0,
+    right: 0, 
     backgroundColor: "#fff",
-    borderRadius: 5,
-    elevation: 5,
-    zIndex: 999,
-    maxHeight: 200,
+    borderRadius: 8,
+    elevation: 5, // Android shadow
+    shadowColor: "#000", // iOS shadow
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    maxHeight: 200, // Giới hạn chiều cao
+    overflow: "hidden", // Ngăn layout bị kéo
+    zIndex: 1000, // Nổi lên trên
   },
+  
   
   suggestionItem: {
     padding: 10,
