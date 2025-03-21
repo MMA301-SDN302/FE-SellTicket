@@ -72,7 +72,7 @@ const useApi = <ResponseType extends Record<string, any>>({
     if (error.code === 403 && error.error_code === ERROR_CODES.JWT_EXPIRED) {
       try {
         const res = await axios.post(
-          "http://192.168.1.192:8080/v1/api/auth/refresh-token",
+          "http://192.168.1.208:8080/v1/api/auth/refresh-token",
           {
             refreshToken: userInfo?.token.refreshToken,
           },
@@ -167,7 +167,7 @@ const useApi = <ResponseType extends Record<string, any>>({
       }
 
       // Get the host from environment or use fallback
-      const host = process.env.EXPO_PUBLIC_HOST || "http://192.168.1.192:8080";
+      const host = process.env.EXPO_PUBLIC_HOST || "http://192.168.1.208:8080";
       console.log("API Host:", host);
 
       try {
