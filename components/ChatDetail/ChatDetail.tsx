@@ -72,11 +72,6 @@ const ChatDetail = ({ route }: any) => {
     // Generate avatar from name if no avatar is available
     const name = `${entity.firstName || ""} ${entity.lastName || ""}`.trim();
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`;
-    const colors = ["f44336", "e91e63", "9c27b0", "673ab7", "3f51b5", "2196f3", "03a9f4", "00bcd4", "009688", "4caf50", "8bc34a", "cddc39", "ffeb3b", "ffc107", "ff9800", "ff5722"];
-    const colorIndex = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
-    const backgroundColor = colors[colorIndex];
-    
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${backgroundColor}&color=fff&size=128`;
   };
 
   // Initialize conversation and load messages
@@ -281,15 +276,9 @@ const ChatDetail = ({ route }: any) => {
         avatar: getAvatar(adminMessage.senderId)
       };
     }
-    // Generate random avatar with consistent background color for the same name
-    const name = "Nhà xe FastTicket";
-    const colors = ["f44336", "e91e63", "9c27b0", "673ab7", "3f51b5", "2196f3", "03a9f4", "00bcd4", "009688", "4caf50", "8bc34a", "cddc39", "ffeb3b", "ffc107", "ff9800", "ff5722"];
-    const colorIndex = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
-    const backgroundColor = colors[colorIndex];
-    
     return {
-      name: name,
-      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${backgroundColor}&color=fff&size=128`
+      name: "Nhà xe FastTicket",
+      avatar: ""
     };
   };
 
@@ -328,30 +317,15 @@ const ChatDetail = ({ route }: any) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <View style={{ position: 'relative' }}>
-            <Image 
-              source={adminInfo.avatar ? { uri: adminInfo.avatar } : defaultAvatar} 
-              style={styles.img} 
-            />
-            <View 
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                right: 0,
-                width: 12,
-                height: 12,
-                borderRadius: 6,
-                backgroundColor: isAdminOnline ? '#4CAF50' : '#9E9E9E',
-                borderWidth: 2,
-                borderColor: 'white'
-              }}
-            />
-          </View>
+          <Image 
+            source={adminInfo.avatar ? { uri: adminInfo.avatar } : defaultAvatar} 
+            style={styles.img} 
+          />
           <View>
             <Text style={styles.headerText}>{adminInfo.name}</Text>
             <Text style={[
               styles.statusText, 
-              { color: isAdminOnline ? "#4CAF50" : "#9E9E9E" }
+              { color: isAdminOnline ? "green" : "#999" }
             ]}>
               {isAdminOnline ? "Online" : "Offline"}
             </Text>
