@@ -147,6 +147,17 @@ const Chat: React.FC<Props> = ({ navigation }: Props) => {
     const isOnline = userOnline.includes(otherParticipant._id);
     const isMyLastMessage = item.lastMessage?.senderId === userInfo?.user.userId;
     
+    // Generate random avatar with consistent background color for the same name
+    const getRandomAvatar = (participant) => {
+      if (participant.avatar) return participant.avatar;
+      
+      const name = `${participant.firstName} ${participant.lastName}`.trim();
+      const colors = ["f44336", "e91e63", "9c27b0", "673ab7", "3f51b5", "2196f3", "03a9f4", "00bcd4", "009688", "4caf50", "8bc34a", "cddc39", "ffeb3b", "ffc107", "ff9800", "ff5722"];
+      const colorIndex = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
+      const backgroundColor = colors[colorIndex];
+      
+      return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${backgroundColor}&color=fff`;
+    };
     return (
       <TouchableOpacity
         style={styles.chatItem}
@@ -167,8 +178,9 @@ const Chat: React.FC<Props> = ({ navigation }: Props) => {
           <Text style={styles.chatName}>
             {`${otherParticipant.firstName} ${otherParticipant.lastName}`}
           </Text>
-          <Text style={styles.chatMessage} numberOfLines={1}>
+          <Text style={[styles.chatMessage, !isOnline && { color: '#9E9E9E' }]} numberOfLines={1}>
             {isMyLastMessage ? "Bạn: " : ""}{item.lastMessage?.content || ""}
+            {!isOnline && " • Offline"}
           </Text>
         </View>
         <Text style={styles.chatTime}>

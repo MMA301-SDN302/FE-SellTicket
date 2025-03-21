@@ -132,5 +132,17 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     borderTopWidth: 1,
     borderColor: "#ddd",
-  }
+  },
+  confirmed: { 
+    backgroundColor: "red", 
+    borderColor: "darkred",
+  },
+  pending: { 
+    backgroundColor: "yellow", 
+    borderColor: "gold",
+  },
+  complete: { 
+    backgroundColor: "#d3d3d3", 
+    borderColor: "#a9a9a9",
+  },
 });

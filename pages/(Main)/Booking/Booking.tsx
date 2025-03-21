@@ -23,16 +23,18 @@ const Booking = ({ route }: Props) => {
   const [seatsFloor2, setSeatsFloor2] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [seatUpdateTrigger, setSeatUpdateTrigger] = useState(0);
   const { navigateTo, goBack } = useNavigate();
   const { fetchData } = useApi<any>({ url: "/seat/getSeat", method: "GET" });
-  const { fetchData: fetchCheckSeat } = useApi<any>({ url: "/v1/api/checkSeat", method: "GET" });
+  const { fetchData: fetchCheckSeat } = useApi<any>({ url: "/seat/checkSeat", method: "GET" });
+  const { fetchData: createSeatTicket } = useApi<any>({ url: "/seat/createTicket", method: "POST" });
 
   useEffect(() => {
     if (routeId && from && to) {
       setLoading(true);
       fetchData({ routeId, from, to })
-        .then((res) => {
-          if (res?.seatMap) {         
+        .then((res) => {     
+          if (res?.seatMap) {     
             setSeatsFloor1([...res.seatMap.floor1]);
             setSeatsFloor2([...res.seatMap.floor2]);
           } else {
@@ -47,7 +49,7 @@ const Booking = ({ route }: Props) => {
         })
         .finally(() => setLoading(false));
     }
-  }, [routeId, from, to]);
+  }, [routeId, from, to, seatUpdateTrigger]);
   
   const formatDateTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -60,11 +62,13 @@ const Booking = ({ route }: Props) => {
 
   const handleSelectSeat = async (seatId: string) => {
     try {
-      // const res = await fetchCheckSeat({ seatId }); // Gọi API kiểm tra ghế
-      // if (res?.isBooked) {
-      //   Alert.alert("Thông báo", "Ghế này đã được đặt, vui lòng chọn ghế khác!");
-      //   return;
-      // }
+      const res = await fetchCheckSeat({ routeId, seatId }); 
+      const status = res.seat.ticket_status;
+      if (status !== "available") {
+        Alert.alert("Thông báo", "Ghế này đã được đặt, vui lòng chọn ghế khác!");
+        setSeatUpdateTrigger((prev) => prev + 1);
+        return;
+      }
   
       setSelectedSeats((prevSeats) =>
         prevSeats.includes(seatId) ? prevSeats.filter((id) => id !== seatId) : [...prevSeats, seatId]
@@ -84,7 +88,7 @@ const Booking = ({ route }: Props) => {
     const seatList = selectedSeats
       .map((seatId) => {
         const seat = [...seatsFloor1, ...seatsFloor2].find((s) => s.id === seatId);
-        return seat ? seat.seatNumber : seatId; 
+        return seat ? seat.seatNumber : seatId;
       })
       .join(", ");
   
@@ -95,39 +99,82 @@ const Booking = ({ route }: Props) => {
         { text: "Hủy", style: "cancel" },
         {
           text: "Xác nhận",
-          onPress: () => {
-            navigateTo("PlaceOrder", {
-              from,
-              to,
-              date,
-              routeName,
-              time,
-              price,
-              travelTime,
-              selectedSeats,
-              policy,
-            });
+          onPress: async () => {
+            try {
+              const ticketData = {
+                routeId,
+                seatIds: selectedSeats,
+                from,
+                to,
+                price,
+              };
+  
+              const response = await createSeatTicket(ticketData);
+  
+              if (response?.success) {
+                Alert.alert("Thành công", "Đặt vé thành công!", [
+                  {
+                    text: "OK",
+                    onPress: () => {
+                      navigateTo("PlaceOrder", {
+                        from,
+                        to,
+                        date,
+                        routeName,
+                        time,
+                        price,
+                        travelTime,
+                        selectedSeats,
+                        policy,
+                        ticketId: response.ticketId, // ID vé để xử lý tiếp
+                      });
+                    },
+                  },
+                ]);
+              } else {
+                throw new Error(response?.message || "Đặt vé thất bại!");
+              }
+            } catch (error) {
+              console.error("Lỗi khi tạo vé:", error);
+              Alert.alert("Lỗi", "Không thể đặt vé, vui lòng thử lại sau!");
+            }
           },
         },
       ]
     );
-  };  
+  };
 
-  const renderSeat = (seat: any) => (
-    <TouchableOpacity
-      key={seat.id}
-      style={[
-        styles.seatItem,
-        seat.isAvailable ? styles.available : styles.unavailable, 
-        selectedSeats.includes(seat.id) && seat.isAvailable && styles.selected, 
-      ]}
-      onPress={() => seat.isAvailable && handleSelectSeat(seat.id)}
-      disabled={!seat.isAvailable} 
-    >
-      <Text style={styles.seatNumber}>{seat.seatNumber}</Text>
-    </TouchableOpacity>
-  );
-
+  const renderSeat = (seat: any) => {
+    const getSeatStyle = () => {
+      if (selectedSeats.includes(seat.id) && seat.isAvailable) {
+        return styles.selected;
+      }
+      switch (seat.ticket_status) {
+        case "available":
+          return styles.available;
+        case "pending":
+          return styles.pending;
+        case "confirmed":
+          return styles.confirmed;
+        case "completed":
+          return styles.complete;
+        default:
+          return styles.unavailable;
+      }
+    };
+  
+    return (
+      <TouchableOpacity
+        key={seat.id}
+        style={[styles.seatItem, getSeatStyle()]}
+        onPress={() => seat.isAvailable && handleSelectSeat(seat.id)}
+        disabled={!seat.isAvailable}
+      >
+        <Text style={styles.seatNumber}>{seat.seatNumber}</Text>
+      </TouchableOpacity>
+    );
+  };
+  
   return (
     <View style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}> 
