@@ -45,7 +45,7 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({
       setConnecting(true);
       // Create socket connection
       console.log("Attempting to connect socket for user:", userInfo.user.userId);
-      const socketInstance = io("http://192.168.1.192:8080", {
+      const socketInstance = io("http://192.168.101.229:8080", {
         query: {
           userId: userInfo.user.userId,
           role: userInfo?.user.role || "user"

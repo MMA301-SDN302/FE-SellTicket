@@ -124,9 +124,23 @@ const ChatDetail = ({ route }: any) => {
       }
       
       setMessages((prevMessages) => {
-        // Check if message already exists to avoid duplicates
-        const exists = prevMessages.some(msg => msg._id === newMessage._id);
-        if (exists) return prevMessages;
+        // More robust duplicate detection - check by ID and also by content/time if needed
+        const isDuplicate = prevMessages.some(msg => 
+          // Check if the ID matches (for server-generated messages)
+          (msg._id && msg._id === newMessage._id) ||
+          // Or check content and approximate timestamp for messages without matching IDs
+          (msg.content === newMessage.content && 
+           senderId === getId(msg.senderId) && 
+           // If timestamps exist, check if they're within 2 seconds of each other
+           (msg.createdAt && newMessage.createdAt && 
+            Math.abs(new Date(msg.createdAt).getTime() - new Date(newMessage.createdAt).getTime()) < 2000))
+        );
+        
+        if (isDuplicate) {
+          console.log("Detected duplicate message, ignoring");
+          return prevMessages;
+        }
+        
         return [...prevMessages, newMessage];
       });
     };
