@@ -24,7 +24,7 @@ const Booking = ({ route }: Props) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [seatUpdateTrigger, setSeatUpdateTrigger] = useState(0);
-  const { navigateTo, goBack } = useNavigate();
+  const { resetToHome, goBack } = useNavigate();
   const { fetchData } = useApi<any>({ url: "/seat/getSeat", method: "GET" });
   const { fetchData: fetchCheckSeat } = useApi<any>({ url: "/seat/checkSeat", method: "GET" });
   const { fetchData: createSeatTicket } = useApi<any>({ url: "/seat/createTicket", method: "POST" });
@@ -111,32 +111,25 @@ const Booking = ({ route }: Props) => {
   
               const response = await createSeatTicket(ticketData);
   
-              if (response?.success) {
+              console.log("API Response nè:", response?.code);
+  
+              if (!response.metadata?.tickets?.[0]?.ticket_id) {
+
                 Alert.alert("Thành công", "Đặt vé thành công!", [
                   {
                     text: "OK",
                     onPress: () => {
-                      navigateTo("PlaceOrder", {
-                        from,
-                        to,
-                        date,
-                        routeName,
-                        time,
-                        price,
-                        travelTime,
-                        selectedSeats,
-                        policy,
-                        ticketId: response.ticketId, // ID vé để xử lý tiếp
-                      });
+                      resetToHome();
                     },
                   },
                 ]);
               } else {
+                console.error("API trả về lỗi:", response?.message || "Lỗi không xác định");
                 throw new Error(response?.message || "Đặt vé thất bại!");
               }
             } catch (error) {
-              console.error("Lỗi khi tạo vé:", error);
-              Alert.alert("Lỗi", "Không thể đặt vé, vui lòng thử lại sau!");
+              console.error("Lỗi trong try-catch:", error);
+              Alert.alert("Lỗi", `Không thể đặt vé. Vui lòng thử lại sau!"`);
             }
           },
         },
