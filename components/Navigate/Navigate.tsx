@@ -23,16 +23,14 @@ const useNavigate = () => {
       if (!rootStackRoutes.includes(target)) {
         throw new Error(`Invalid route: ${target}`);
       }
-
-      navigation.navigate(target, params);
+      navigation.navigate(target as any, params);
     } catch (error) {
-      Alert.alert(
-        "Lỗi Điều Hướng", // Tiêu đề
-        "Không thể điều hướng tới trang đích. Vui lòng kiểm tra lại hoặc thử lại sau.", // Nội dung thông báo
-        [{ text: "OK" }] // Nút OK
-      );
+      Alert.alert("Lỗi Điều Hướng", "Không thể điều hướng tới trang đích. Vui lòng kiểm tra lại hoặc thử lại sau.", [
+        { text: "OK" },
+      ]);
     }
   };
+  
 
   const goBack = () => {
     if (navigation.canGoBack()) {
@@ -42,9 +40,18 @@ const useNavigate = () => {
     }
   };
 
+  const resetToHome = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "HomeStack" as keyof RootStackParamList }],
+    });
+  };
+  
+
   return { 
     navigateTo,
-    goBack 
+    goBack,
+    resetToHome,
   };
 };
 
