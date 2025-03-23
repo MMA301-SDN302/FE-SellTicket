@@ -99,17 +99,15 @@ export const styles = StyleSheet.create({
     right: 0, 
     backgroundColor: "#fff",
     borderRadius: 8,
-    elevation: 5, // Android shadow
-    shadowColor: "#000", // iOS shadow
+    elevation: 5, 
+    shadowColor: "#000", 
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    maxHeight: 200, // Giới hạn chiều cao
-    overflow: "hidden", // Ngăn layout bị kéo
-    zIndex: 1000, // Nổi lên trên
+    maxHeight: 200, 
+    overflow: "hidden", 
+    zIndex: 1000, 
   },
-  
-  
   suggestionItem: {
     padding: 10,
     borderBottomWidth: 1,

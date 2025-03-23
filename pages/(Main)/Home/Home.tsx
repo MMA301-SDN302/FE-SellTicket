@@ -1,4 +1,6 @@
 import { useState, useCallback } from "react";
+import { Dimensions } from "react-native";
+const { width, height } = Dimensions.get("window");
 import {
   View,
   Text,
@@ -122,8 +124,11 @@ export const Home = () => {
           </View>
 
           {showSuggestions && suggestionsFor && (
-            <View style={[styles.suggestionsContainer, { maxHeight: 200 }]}>
-              <ScrollView keyboardShouldPersistTaps="handled">
+            <View style={[styles.suggestionsContainer, { top: suggestionsFor === 1 ? height * 0.07 : height*0.14 }]}>
+              <ScrollView
+                keyboardShouldPersistTaps="handled"
+                style={{ maxHeight: 200 }}
+              >
                 {suggestions.map((suggestion) => (
                   <TouchableOpacity
                     key={suggestion.stop_id}
