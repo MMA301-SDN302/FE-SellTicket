@@ -45,6 +45,8 @@ const VerifyOtp = ({ navigation, route }: Props) => {
   // Hàm khởi tạo OTP listener
   useEffect(() => {
     RNAndroidOtpVerify.getHash().then((hash) => {
+      console.log(hash);
+
       setHash(hash[0]); // Lưu hash key
     });
 

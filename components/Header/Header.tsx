@@ -1,7 +1,9 @@
-import { TouchableOpacity, View, Image, Text, Button } from "react-native";
+import { TouchableOpacity, View, Image, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import type { StackNavigationProp } from "@react-navigation/stack";
+import React from 'react';
+import { NotificationBadge } from '../NotificationBadge/NotificationBadge';
 
 import type { RootStackParamList } from "../../types/NavigationTypes";
 import { styles } from "./HeaderStyle";
@@ -16,10 +18,16 @@ type HeaderProps = {
   goHome?: boolean;
 };
 
+type HeaderNavigationProp = StackNavigationProp<RootStackParamList>;
+
 export const Header = ({ back, goHome }: HeaderProps) => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<HeaderNavigationProp>();
   const { userInfo } = useAuth();
-  // const user
+
+  const handleNotificationPress = () => {
+    navigation.navigate('Notification');
+  };
+
   return (
     <View style={styles.headerContainer}>
       <Image source={BackgroundImg} style={styles.drawerContent} />
@@ -76,16 +84,18 @@ export const Header = ({ back, goHome }: HeaderProps) => {
         {userInfo != undefined ? (
           <View style={styles.iconContainer}>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Notification")}
+              style={styles.iconButton}
+              onPress={handleNotificationPress}
             >
               <Ionicons
                 name="notifications-outline"
-                size={30}
+                size={24}
                 color={"#0c1440"}
               />
+              <NotificationBadge size={8} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate("Chat")}>
-              <Ionicons name="chatbubble-outline" size={30} color={"#0c1440"} />
+              <Ionicons name="chatbubbles-outline" size={24} color={"#0c1440"} />
             </TouchableOpacity>
           </View>
         ) : (

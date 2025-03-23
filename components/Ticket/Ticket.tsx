@@ -5,16 +5,19 @@ import ButtonCommon from "../Common/Button/ButtonCommon";
 import useApi from "../../hooks/useApi";
 import { ApiConstant } from "../../data/ApiConstant";
 import type { TicketResponse } from "./type";
+import { useNavigation } from "@react-navigation/native";
 
 type TicketProps = TicketResponse & {
   onCancel: () => Promise<void>;
 };
 
 export function Ticket({ onCancel, ...ticket }: TicketProps) {
+  const navigation = useNavigation();
   const { fetchData } = useApi({
     method: "DELETE",
     url: `${ApiConstant.Ticket}/${ticket._id}`,
   });
+  
   async function CancelTicket() {
     if (!ticket._id) {
       console.error("Lỗi: _id không tồn tại");
@@ -39,7 +42,23 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
     ]);
   }
 
+  function handlePayment() {
+    // Navigate to payment screen with ticket ID and ticket info
+    navigation.navigate('Payment', {
+      ticketId: ticket._id,
+      ticketInfo: ticket
+    });
+  }
+
   function GenerateQRCode() {}
+
+  // Get departure and arrival locations, handling both trip_id and direct location properties
+  const departureLocation = ticket.trip_id?.depature || ticket.startlocation || "N/A";
+  const arrivalLocation = ticket.trip_id?.arrive || ticket.endlocation || "N/A";
+  
+  // Get trip times (use placeholder if unavailable)
+  const startTime = ticket.trip_id?.tripStartTime || new Date();
+  const endTime = ticket.trip_id?.tripEndTime || new Date();
 
   return (
     <View style={styles.ticketContainer}>
@@ -91,7 +110,7 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {ticket.ticket_No}
+                  {ticket.ticket_seat || ticket.ticket_No}
                 </Text>
               </View>
             )}
@@ -128,17 +147,17 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {ticket.trip_id.tripStartTime?.toLocaleTimeString("vi-VN", {
+                {startTime instanceof Date ? startTime.toLocaleTimeString("vi-VN", {
                   hour: "2-digit",
                   minute: "2-digit",
-                })}
+                }) : "N/A"}
               </Text>
               <Text
                 style={styles.dateText}
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {ticket.trip_id.tripStartTime?.toLocaleDateString("vi-VN", {})}
+                {startTime instanceof Date ? startTime.toLocaleDateString("vi-VN", {}) : "N/A"}
               </Text>
             </View>
             <View style={styles.detailTime}>
@@ -154,10 +173,10 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {ticket.trip_id.tripEndTime?.toLocaleTimeString("vi-VN", {
+                {endTime instanceof Date ? endTime.toLocaleTimeString("vi-VN", {
                   hour: "2-digit",
                   minute: "2-digit",
-                })}
+                }) : "N/A"}
               </Text>
               <Text
                 style={styles.dateText}
@@ -169,7 +188,7 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {ticket.trip_id.tripEndTime?.toLocaleDateString("vi-VN", {})}
+                  {endTime instanceof Date ? endTime.toLocaleDateString("vi-VN", {}) : "N/A"}
                 </Text>
               </Text>
             </View>
@@ -190,7 +209,7 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {ticket.trip_id.depature}
+              {departureLocation}
             </Text>
             <View
               style={{
@@ -208,7 +227,7 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {ticket.trip_id.arrive}
+              {arrivalLocation}
             </Text>
           </View>
         </View>
@@ -241,7 +260,7 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
           <ButtonCommon
             title="Thanh toán"
             isActive={true}
-            onPress={() => GenerateQRCode()}
+            onPress={() => handlePayment()}
             backgroundColor="#f0f0f0"
             textColor="black"
             activeBackgroundColor="#4D5995"
@@ -249,7 +268,7 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
             buttonStyle={{ width: "40%" }}
           />
           <ButtonCommon
-            title="Hủy đặt vé"
+            title="Hủy vé"
             isActive={true}
             onPress={() => CancelTicket()}
             backgroundColor="#fff"
@@ -257,6 +276,20 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
             activeTextColor="#fff"
             buttonStyle={{ width: "40%", backgroundColor: "#ff4747" }}
           />
+        </View>
+      )}
+      {ticket.ticket_status == "cancelled" && (
+        <View style={styles.buttonCurrent}>
+          <Text style={{ fontWeight: "500", color: "red" }}>
+            Vé đã bị hủy
+          </Text>
+        </View>
+      )}
+      {ticket.ticket_status == "completed" && (
+        <View style={styles.buttonCurrent}>
+          <Text style={{ fontWeight: "500", color: "green" }}>
+            Vé đã hoàn thành
+          </Text>
         </View>
       )}
     </View>

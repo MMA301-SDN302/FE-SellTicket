@@ -9,6 +9,7 @@ export type FormAreaProps<T> = {
   buttonTitle?: string;
   wrapStyle?: StyleProp<TextStyle>;
   titleStyle?: StyleProp<TextStyle>;
+  disableChange?: boolean;
 };
 export type ErrorCondition = {
   required: boolean;

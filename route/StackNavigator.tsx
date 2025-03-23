@@ -13,6 +13,7 @@ import { TabNavigatorHome } from "./TabNavigator";
 import RoutePage from "../pages/(Main)/Route/Route";
 import VerifyOtp from "../pages/(Auth)/VerifyOtp/VerifyOtp";
 import ResetPassword from "../pages/(Auth)/ResetPassword/ResetPassword";
+import PaymentScreen from "../pages/(Main)/Payment/Payment";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -90,6 +91,16 @@ const StackNavigator = () => {
           headerShown: true,
         }}
       />
+
+      <Stack.Screen
+        name="Payment"
+        component={PaymentScreen}
+        options={{
+          header: () => <Header back={true} />,
+          headerShown: true,
+        }}
+      />
+
       <Stack.Screen
         name="OtpVerify"
         component={VerifyOtp}

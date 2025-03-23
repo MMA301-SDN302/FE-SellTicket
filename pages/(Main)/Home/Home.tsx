@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { Dimensions } from "react-native";
+const { width, height } = Dimensions.get("window");
 import {
   View,
   Text,
@@ -12,12 +14,14 @@ import { styles } from "./HomeStyle";
 import { MaterialIcons } from "@expo/vector-icons";
 import TextInputCommon from "../../../components/Common/TextInput/TextInputCommon";
 import useNavigate from "../../../components/Navigate/Navigate";
+import useApi from "../../../hooks/useApi";
+import { debounce } from "lodash";
 
 const recentSearches = [
   { id: "1", from: "Hồ Chí Minh", to: "Hà Nội", date: "20/01/2025" },
   { id: "2", from: "Đà Lạt", to: "Sài Gòn", date: "15/01/2025" },
-  { id: "3", from: "Hà Nội", to: "Đà Nẵng", date: "22/01/2025" },
-  { id: "4", from: "Nha Trang", to: "Hà Nội", date: "17/01/2025" },
+  { id: "3", from: "Hà Nội", to: "Đà Nẵng", date: "05/03/2025" },
+  { id: "4", from: "Hà Nội", to: "Hà Tĩnh", date: "05/03/2025" },
 ];
 
 export const Home = () => {
@@ -26,8 +30,12 @@ export const Home = () => {
   const [date, setDate] = useState<Date>(new Date());
   const [isRoundTrip, setIsRoundTrip] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [suggestions, setSuggestions] = useState<{ stop_id: number; stop_name: string }[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestionsFor, setSuggestionsFor] = useState<number | null>(null); // 1: from, 2: to
 
   const { navigateTo } = useNavigate();
+  const { fetchData } = useApi<any>({ url: "/routes/supportSearch", method: "GET" });
 
   const handleSwapLocations = () => {
     setFrom(to);
@@ -46,8 +54,49 @@ export const Home = () => {
       setIsError(true);
       return;
     }
+
+    if (from.trim().toLowerCase() === to.trim().toLowerCase()) {
+      alert("Nơi xuất phát và nơi đến không được trùng nhau. Vui lòng nhập lại!");
+      return;
+    }
+
     const formattedDate = date.toLocaleDateString("vi-VN");
     navigateTo("Route", { from, to, date: formattedDate, isRoundTrip });
+  };
+
+  const fetchSuggestions = async (query: string, label: number) => {
+    if (!query) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+    try {
+      const response = await fetchData({
+        params: { startLocation: label === 1 ? query : from, endLocation: label === 2 ? query : to, label }
+      });
+
+      setSuggestions(response || []);
+      setSuggestionsFor(label);
+      setShowSuggestions(true);
+    } catch (error) {
+      console.error("Lỗi khi tìm kiếm gợi ý:", error);
+    }
+  };
+
+  const debouncedFetchSuggestions = useCallback(
+    debounce((query: string, label: number) => {
+      fetchSuggestions(query, label);
+    }, 500),
+    []
+  );
+
+  const handleInputChange = (text: string, label: number) => {
+    if (label === 1) {
+      setFrom(text);
+    } else {
+      setTo(text);
+    }
+    debouncedFetchSuggestions(text, label);
   };
 
   return (
@@ -67,12 +116,38 @@ export const Home = () => {
               type="text"
               error={isError && !from ? "Vui lòng nhập nơi xuất phát." : ""}
               fieldName="from"
-              onChangeText={setFrom}
+              onChangeText={(text: string) => handleInputChange(text, 1)}
             />
             <TouchableOpacity onPress={handleSwapLocations} style={styles.swapButton}>
               <MaterialIcons name="swap-vert" size={24} color="#007AFF" />
             </TouchableOpacity>
           </View>
+
+          {showSuggestions && suggestionsFor && (
+            <View style={[styles.suggestionsContainer, { top: suggestionsFor === 1 ? height * 0.07 : height*0.14 }]}>
+              <ScrollView
+                keyboardShouldPersistTaps="handled"
+                style={{ maxHeight: 200 }}
+              >
+                {suggestions.map((suggestion) => (
+                  <TouchableOpacity
+                    key={suggestion.stop_id}
+                    onPress={() => {
+                      if (suggestionsFor === 1) {
+                        setFrom(suggestion.stop_name);
+                      } else {
+                        setTo(suggestion.stop_name);
+                      }
+                      setShowSuggestions(false);
+                    }}
+                    style={styles.suggestionItem}
+                  >
+                    <Text>{suggestion.stop_name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
 
           <TextInputCommon
             textTitle="Bạn muốn đi đâu?"
@@ -81,9 +156,9 @@ export const Home = () => {
             type="text"
             error={isError && !to ? "Vui lòng nhập nơi đến." : ""}
             fieldName="to"
-            onChangeText={setTo}
+            onChangeText={(text: string) => handleInputChange(text, 2)}
           />
-          
+
           <TextInputCommon
             textTitle="Ngày đi"
             placeholder="Chọn ngày"

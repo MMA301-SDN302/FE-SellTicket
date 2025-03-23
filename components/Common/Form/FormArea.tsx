@@ -4,6 +4,7 @@ import { TextInputCommonProps } from "../TextInput/InputType/type";
 import useFormBasic from "../../../hooks/useFormBasic";
 import { FormAreaProps, FormErrors } from "./Type";
 import ButtonCommon from "../Button/ButtonCommon";
+import { useChanges } from "../../../hooks/useChanges";
 
 const FormArea = <T extends Record<string, any>>({
   children,
@@ -12,10 +13,14 @@ const FormArea = <T extends Record<string, any>>({
   buttonTitle = "Submit",
   wrapStyle = {},
   titleStyle = {},
+  disableChange = false,
 }: FormAreaProps<T>) => {
+  const tempValues = initialValues;
   const { handleSubmit, values, handleChange, errorsMessage } =
     useFormBasic<T>(initialValues);
   const [errors, setErrors] = useState<FormErrors<T>>({});
+  if (disableChange)
+    disableChange = JSON.stringify(values) === JSON.stringify(tempValues);
 
   useEffect(() => {
     React.Children.map(children, (child) => {
@@ -69,6 +74,7 @@ const FormArea = <T extends Record<string, any>>({
         title={buttonTitle}
         onPress={() => handleSubmit(onSubmit, errors)}
         titleStyle={titleStyle}
+        disabled={disableChange}
       />
     </View>
   );

@@ -7,13 +7,22 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 100,
-    paddingTop: 10,
+    paddingTop: 20,
   },
   welcomeText: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+  },
+  welcomeTextName: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#0c1440",
+  },
+  welcomeTextHello: {
+    fontSize: 16,
+    color: "#0c1440",
   },
   welcomeTitle: {
     textAlign: "center",
@@ -69,7 +78,11 @@ export const styles = StyleSheet.create({
   iconContainer: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
     gap: 20,
+    marginTop: 10,
   },
+  iconButton: {
+    padding: 4,
+    position: 'relative'
+  }
 });

@@ -8,12 +8,14 @@ import React, {
 } from "react";
 import { Socket, io } from "socket.io-client";
 import { useAuth } from "../hooks/useAuth";
+import { Alert } from "react-native";
 
 interface SocketContextProps {
   socket: Socket | null;
   setSocket: (socket: Socket | null) => void;
   userOnline: string[];
   setUserOnline: (userOnline: string[]) => void;
+  connecting: boolean;
 }
 
 export const SocketContext = createContext<SocketContextProps>({
@@ -21,6 +23,7 @@ export const SocketContext = createContext<SocketContextProps>({
   setSocket: () => {},
   userOnline: [],
   setUserOnline: () => {},
+  connecting: false,
 });
 
 export const useSocketContext = () => {
@@ -32,37 +35,98 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [userOnline, setUserOnline] = useState<string[]>([]);
+  const [connecting, setConnecting] = useState(false);
   const { clearUser, userInfo } = useAuth();
+
   useEffect(() => {
-    if (userInfo?.user?.userId !== "") {
-      const socket = io("http://localhost:8080", {
+    if (!userInfo?.user?.userId) return;
+
+    try {
+      setConnecting(true);
+      // Create socket connection
+      console.log(
+        "Attempting to connect socket for user:",
+        userInfo.user.userId
+      );
+      const socketInstance = io("http://localhost:8080", {
         query: {
-          userId: userInfo?.user.userId,
+          userId: userInfo.user.userId,
+          role: userInfo?.user.role || "user",
         },
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        timeout: 10000,
       });
-      setSocket(socket);
-      socket.on("getOnlineUsers", async (data: string[]) => {
-        setUserOnline(data);
+
+      // Handle connection events
+      socketInstance.on("connect", () => {
+        console.log("Socket connected successfully", socketInstance.id);
+        setConnecting(false);
       });
-      socket.on("forceDisconnect", async () => {
+
+      socketInstance.on("connect_error", (error) => {
+        console.error("Socket connection error:", error.message);
+        console.error("Connection error details:", {
+          message: error.message,
+          description: error.description,
+          context: error.context,
+        });
+        setConnecting(false);
+      });
+
+      socketInstance.on(
+        "getOnlineUsers",
+        (data: { users: string[]; admin: string[] }) => {
+          console.log("Online users updated:", data);
+          setUserOnline([...data.users, ...data.admin]);
+        }
+      );
+
+      socketInstance.on("forceDisconnect", async () => {
+        console.warn("Forced disconnection requested");
         clearUser();
       });
+
+      socketInstance.on("messageError", (error) => {
+        console.error("Message error from server:", error);
+      });
+
+      socketInstance.on("error", (error) => {
+        console.error("General socket error:", error);
+      });
+
+      socketInstance.on("messageRead", ({ messageId }) => {
+        // Update message read status if needed
+      });
+
+      setSocket(socketInstance);
+
       return () => {
-        if (socket) {
-          socket.close();
+        if (socketInstance) {
+          socketInstance.disconnect();
           setSocket(null);
         }
       };
+    } catch (error) {
+      console.error("Error setting up socket:", error);
+      setConnecting(false);
     }
-  }, [userInfo]);
+  }, [userInfo?.user?.userId]);
 
-  const socketContextValueWithUserOnline = useMemo(
-    () => ({ socket, setSocket, userOnline, setUserOnline }),
-    [socket, setSocket, userOnline, setUserOnline]
+  const socketContextValue = useMemo(
+    () => ({
+      socket,
+      setSocket,
+      userOnline,
+      setUserOnline,
+      connecting,
+    }),
+    [socket, setSocket, userOnline, setUserOnline, connecting]
   );
 
   return (
-    <SocketContext.Provider value={socketContextValueWithUserOnline}>
+    <SocketContext.Provider value={socketContextValue}>
       {children}
     </SocketContext.Provider>
   );

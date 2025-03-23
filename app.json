@@ -20,6 +20,7 @@
         "foregroundImage": "./assets/appInstall.png",
         "backgroundColor": "#ffffff"
       },
+      "permissions": ["CAMERA"],
       "package": "com.kaidophan37.FastTicket"
     },
     "web": {

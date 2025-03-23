@@ -71,7 +71,6 @@ export function TabNavigatorHome({ navigation }: any) {
             component={Profile}
             options={{ header: () => <Header />, headerShown: true }}
           />
-
           <Tab.Screen
             name="Đăng xuất"
             component={() => null}

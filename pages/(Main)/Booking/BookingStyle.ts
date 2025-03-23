@@ -54,6 +54,13 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 10,
   },
+  headerTitle: {
+  fontSize: 20,
+  fontWeight: "bold",
+  textAlign: "center",
+  marginBottom: 10,
+},
+
   sheetStyles: {
     flexDirection: "row",
     justifyContent: "space-evenly",
@@ -106,8 +113,8 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#007bff",
     paddingVertical: 12,
+    paddingHorizontal: 20,
     borderRadius: 10,
-    marginTop: 20,
     elevation: 5,
   },
   finishButtonText: {
@@ -115,5 +122,27 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#fff",
     marginLeft: 10,
+  },
+  buttonContainer: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    backgroundColor: "#fff",  // Nền trắng để không bị che mất nội dung
+    paddingVertical: 10,
+    alignItems: "center",
+    borderTopWidth: 1,
+    borderColor: "#ddd",
+  },
+  confirmed: { 
+    backgroundColor: "red", 
+    borderColor: "darkred",
+  },
+  pending: { 
+    backgroundColor: "yellow", 
+    borderColor: "gold",
+  },
+  complete: { 
+    backgroundColor: "#d3d3d3", 
+    borderColor: "#a9a9a9",
   },
 });

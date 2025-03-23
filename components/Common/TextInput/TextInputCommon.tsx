@@ -23,6 +23,7 @@ const TextInputCommon = ({
   icon,
   error = "",
   checkBoxOptions,
+  disable = false,
 }: TextInputCommonProps) => {
   const inputComponent: { [key: string]: any } = {
     phone: (
@@ -35,11 +36,12 @@ const TextInputCommon = ({
         placeholder={placeholder}
         onChangeText={onChangeText}
         icon={icon}
+        disable={disable}
       />
     ),
     date: (
       <DateInputType
-        value={value instanceof Date ? value : new Date()}
+        value={value ?? ""}
         title={textTitle || ""}
         options={options}
         placeholder={placeholder}

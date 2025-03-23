@@ -52,7 +52,7 @@ export const SignIn: React.FC<Props> = ({ navigation }: Props) => {
           AsyncStorageLocal.remove("account");
         }
         saveUser(res);
-        navigation.pop();
+        navigation.navigate("HomeStack");
       })
       .catch((err: ErrorResponse) => {
         if (err.error_code === ERROR_CODES.MISSING_FIELD) {

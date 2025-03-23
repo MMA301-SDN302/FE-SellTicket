@@ -1,4 +1,6 @@
 import { ROLE_NAME } from "./../utils/constant";
+import { TicketResponse } from "../components/Ticket/type";
+
 export type RootStackParamList = {
   HomeStack: undefined;
   Welcome: undefined;
@@ -22,16 +24,19 @@ export type RootStackParamList = {
     date: string;
     isRoundTrip: boolean;
     travelTime: number;
-  }; // Thêm travelTime vào Route
+    routeId: string;
+  };
   Booking: {
     from: string;
     to: string;
     date: string;
-    busName: string;
+    routeName: string;
     time: string;
-    price: string;
+    price: number | null;
     travelTime: number;
-  }; // Thêm travelTime vào Booking
+    routeId: string;
+    policy: string | null;
+  };
   PlaceOrder: {
     from: string;
     to: string;
@@ -46,6 +51,11 @@ export type RootStackParamList = {
     mobilePhone: string;
     sendType: string;
   };
+  Payment: {
+    ticketId: string;
+    ticketInfo: TicketResponse;
+  };
+  MyTicket: undefined;
   AdminPage: undefined;
   ProductDashboard: undefined;
   UserManagement: undefined;
@@ -82,4 +92,6 @@ export const rootStackRoutes: (keyof RootStackParamList)[] = [
   "OtpVerify",
   "Chat",
   "Notification",
+  "Payment",
+  "MyTicket",
 ];

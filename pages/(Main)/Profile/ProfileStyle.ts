@@ -39,4 +39,13 @@ export const styles = StyleSheet.create({
     backgroundColor: "#4D5995",
   },
   buttonText: {},
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  image: {
+    width: 200,
+    height: 200,
+  },
 });

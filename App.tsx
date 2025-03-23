@@ -14,6 +14,10 @@ LogBox.ignoreLogs([
   "Warning: CountryModal: Support for defaultProps will be removed from function components in a future major release.",
   "Warning: Main: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
   "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.",
+  "Warning: HeaderModal: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
+  "Warning: AnimatedModal: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
+  "Warning: CountryFilter: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
+  "Warning: CountryList: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
 ]);
 
 export default function App() {
