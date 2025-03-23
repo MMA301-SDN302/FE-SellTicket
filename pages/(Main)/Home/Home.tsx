@@ -86,7 +86,7 @@ export const Home = () => {
   const debouncedFetchSuggestions = useCallback(
     debounce((query: string, label: number) => {
       fetchSuggestions(query, label);
-    }, 500),
+    }, 2000),
     []
   );
 

@@ -101,11 +101,11 @@ const StackNavigator = () => {
         }}
       />
 
-      <Stack.Screen
+      {/* <Stack.Screen
         name="OtpVerify"
         component={VerifyOtp}
         options={{ headerShown: false }}
-      />
+      /> */}
       <Stack.Screen
         name="ResetPassword"
         component={ResetPassword}

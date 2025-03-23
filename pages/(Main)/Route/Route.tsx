@@ -6,6 +6,8 @@ import type { StackNavigationProp } from "@react-navigation/stack";
 import type { RouteProp } from "@react-navigation/native";
 import type { RootStackParamList } from "../../../types/NavigationTypes";
 import useApi from "../../../hooks/useApi";
+import { useAuth } from "../../../hooks/useAuth";
+import useNavigate from "../../../components/Navigate/Navigate";
 
 type RouteScreenProp = StackNavigationProp<RootStackParamList, "Route">;
 type RouteScreenRouteProp = RouteProp<RootStackParamList, "Route">;
@@ -18,11 +20,11 @@ type Props = {
 const Route = ({ navigation, route }: Props) => {
   const { width } = useWindowDimensions();
   const { from = "", to = "", date = "" } = route.params || {};
-
   const [busRoutes, setBusRoutes] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
+  const { navigateTo } = useNavigate();
+  const  auth  = useAuth();
   const { fetchData } = useApi<any[]>({
     url: "/routes/search",
     method: "GET",
@@ -53,7 +55,11 @@ const Route = ({ navigation, route }: Props) => {
   };  
 
   const handleSelectRoute = (selectedRoute: any) => {
-    navigation.navigate("Booking", {
+    if (!auth.userInfo) {
+      navigateTo("SignIn");
+      return
+    }
+    navigateTo("Booking", {
       from,
       to,
       date,
