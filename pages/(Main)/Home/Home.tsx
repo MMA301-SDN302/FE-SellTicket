@@ -52,6 +52,12 @@ export const Home = () => {
       setIsError(true);
       return;
     }
+
+    if (from.trim().toLowerCase() === to.trim().toLowerCase()) {
+      alert("Nơi xuất phát và nơi đến không được trùng nhau. Vui lòng nhập lại!");
+      return;
+    }
+
     const formattedDate = date.toLocaleDateString("vi-VN");
     navigateTo("Route", { from, to, date: formattedDate, isRoundTrip });
   };
@@ -63,9 +69,10 @@ export const Home = () => {
       return;
     }
     try {
-      const response = await fetchData({ 
-        params: { query, label, startLocation: from, endLocation: to } 
+      const response = await fetchData({
+        params: { startLocation: label === 1 ? query : from, endLocation: label === 2 ? query : to, label }
       });
+
       setSuggestions(response || []);
       setSuggestionsFor(label);
       setShowSuggestions(true);
@@ -74,34 +81,10 @@ export const Home = () => {
     }
   };
 
-  interface Stop {
-    stop_id: number;
-    stop_name: string;
-  }
-
   const debouncedFetchSuggestions = useCallback(
-    debounce(
-      async (query: string, label: number, fetchData: (params: any) => Promise<Stop[]>, 
-        setSuggestions: (stops: Stop[]) => void, setShowSuggestions: (show: boolean) => void, 
-        setSuggestionsFor: (label: number) => void
-      ) => {
-        if (!query) {
-          setSuggestions([]);
-          setShowSuggestions(false);
-          return;
-        }
-
-        try {
-          const response: Stop[] = await fetchData({ params: { query, label } });
-          setSuggestions(response || []);
-          setSuggestionsFor(label);
-          setShowSuggestions(true);
-        } catch (error) {
-          console.error("Lỗi khi tìm kiếm gợi ý:", error);
-        }
-      }, 
-      1000
-    ), 
+    debounce((query: string, label: number) => {
+      fetchSuggestions(query, label);
+    }, 500),
     []
   );
 
@@ -111,7 +94,7 @@ export const Home = () => {
     } else {
       setTo(text);
     }
-    debouncedFetchSuggestions(text, label, fetchData, setSuggestions, setShowSuggestions, setSuggestionsFor);
+    debouncedFetchSuggestions(text, label);
   };
 
   return (
@@ -146,9 +129,9 @@ export const Home = () => {
                     key={suggestion.stop_id}
                     onPress={() => {
                       if (suggestionsFor === 1) {
-                        setFrom(suggestion.stop_name); 
+                        setFrom(suggestion.stop_name);
                       } else {
-                        setTo(suggestion.stop_name); 
+                        setTo(suggestion.stop_name);
                       }
                       setShowSuggestions(false);
                     }}
