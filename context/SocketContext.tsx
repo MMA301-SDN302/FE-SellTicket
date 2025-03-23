@@ -44,11 +44,14 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({
     try {
       setConnecting(true);
       // Create socket connection
-      console.log("Attempting to connect socket for user:", userInfo.user.userId);
-      const socketInstance = io("http://192.168.101.229:8080", {
+      console.log(
+        "Attempting to connect socket for user:",
+        userInfo.user.userId
+      );
+      const socketInstance = io("http://localhost:8080", {
         query: {
           userId: userInfo.user.userId,
-          role: userInfo?.user.role || "user"
+          role: userInfo?.user.role || "user",
         },
         reconnection: true,
         reconnectionAttempts: 5,
@@ -67,25 +70,28 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({
         console.error("Connection error details:", {
           message: error.message,
           description: error.description,
-          context: error.context
+          context: error.context,
         });
         setConnecting(false);
       });
 
-      socketInstance.on("getOnlineUsers", (data: { users: string[]; admin: string[] }) => {
-        console.log("Online users updated:", data);
-        setUserOnline([...data.users, ...data.admin]);
-      });
+      socketInstance.on(
+        "getOnlineUsers",
+        (data: { users: string[]; admin: string[] }) => {
+          console.log("Online users updated:", data);
+          setUserOnline([...data.users, ...data.admin]);
+        }
+      );
 
       socketInstance.on("forceDisconnect", async () => {
         console.warn("Forced disconnection requested");
         clearUser();
       });
-      
+
       socketInstance.on("messageError", (error) => {
         console.error("Message error from server:", error);
       });
-      
+
       socketInstance.on("error", (error) => {
         console.error("General socket error:", error);
       });
@@ -95,7 +101,7 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({
       });
 
       setSocket(socketInstance);
-      
+
       return () => {
         if (socketInstance) {
           socketInstance.disconnect();
@@ -109,12 +115,12 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({
   }, [userInfo?.user?.userId]);
 
   const socketContextValue = useMemo(
-    () => ({ 
-      socket, 
-      setSocket, 
-      userOnline, 
+    () => ({
+      socket,
+      setSocket,
+      userOnline,
       setUserOnline,
-      connecting
+      connecting,
     }),
     [socket, setSocket, userOnline, setUserOnline, connecting]
   );

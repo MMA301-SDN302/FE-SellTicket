@@ -24,18 +24,18 @@ export type RootStackParamList = {
     date: string;
     isRoundTrip: boolean;
     travelTime: number;
-    routeId: string,
-  }; 
+    routeId: string;
+  };
   Booking: {
     from: string;
     to: string;
     date: string;
-    routeName: string; 
-    time: string; 
-    price: number | null; 
-    travelTime: number; 
+    routeName: string;
+    time: string;
+    price: number | null;
+    travelTime: number;
     routeId: string;
-    policy: string | null; 
+    policy: string | null;
   };
   PlaceOrder: {
     from: string;

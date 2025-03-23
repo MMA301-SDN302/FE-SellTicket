@@ -15,11 +15,12 @@ export const ApiConstant = {
     Confirm: "/payment/confirm",
     Config: "/payment/config",
     StripeSheet: "/payment/stripe-sheet",
-    PayosPayment: "/payment/payos-payment"
+    PayosPayment: "/payment/payos-payment",
   },
   Notification: {
     Send: "/notification/send",
     GetAll: "/notification/all",
-    MarkRead: "/notification/read"
-  }
+    MarkRead: "/notification/read",
+  },
+  Chat: "/message/conversations/",
 };

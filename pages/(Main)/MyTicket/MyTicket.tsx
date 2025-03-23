@@ -1,5 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { ScrollView, View, Text, TouchableOpacity, RefreshControl, ActivityIndicator } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  RefreshControl,
+  ActivityIndicator,
+} from "react-native";
 import { styles } from "./MyTicketStyle";
 import { PreviewLayout } from "../../../components/PreviewLayout/PreviewLayout";
 import { Ticket } from "../../../components/Ticket/Ticket";
@@ -19,59 +26,67 @@ const MyTickets = () => {
     method: "GET",
     url: `${ApiConstant.Ticket}/`,
     disableSpinner: true, // Disable default spinner to use custom loading UI
+    security: true,
   });
 
   const fetchTickets = async () => {
     setError(null); // Clear any previous errors
     try {
       const res = await fetchData();
-      
+
       // Log response for debugging
       console.log("Raw API response:", res);
-      
-      if (!res || !Array.isArray(res)) {
-        console.error("Invalid ticket data format", res);
-        setError("Không thể tải dữ liệu vé. Định dạng dữ liệu không hợp lệ.");
+
+      if (!Array.isArray(res)) {
+        setError("Bạn chưa có vé nào.");
         setTickets([]);
         return;
       }
-      
+
       // Format the tickets with proper date objects and ensure type compatibility
       const formattedTickets: TicketResponse[] = res.map((ticket) => {
         // Make sure trip_id is properly formatted or use default empty object with correct type
-        const formattedTrip = ticket.trip_id ? {
-          ...ticket.trip_id,
-          tripStartTime: ticket.trip_id.tripStartTime ? new Date(ticket.trip_id.tripStartTime) : new Date(),
-          tripEndTime: ticket.trip_id.tripEndTime ? new Date(ticket.trip_id.tripEndTime) : new Date(),
-        } : ticket.trip_id;
+        const formattedTrip = ticket.trip_id
+          ? {
+              ...ticket.trip_id,
+              tripStartTime: ticket.trip_id.tripStartTime
+                ? new Date(ticket.trip_id.tripStartTime)
+                : new Date(),
+              tripEndTime: ticket.trip_id.tripEndTime
+                ? new Date(ticket.trip_id.tripEndTime)
+                : new Date(),
+            }
+          : ticket.trip_id;
 
         return {
           ...ticket,
-          trip_id: formattedTrip
+          trip_id: formattedTrip,
         };
       });
-      
+
       console.log("Formatted tickets:", formattedTickets);
       setTickets(formattedTickets);
     } catch (err: any) {
       console.error("Error fetching tickets:", err);
-      setError(err.message || "Không thể tải dữ liệu vé. Vui lòng thử lại sau.");
+      setError(
+        err.message || "Không thể tải dữ liệu vé. Vui lòng thử lại sau."
+      );
       setTickets([]);
     }
   };
-  
+
   // Initial data loading
   useEffect(() => {
     fetchTickets();
   }, []);
-  
+
   // Handle pull-to-refresh
   const onRefresh = async () => {
     setIsRefreshing(true);
     await fetchTickets();
     setIsRefreshing(false);
   };
-  
+
   const filteredTickets = useMemo(() => {
     if (!Array.isArray(tickets)) return [];
 
@@ -89,9 +104,12 @@ const MyTickets = () => {
     const statusFiltered = tickets.filter(
       (ticket) => ticket.ticket_status === statusMap[direction]
     );
-    
-    console.log(`Tickets with status "${statusMap[direction]}":`, statusFiltered);
-    
+
+    console.log(
+      `Tickets with status "${statusMap[direction]}":`,
+      statusFiltered
+    );
+
     // No need to filter by userId for now, just return all tickets with matching status
     return statusFiltered;
   }, [direction, tickets, userInfo]);
@@ -112,9 +130,6 @@ const MyTickets = () => {
       return (
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{error}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={fetchTickets}>
-            <Text style={styles.retryButtonText}>Thử lại</Text>
-          </TouchableOpacity>
         </View>
       );
     }
@@ -143,18 +158,13 @@ const MyTickets = () => {
       values={["Chờ thanh toán", "Hiện tại", "Đã hoàn thành", "Đã hủy"]}
       setSelectedValue={setDirection}
     >
-      <ScrollView 
+      <ScrollView
         style={styles.container}
         refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={onRefresh}
-          />
+          <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
         }
       >
-        <View style={styles.containerView}>
-          {renderContent()}
-        </View>
+        <View style={styles.containerView}>{renderContent()}</View>
       </ScrollView>
     </PreviewLayout>
   );
