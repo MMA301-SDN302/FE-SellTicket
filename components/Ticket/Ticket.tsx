@@ -17,7 +17,7 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
     method: "DELETE",
     url: `${ApiConstant.Ticket}/${ticket._id}`,
   });
-  
+
   async function CancelTicket() {
     if (!ticket._id) {
       console.error("Lỗi: _id không tồn tại");
@@ -42,23 +42,15 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
     ]);
   }
 
-  function handlePayment() {
-    // Navigate to payment screen with ticket ID and ticket info
-    navigation.navigate('Payment', {
-      ticketId: ticket._id,
-      ticketInfo: ticket
-    });
-  }
+  function handlePayment() {}
 
   function GenerateQRCode() {}
 
-  // Get departure and arrival locations, handling both trip_id and direct location properties
-  const departureLocation = ticket.trip_id?.depature || ticket.startlocation || "N/A";
-  const arrivalLocation = ticket.trip_id?.arrive || ticket.endlocation || "N/A";
-  
-  // Get trip times (use placeholder if unavailable)
-  const startTime = ticket.trip_id?.tripStartTime || new Date();
-  const endTime = ticket.trip_id?.tripEndTime || new Date();
+  const departureLocation = ticket.startlocation || "N/A";
+  const arrivalLocation = ticket.endlocation || "N/A";
+
+  const startTime = ticket.route_id?.routeStartTime || new Date();
+  const endTime = ticket.route_id?.routeEndTime || new Date();
 
   return (
     <View style={styles.ticketContainer}>
@@ -147,17 +139,21 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {startTime instanceof Date ? startTime.toLocaleTimeString("vi-VN", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }) : "N/A"}
+                {startTime instanceof Date
+                  ? startTime.toLocaleTimeString("vi-VN", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  : "N/A"}
               </Text>
               <Text
                 style={styles.dateText}
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {startTime instanceof Date ? startTime.toLocaleDateString("vi-VN", {}) : "N/A"}
+                {startTime instanceof Date
+                  ? startTime.toLocaleDateString("vi-VN", {})
+                  : "N/A"}
               </Text>
             </View>
             <View style={styles.detailTime}>
@@ -173,10 +169,12 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {endTime instanceof Date ? endTime.toLocaleTimeString("vi-VN", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }) : "N/A"}
+                {endTime instanceof Date
+                  ? endTime.toLocaleTimeString("vi-VN", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  : "N/A"}
               </Text>
               <Text
                 style={styles.dateText}
@@ -188,7 +186,9 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {endTime instanceof Date ? endTime.toLocaleDateString("vi-VN", {}) : "N/A"}
+                  {endTime instanceof Date
+                    ? endTime.toLocaleDateString("vi-VN", {})
+                    : "N/A"}
                 </Text>
               </Text>
             </View>
@@ -280,9 +280,7 @@ export function Ticket({ onCancel, ...ticket }: TicketProps) {
       )}
       {ticket.ticket_status == "cancelled" && (
         <View style={styles.buttonCurrent}>
-          <Text style={{ fontWeight: "500", color: "red" }}>
-            Vé đã bị hủy
-          </Text>
+          <Text style={{ fontWeight: "500", color: "red" }}>Vé đã bị hủy</Text>
         </View>
       )}
       {ticket.ticket_status == "completed" && (

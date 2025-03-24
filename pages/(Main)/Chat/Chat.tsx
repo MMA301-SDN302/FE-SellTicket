@@ -80,21 +80,6 @@ const Chat: React.FC<Props> = ({ navigation }: Props) => {
         }
       } catch (error) {
         console.error("Error fetching conversations:", error);
-        // Show more detailed error information
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.error("Response error data:", error.response.data);
-          console.error("Response error status:", error.response.status);
-          console.error("Response error headers:", error.response.headers);
-        } else if (error.request) {
-          // The request was made but no response was received
-          console.error("No response received:", error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.error("Request setup error:", error.message);
-        }
-
         // Use empty array for conversations when there's an error
         setConversations([]);
         setFilteredConversations([]);
@@ -153,7 +138,7 @@ const Chat: React.FC<Props> = ({ navigation }: Props) => {
       item.lastMessage?.senderId === userInfo?.user.userId;
 
     // Generate random avatar with consistent background color for the same name
-    const getRandomAvatar = (participant) => {
+    const getRandomAvatar = (participant: any) => {
       if (participant.avatar) return participant.avatar;
 
       const name = `${participant.firstName} ${participant.lastName}`.trim();
@@ -249,7 +234,9 @@ const Chat: React.FC<Props> = ({ navigation }: Props) => {
             {searchText.trim() === "" && (
               <TouchableOpacity
                 style={styles.startChatButton}
-                onPress={() => navigation.navigate("ChatDetail", {})}
+                onPress={() =>
+                  navigation.navigate("ChatDetail", { chatId: "" })
+                }
               >
                 <Text style={styles.startChatButtonText}>Start a new chat</Text>
               </TouchableOpacity>

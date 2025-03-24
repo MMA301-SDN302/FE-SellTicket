@@ -49,11 +49,11 @@ const MyTickets = () => {
         const formattedTrip = ticket.trip_id
           ? {
               ...ticket.trip_id,
-              tripStartTime: ticket.trip_id.tripStartTime
-                ? new Date(ticket.trip_id.tripStartTime)
+              tripStartTime: ticket.route_id?.routeStartTime
+                ? new Date(ticket.route_id.routeStartTime)
                 : new Date(),
-              tripEndTime: ticket.trip_id.tripEndTime
-                ? new Date(ticket.trip_id.tripEndTime)
+              tripEndTime: ticket.route_id?.routeEndTime
+                ? new Date(ticket.route_id.routeEndTime)
                 : new Date(),
             }
           : ticket.trip_id;

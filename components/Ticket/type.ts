@@ -72,7 +72,7 @@ export type TicketResponse = {
   ticket_seat?: string;
   ticket_status: "pending" | "confirmed" | "cancelled" | "completed";
   trip_id?: Trip;
-  route_id?: string;
+  route_id?: RouteResponse;
   user_id: string;
   startlocation?: string;
   endlocation?: string;
