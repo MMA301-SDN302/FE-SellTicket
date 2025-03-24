@@ -25,16 +25,15 @@ const MyTickets = () => {
   const { fetchData, loading } = useApi<TicketResponse[]>({
     method: "GET",
     url: `${ApiConstant.Ticket}/`,
-    disableSpinner: true, // Disable default spinner to use custom loading UI
+    disableSpinner: true, 
     security: true,
   });
 
   const fetchTickets = async () => {
-    setError(null); // Clear any previous errors
+    setError(null); 
     try {
       const res = await fetchData();
 
-      // Log response for debugging
       console.log("Raw API response:", res);
 
       if (!Array.isArray(res)) {
@@ -75,12 +74,10 @@ const MyTickets = () => {
     }
   };
 
-  // Initial data loading
   useEffect(() => {
     fetchTickets();
   }, []);
 
-  // Handle pull-to-refresh
   const onRefresh = async () => {
     setIsRefreshing(true);
     await fetchTickets();
@@ -100,7 +97,6 @@ const MyTickets = () => {
       "Chờ thanh toán": "pending",
     };
 
-    // Filter by status first
     const statusFiltered = tickets.filter(
       (ticket) => ticket.ticket_status === statusMap[direction]
     );
@@ -110,11 +106,9 @@ const MyTickets = () => {
       statusFiltered
     );
 
-    // No need to filter by userId for now, just return all tickets with matching status
     return statusFiltered;
   }, [direction, tickets, userInfo]);
 
-  // Render loading state
   const renderContent = () => {
     if (loading && !isRefreshing && tickets.length === 0) {
       return (
@@ -125,7 +119,6 @@ const MyTickets = () => {
       );
     }
 
-    // Render error state
     if (error && !loading && tickets.length === 0) {
       return (
         <View style={styles.errorContainer}>
@@ -134,12 +127,10 @@ const MyTickets = () => {
       );
     }
 
-    // Render empty state
     if (!filteredTickets || filteredTickets.length === 0) {
       return <Text style={styles.textNoDisplay}>Không có vé để hiển thị</Text>;
     }
 
-    // Render tickets
     return (
       <>
         {filteredTickets?.map((ticket, index) => (
